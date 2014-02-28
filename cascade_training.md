@@ -48,8 +48,8 @@
             * `<calling-page>`
             * Contains all information about the current page in a `<system-page>` element.
             * Only needed when you're using a content-type index
+            
 ---
-
 #### Setup Block
 
 * These blocks override more general blocks
@@ -89,9 +89,9 @@
     3. Get the items within that folder (i.e. current page siblings)
         * `#set($items = $_XPathTool.selectNodes($folder, "system-page[name='index'][dynamic-metadata[name='include-nav' and value='Yes']] | system-folder"))`
         * Note that `dynamic-metadata` values are case sensitive
-    4. Check for items, and if there is at least one loop through and create a list of links ([see here](1))
-    5. Use a macro to get the link for each item in the list ([see here](2))
-    6. Use a macro to get the title for each item in the list ([see here](3))
+    4. Check for items, and if there is at least one loop through and create a list of links ([see here](#1))
+    5. Use a macro to get the link for each item in the list ([see here](#2))
+    6. Use a macro to get the title for each item in the list ([see here](#3))
 * Basic navigation (LocatorTool)
     1. Set the current page
         * `#set($page = $_.locatePage($currentPagePath, $currentPageSiteName))`
@@ -100,17 +100,17 @@
         * `#set($folder = $page.parentFolder)`
     3. Get the parent children (aka siblings)
         * `#set($children = $folder.children)`
-    4. Do your nav loop ([see here](4))
-    5. Use a printTitle macro ([see here](5))
+    4. Do your nav loop ([see here](#4))
+    5. Use a printTitle macro ([see here](#5))
 
 ##### Implementation Details
 
 * If you want to get a high level of specificity when selecting navigation directories, you can create a data definition or metadata field on directories to allow you to select those directories.
     * e.g. Navigation Level metadata option with a `top-level` value for the root directory
     
-#### Footnotes
+##### Footnotes
     
-<a name="1">Navigation Loop</a>:
+<a name="1"></a>Navigation Loop:
 
     #if($items.size > 0)
         <ul>
@@ -130,7 +130,7 @@
         </ul>
     #end
     
-<a name="2">getLink Macro</a>:
+<a name="2"></a>getLink Macro:
 
     #macro(getLink $node)
         #if($node.getChild("link"))
@@ -138,7 +138,7 @@
         #end
     #end
 
-<a name="3">printTitle Macro</a>:
+<a name="3"></a>printTitle Macro:
 
     #macro(printTitle $i)
         #if($i.getChild("display-name"))
@@ -150,7 +150,7 @@
         #end
     #end
 
-<a name="4">Locator Tool Navigation Loop</a>
+<a name="4"></a>Locator Tool Navigation Loop
 
     #foreach($child in $children)
         #if($item.identifier.type == 'folder')
@@ -165,7 +165,7 @@
         #end
     #end
 
-<a name="5">Locator Tool printTitle Macro</a>
+<a name="5"></a>Locator Tool printTitle Macro
 
     #macro (printTitle $i)
         #if($_PropertyTool.isNull($i.metadata.displayName))
@@ -197,4 +197,4 @@
 ---
 #### Calendar
 
-
+* [Sample implementation](https://github.com/hannonhill/Calendar)
