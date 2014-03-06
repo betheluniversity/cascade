@@ -1,0 +1,18 @@
+/* For use with the browser extension Stylebot: stylebot.me */
+
+
+/* For the format editing interface. Places the velocity editor side-by-side with the xml preview */
+
+#contentContainer {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+#fileUploadArea {
+  flex: 1;
+  margin-right: 1em;
+}
+
+#contentContainer #previewFloat {
+  flex: 1;
+}
