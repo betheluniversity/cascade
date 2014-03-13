@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+       
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_001.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_002.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_003.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_004.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_005.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_006.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_007.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_008.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_009.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_010.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_011.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_012.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_013.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_014.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_015.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_016.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_017.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_018.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_019.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_020.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_021.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_022.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_023.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_025.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_026.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_027.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_028.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_029.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_030.xml"/>
+       <include file="com/hannonhill/cascade/model/database/updater/updates/6_0/6_0_031.xml"/>
+</databaseChangeLog>

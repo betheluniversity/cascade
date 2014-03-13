@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <changeSet author="aubrey.rhodes" id="6_0_028">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_028"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            <addColumn tableName="cxml_entityrelation">
+                <column name="velocityId" type="VARCHAR(32)" defaultValue="null"/>
+                <column name="fileId" type="VARCHAR(32)" defaultValue="null"/>
+            </addColumn>
+            <addForeignKeyConstraint referencedTableName="cxml_foldercontent" baseColumnNames="velocityId" baseTableName="cxml_entityrelation" referencedColumnNames="id" constraintName="FK_EREL_VELOCITY"/>
+            <addForeignKeyConstraint referencedTableName="cxml_foldercontent" baseColumnNames="fileId" baseTableName="cxml_entityrelation" referencedColumnNames="id" constraintName="FK_EREL_FILE"/>
+            
+            <modifySql dbms="mssql">
+                <replace replace="VARCHAR" with="NVARCHAR"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+         </changeSet>
+         
+</databaseChangeLog>

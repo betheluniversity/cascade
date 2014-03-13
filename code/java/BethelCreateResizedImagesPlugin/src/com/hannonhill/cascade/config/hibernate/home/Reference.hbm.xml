@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.Reference" discriminator-value="REF" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity">
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.Reference"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.Reference"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.Reference"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.Reference"
+		/>
+		
+		<many-to-one
+			name="block"
+			column="referenceBlockId"
+		/>
+		<many-to-one
+			name="file"
+			column="referenceFileId"
+		/>
+		<many-to-one
+			name="folder"
+			column="referenceFolderId"
+		/>
+		<many-to-one
+			name="page"
+			column="referencePageId"
+		/>
+		<many-to-one
+			name="template"
+			column="referenceTemplateId"
+		/>
+		<many-to-one
+			name="xsltFormat"
+			column="referenceStylesheetId"
+		/>
+		<many-to-one
+			name="symlink"
+			column="referenceSymlinkId"
+		/>
+		
+		<many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.Reference"
+     	/>
+     	
+     	<set name="allDrafts" inverse="true" cascade="all-delete-orphan">
+     		<key column="draftOriginalId"/>
+     		<one-to-many class="com.hannonhill.cascade.model.dom.Reference"/>
+     	</set>
+	</subclass>
+</hibernate-mapping>

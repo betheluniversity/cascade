@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <!-- Id field must be the next consecutive value for the current release
+         	  Example: if the last update id was 6_7_002, your update would be
+         	  6_7_003
+          -->
+        <changeSet author="artur.tomusiak" id="7_0_014a">
+           <!-- Add the new id columns -->
+           <addColumn tableName="cxml_assetfactoryplugin">
+               <column name="id" type="VARCHAR(32)"/>
+           </addColumn>
+
+           <addColumn tableName="cxml_assetfactorypluginparam">
+               <column name="id" type="VARCHAR(32)"/>
+           </addColumn>
+           
+           <!-- Add the link column between plugin param and plugin -->
+           <addColumn tableName="cxml_assetfactorypluginparam">
+           		<column name="assetFactoryPluginId" type="VARCHAR(32)"/>
+           </addColumn>
+
+           <!-- Populate the 3 columns -->
+           <customChange class="com.hannonhill.cascade.model.database.updater.updates.custom.AddIdsToAssetFactoryPluginAndParam" />
+           
+           <!-- Temporarily drop the foreign key to make it possible to drop the primary key -->
+           <dropForeignKeyConstraint baseTableName="cxml_assetfactoryplugin" constraintName="FK_AFP_FACTORY"/>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+	            <replace replace="TINYINT(1)" with="TINYINT"/>
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="TINYINT(5)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->                
+            </modifySql>
+            <modifySql dbms="oracle">
+            	<replace replace="TINYINT(1)" with="NUMBER(1)"/>
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <replace replace="TINYINT(5)" with="NUMBER(5)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+            
+        </changeSet>
+        
+        <!-- Remove old primary key -->
+        <!-- Using sql statement because of https://liquibase.jira.com/browse/CORE-1036 -->
+        <changeSet author="artur.tomusiak" id="7_0_014b">
+           <preConditions onFail="MARK_RAN">
+        		<not>
+        			<dbms type="mysql"/>
+        		</not>
+           </preConditions>
+
+           <sql>ALTER TABLE cxml_assetfactoryplugin DROP CONSTRAINT PK_CXML_AFPLUGIN</sql>
+           
+           <!-- 
+                SQL Server requires the index to be dropped ahead of dropping the column.
+           
+                MySQL generates an error when trying to drop the index because the FK on the assetFactoryId 
+                column is using the index. So we drop the column first which implicitly drops that column 
+                from the index. The other part of the index is removed when the other column is removed later.
+                
+                Oracle works either way so we avoid the extra query and don't drop the index. 
+           -->
+           <dropIndex tableName="cxml_assetfactorypluginparam" indexName="IDX_AFPP_FACTORY_CLASS"/>
+		</changeSet>
+		           
+       <changeSet author="artur.tomusiak" id="7_0_014c">
+           <preConditions onFail="MARK_RAN">
+       			<dbms type="mysql"/>
+           </preConditions>
+           <sql>ALTER TABLE cxml_assetfactoryplugin DROP PRIMARY KEY</sql>
+       </changeSet>
+       
+       <!-- Oracle also needs a unique index to be dropped when dropping a primary key (the index won't show in a list of indexes, but it is still there and could be violated) -->
+       <changeSet author="artur.tomusiak" id="7_0_014d" failOnError="false">
+			<preConditions onFail="MARK_RAN">
+				<dbms type="oracle"/>
+			</preConditions>
+					
+			<dropIndex tableName="cxml_assetfactoryplugin" indexName="PK_CXML_AFPLUGIN"/>
+       </changeSet>
+       
+       <changeSet author="artur.tomusiak" id="7_0_014e">
+       	   <!-- Add not null constraint (necessary in MS SQL to be able to add primary key) -->
+       	   <addNotNullConstraint tableName="cxml_assetfactoryplugin" columnName="id" columnDataType="VARCHAR(32)"/>
+       	   <addNotNullConstraint tableName="cxml_assetfactorypluginparam" columnName="id" columnDataType="VARCHAR(32)"/>
+       		
+           <!-- Create new primary keys -->
+           <addPrimaryKey tableName="cxml_assetfactoryplugin" columnNames="id" constraintName="PK_CXML_AFPLUGIN" />
+           <addPrimaryKey tableName="cxml_assetfactorypluginparam" columnNames="id" constraintName="PK_CXML_AFPLUGINPARAM"/>
+           
+           <!-- Add back the foreign key -->
+           <addForeignKeyConstraint 
+           		constraintName="FK_AFP_FACTORY" 
+           		referencedTableName="cxml_assetfactory" 
+           		baseColumnNames="assetFactoryId" 
+           		baseTableName="cxml_assetfactoryplugin" 
+           		referencedColumnNames="id"/>
+           
+           <addForeignKeyConstraint 
+           		constraintName="FK_AFPP_ASSETFACTORYPLUGIN" 
+           		referencedTableName="cxml_assetfactoryplugin" 
+           		baseColumnNames="assetFactoryPluginId" 
+           		baseTableName="cxml_assetfactorypluginparam" 
+           		referencedColumnNames="id"/>
+           		
+           <!-- Drop unnecessary columns and constraints -->
+           <dropColumn tableName="cxml_assetfactorypluginparam" columnName="pluginClass" />
+
+           <dropForeignKeyConstraint baseTableName="cxml_assetfactorypluginparam" constraintName="FK_AFPP_FACTORY"/>
+                       
+           <dropColumn tableName="cxml_assetfactorypluginparam" columnName="assetFactoryId"/>            
+            
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+	            <replace replace="TINYINT(1)" with="TINYINT"/>
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="TINYINT(5)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->                
+            </modifySql>
+            <modifySql dbms="oracle">
+            	<replace replace="TINYINT(1)" with="NUMBER(1)"/>
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <replace replace="TINYINT(5)" with="NUMBER(5)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet>
+</databaseChangeLog>

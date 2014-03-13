@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="artur.tomusiak" id="6_A_003">
+        	<preConditions onFail="MARK_RAN">
+        		<not>
+        			<dbms type="mssql"/>
+        		</not>
+        	</preConditions>
+        	<update tableName="cxml_transport">
+        		<column name="directory" valueNumeric="trim(directory) " />
+        		<where>directory IS NOT NULL</where>
+        	</update>
+        	
+        	<update tableName="cxml_transport">
+        		<column name="initialDirectory" valueNumeric="trim(initialDirectory) "/>
+        		<where>initialDirectory IS NOT NULL</where>
+        	</update>
+        	
+        	<update tableName="cxml_destination">
+        		<column name="directory" valueNumeric="trim(directory) "/>
+        		<where>directory IS NOT NULL</where>
+        	</update>
+        </changeSet>
+        
+        <changeSet author="mike.strauch" id="6_A_003b">
+        	<preConditions onFail="MARK_RAN">
+        		<not>
+        			<or>
+	        			<dbms type="mysql"/>
+	        			<dbms type="oracle"/>
+        			</or>
+        		</not>
+        	</preConditions>
+        	<update tableName="cxml_transport">
+        		<column name="directory" valueNumeric="rtrim(ltrim(directory)) " />
+        		<where>directory IS NOT NULL</where>
+        	</update>
+        	
+        	<update tableName="cxml_transport">
+        		<column name="initialDirectory" valueNumeric="rtrim(ltrim(initialDirectory)) "/>
+        		<where>initialDirectory IS NOT NULL</where>
+        	</update>
+        	
+        	<update tableName="cxml_destination">
+        		<column name="directory" valueNumeric="rtrim(ltrim(directory)) "/>
+        		<where>directory IS NOT NULL</where>
+        	</update>
+        </changeSet>
+ 
+</databaseChangeLog>

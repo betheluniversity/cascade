@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hannonhill.cascade.model.dom.ConnectorPageMapping" table="cxml_con_page_mapping">
+		<id name="id" type="string" unsaved-value="null" >
+			<generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+		</id>
+		<many-to-one 
+			name="connector" 
+			column="connectorId"
+			class="com.hannonhill.cascade.model.dom.Connector"
+		/>	
+		<many-to-one	
+			name="page"
+			column="pageId"
+			class="com.hannonhill.cascade.model.dom.Page"
+		/>
+		<property name="foreignId" type="text"/>
+		<property name="creationDate"/>
+	</class>
+</hibernate-mapping>	

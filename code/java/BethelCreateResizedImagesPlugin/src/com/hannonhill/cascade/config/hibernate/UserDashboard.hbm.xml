@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.hannonhill.cascade.model.dom.UserDashboard" table="cxml_user_dashboard">
+        <id name="id" type="string" unsaved-value="null" >
+            <generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+        </id>   
+        <many-to-one    
+            name="user"
+            column="userId"
+            class="com.hannonhill.cascade.model.dom.User"
+        />
+        <many-to-one 
+            name="site"
+            column="siteId"
+            not-null="false"
+            class="com.hannonhill.cascade.model.dom.Site"
+        />
+        
+        <property name="config" type="text"/>            
+    </class>
+</hibernate-mapping>

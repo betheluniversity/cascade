@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <union-subclass name="com.hannonhill.cascade.model.dom.AssetFactoryPluginParameter" table="cxml_assetfactorypluginparam" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+    	<many-to-one name="assetFactoryPlugin">
+			<column name="assetFactoryPluginId"/>
+		</many-to-one>
+		<property name="paramName"/>
+		<property name="value" column="paramValue"/>
+	</union-subclass>
+</hibernate-mapping>

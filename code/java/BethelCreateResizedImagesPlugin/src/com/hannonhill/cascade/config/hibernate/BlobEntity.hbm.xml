@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.BlobEntity" table="cxml_blob" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		<property name="data" length="2147483647"/>
+	</union-subclass>
+</hibernate-mapping>

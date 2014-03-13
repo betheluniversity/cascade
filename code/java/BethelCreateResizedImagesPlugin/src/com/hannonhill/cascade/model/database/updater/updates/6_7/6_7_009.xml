@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <!-- Id field must be the next consecutive value for the current release
+         	  Example: if the last update id was 6_7_002, your update would be
+         	  6_7_003
+          -->
+        <changeSet author="mike.strauch" id="6_7_009">
+           <sql>
+				update cxml_roles set
+				toolsAbilities = toolsAbilities + power(2, 12) /* View/Restore Access for user recycle bin */
+            </sql>
+            <modifySql dbms="mysql">
+                <replace replace="power" with="pow"/>
+            </modifySql>            
+        </changeSet> 
+</databaseChangeLog>

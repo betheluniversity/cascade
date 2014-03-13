@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" depends-on="liquibase">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="autoStartup" value="false"/>
+		<property name="quartzProperties">
+			<bean class="com.hannonhill.cascade.model.quartz.util.QuartzPropertiesFactoryBean">
+				<property name="databaseInformation" ref="dbInfo"/>
+				<property name="properties">
+					<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+						<property name="location" value="classpath:com/hannonhill/cascade/config/quartz/quartz.properties"/>
+					</bean>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+				<property name="customMysqlProperties">
+					<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+						<property name="location" value="classpath:com/hannonhill/cascade/config/quartz/custom.mysql.properties"/>
+					</bean>
+				</property>
+				<property name="customMssqlProperties">
+					<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+						<property name="location" value="classpath:com/hannonhill/cascade/config/quartz/custom.mssql.properties"/>
+					</bean>
+				</property>
+				<property name="customOracleProperties">
+					<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+						<property name="location" value="classpath:com/hannonhill/cascade/config/quartz/custom.oracle.properties"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="publishPollTrigger"/>
+				<ref bean="workflowExpirationTrigger"/>
+				<ref bean="workflowStepEscalationTrigger"/>
+				<ref bean="googleAnalyticsSyncTrigger"/>
+				<ref bean="purgeDeletedTrigger"/>
+				<ref bean="deleteExpiredTrigger"/>
+				<ref bean="loginDestroyerTrigger"/>
+				<ref bean="publishExpireAndPurgeTrigger"/>
+				<ref bean="rebuildEntityRelationsTrigger"/>
+  			<ref bean="historyTrimTrigger"/>
+			</list>
+		</property>
+		<property name="jobDetails">
+			<list>
+				<ref bean="publishRequestCheckJob"/>
+				<ref bean="workflowExpirationCheckJob"/>
+				<ref bean="workflowStepEscalationJob"/>
+				<ref bean="googleAnalyticsSyncJob"/>
+				<ref bean="purgeDeletedJob" />
+				<ref bean="deleteExpiredJob" />
+				<ref bean="loginDestroyerJob" />
+				<ref bean="publishExpireAndPurgeJob"/>
+				<ref bean="rebuildEntityRelationsJob"/>
+  			<ref bean="historyTrimJob"/>
+			</list>
+		</property>
+		<property name="schedulerContextAsMap">
+			<map>
+				<entry key="serviceProvider" value-ref="serviceProvider" />
+				<entry key="cacheDiscarderProvider" value-ref="cacheDiscarderProvider"/>
+			</map>
+		</property>
+		<!-- Listeners that are notified for ALL trigger events -->
+		<property name="globalTriggerListeners">
+			<list>
+				<bean class="com.hannonhill.cascade.model.quartz.TriggerLogger"/>
+			</list>
+		</property>
+		<!-- this must be set, or else changes to our jobs won't update in the persistent storage -->
+		<property name="overwriteExistingJobs" value="true"/>
+	</bean>
+	
+	<bean id="currentTime" class="java.util.Date"/> 
+	
+	<bean id="publishPollTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Publish Request Check"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="repeatInterval" value="5000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="priority" value="8"/>
+		<property name="description" value="Checks for publish requests"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Publish Request Check"/>
+	</bean>	
+	
+	<bean id="publishRequestCheckJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.PublishServiceImpl$RequestPollJob" />
+		<property name="name" value="Publish Request Check"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to periodically poll the publish queue for new jobs" />
+	</bean>
+	
+	<bean id="publishExpireAndPurgeTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Publish Expire and Purge"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="repeatInterval" value="60000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Expires and purges requests that are not being checked in"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Publish Expire and Purge"/>
+	</bean>	
+	
+	<bean id="publishExpireAndPurgeJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.PublishServiceImpl$RequestExpirationAndPurgeJob" />
+		<property name="name" value="Publish Expire and Purge"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to periodically expire and purge publish requests that are not being checked in" />
+	</bean>
+	
+	<bean id="workflowExpirationTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Workflow Expiration Check"/>
+		<property name="repeatInterval" value="600000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Checks for expired workflows"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Workflow Expiration Check"/>
+	</bean>
+	
+	<bean id="workflowExpirationCheckJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.WorkflowServiceImpl$WorkflowExpirationJob" />
+		<property name="name" value="Workflow Expiration Check"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to check for workflows that have expired" />
+	</bean>	
+	
+	<bean id="workflowStepEscalationTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Workflow Step Escalation Check"/>
+		<property name="repeatInterval" value="600000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Checks for steps that need to be escalated"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Workflow Step Escalation Check"/>
+	</bean>
+
+	<bean id="workflowStepEscalationJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.WorkflowServiceImpl$WorkflowStepEscalationJob" />
+		<property name="name" value="Workflow Step Escalation Check"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to check for workflows that are on steps that need to be escalated" />
+	</bean>	
+	
+	<bean id="googleAnalyticsSyncTrigger" class="org.quartz.CronTrigger">
+		<property name="name" value="Google Analytics data synchronization"/>
+		<property name="startTime" ref="currentTime" />
+		<property name="cronExpression" value="0 30 1 * * ?"/> <!-- Run at 1:30am every day -->
+		<property name="description" value="Synchronizes Asset Stats for each Google Analytics Connector"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Google Analytics data synchronization"/>
+	</bean>
+
+	<bean id="googleAnalyticsSyncJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.stats.AssetStatsServiceImpl$GoogleAnalyticsSyncJob" />
+		<property name="name" value="Google Analytics data synchronization"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Synchronizes Asset Stats for each Google Analytics Connector" />
+	</bean>
+
+	<bean id="purgeDeletedTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Recycle Bin Purge Deleted"/>
+		<property name="repeatInterval" value="600000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Permanently removes entities from the database that are marked as deleted."/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Recycle Bin Purge Deleted"/>
+	</bean>
+	
+	<bean id="purgeDeletedJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.ScheduleServiceImpl$RecycleBinJob" />
+		<property name="name" value="Recycle Bin Purge Deleted"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to permanently remove entities from the database that are marked as deleted." />
+	</bean>	
+	
+	<bean id="deleteExpiredTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Recycle Bin Delete Expired"/>
+		<property name="repeatInterval" value="3600000"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Marks entities in the Recycle Bin as deleted and ready to purge if they have past the expiration period"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Recycle Bin Delete Expired"/>
+	</bean>
+	
+	<bean id="deleteExpiredJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.ScheduleServiceImpl$RecycleBinExpirationJob" />
+		<property name="name" value="Recycle Bin Delete Expired"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to mark entities in the Recycle Bin as deleted and ready to purge if they have past the expiration period"/>
+	</bean>	
+	
+	<bean id="loginDestroyerTrigger" class="org.quartz.SimpleTrigger">
+		<property name="name" value="Login Destroyer"/>
+		<property name="repeatInterval" ref="checkinDurationBeforeInvalid"/>
+		<property name="repeatCount" value="-1" />
+		<property name="startTime" ref="currentTime" />
+		<property name="priority" value="6"/>
+		<property name="description" value="Destroys login records that are not managed by an active session"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Login Destroyer" />
+	</bean>
+	
+	<bean id="loginDestroyerJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.LoginServiceImpl$LoginDestroyer" />
+		<property name="name" value="Login Destroyer"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to destroy login records that are not managed by an active session"/>
+	</bean>
+	<bean id="rebuildEntityRelationsTrigger" class="org.quartz.CronTrigger">
+		<property name="name" value="Rebuilding of entity relations"/>
+		<property name="startTime" ref="currentTime" />
+		<property name="cronExpression" value="0 0 1 * * ?"/> <!-- Run at 1am every day -->
+		<property name="description" value="Rebuilds entity relations for each asset in the system and realigns the links"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="Rebuilding of entity relations"/>
+	</bean>
+	<bean id="rebuildEntityRelationsJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.xml.RelationshipManagementServiceImpl$RebuildEntityRelationsJob" />
+		<property name="name" value="Rebuilding of entity relations"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Rebuilds entity relations for each asset in the system and realigns the links" />
+	</bean>
+  <bean id="historyTrimTrigger" class="org.quartz.CronTrigger">
+		<property name="name" value="User History Trim"/>
+		<property name="cronExpression" value="0 0 1 * * ?"/><!-- run at 1am -->
+		<property name="startTime" ref="currentTime" />
+		<property name="description" value="Trims each user's history down to a max size"/>
+		<property name="jobGroup" value="DEFAULT"/>
+		<property name="jobName" value="User History Trim"/>
+	</bean>
+  <bean id="historyTrimJob" class="org.quartz.JobDetail">
+		<property name="jobClass" value="com.hannonhill.cascade.model.service.HistoryServiceImpl$TrimHistoryJob" />
+		<property name="name" value="User History Trim"/>
+		<property name="group" value="DEFAULT"/>
+		<property name="description" value="Job to trim user history down to a max size"/>
+	</bean>
+</beans>

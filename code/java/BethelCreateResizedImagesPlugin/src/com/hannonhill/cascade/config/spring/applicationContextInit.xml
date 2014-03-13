@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- Cluster wide locker -->
+	<bean id="clusterLocker" class="com.hannonhill.cascade.model.database.RowLockingClusterLocker">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="databaseInformation" ref="dbInfo"/>
+		<property name="tableName" value="cxml_lock"/>
+		<property name="createTableCommands">
+			<map>
+				<entry key="MYSQL" value="CREATE TABLE cxml_lock (name VARCHAR(250) NOT NULL, PRIMARY KEY(name)) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci"/>
+				<entry key="SQLSERVER" value="CREATE TABLE cxml_lock (name VARCHAR(250) NOT NULL, PRIMARY KEY(name))"/>
+				<entry key="ORACLE" value="CREATE TABLE cxml_lock (name VARCHAR2(250) NOT NULL, CONSTRAINT PK_CXML_LOCK PRIMARY KEY(name))"/>
+			</map>
+		</property>
+		<property name="lockTableCommands">
+			<map>
+				<entry key="MYSQL" value="SELECT * FROM TABLE_NAME WHERE name=? FOR UPDATE"/>
+				<entry key="SQLSERVER" value="SELECT * FROM TABLE_NAME WITH (ROWLOCK, UPDLOCK) WHERE name=?"/>
+				<entry key="ORACLE" value="SELECT * FROM TABLE_NAME WHERE name=? FOR UPDATE"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="conditionalExecutor" class="com.hannonhill.cascade.model.database.DataSourceVersionConditionalExecutor">
+		<property name="clusterLocker" ref="clusterLocker"/>
+		<property name="dataSource" ref="dataSource"/>
+		<property name="databaseInformation" ref="dbInfo"/>
+		<property name="selectCommand" value="SELECT value FROM cxml_condexec WHERE name=?"/>
+		<property name="insertCommand" value="INSERT INTO cxml_condexec (name, value) VALUES (?,?)"/>
+		<property name="updateCommand" value="UPDATE cxml_condexec SET value=? WHERE name=?"/>
+		<property name="existsCommand" value="SELECT count(*) FROM cxml_condexec"/>
+		<property name="createCommands">
+			<map>
+				<entry key="MYSQL" value="CREATE TABLE cxml_condexec (name VARCHAR(250)NOT NULL , value VARCHAR(250) NOT NULL) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci"/>
+				<entry key="SQLSERVER" value="CREATE TABLE cxml_condexec (name VARCHAR(250) NOT NULL, value VARCHAR(250) NOT NULL)"/>
+				<entry key="ORACLE" value="CREATE TABLE cxml_condexec (name VARCHAR2(250) NOT NULL, value VARCHAR2(250) NOT NULL)"/>
+			</map>
+		</property>
+ 	</bean> 	
+ 
+    <bean id="liquibaseInstallLog" class="com.hannonhill.cascade.model.database.updater.LiquibaseLogInstaller" init-method="init">
+    </bean> 
+	
+	<bean id="liquibase" class="liquibase.spring.SpringLiquibase" depends-on="liquibaseInstallLog">
+      <property name="dataSource" ref="dataSource" />
+      <property name="changeLog" value="classpath:com/hannonhill/cascade/model/database/updater/updates/master.xml" />
+    </bean>
+	
+	<bean id="postInitializationTasks" class="com.hannonhill.cascade.model.init.StartupTasks" init-method="initialize" depends-on="serviceProviderHolder,liquibase">
+		<property name="tasks">
+			<list>
+				<bean class="com.hannonhill.cascade.model.init.LastDatabaseUpdateVersionCheck">
+					<property name="dataSource" ref="dataSource"/>
+				</bean>
+				<bean class="com.hannonhill.cascade.model.init.ConfigureLogging"/>
+				
+				<!--  Fix Asset Factory Paths CSCD-6444 -->
+				<bean class="com.hannonhill.cascade.model.init.RebuildAssetFactoryPaths">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+			
+				<!-- Ensure all users have a hash -->
+				<bean class="com.hannonhill.cascade.model.init.EnsureUserHashes">
+					<property name="serviceProvider" ref="serviceProvider"/>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+				
+				<!--  <bean class="com.hannonhill.cascade.model.database.EnsureDefaultMetadataSetTask">
+					<property name="serviceProvider" ref="serviceProvider"/>
+				    <property name="dataSource" ref="dataSource"/>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>-->
+				
+				<!-- initialization routine that creates database paths for all system area assets -->
+				
+				<!-- <bean class="com.hannonhill.cascade.model.database.SystemAreaPathBuilderImpl">
+				    <property name="serviceProvider" ref="serviceProvider"/>
+				    <property name="dataSource" ref="dataSource"/>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean> -->
+				
+				<!-- initialization routines that update system xml for xml records and structured data records -->
+				
+				<bean class="com.hannonhill.cascade.model.init.UpdateSystemXMLInitialization">
+					<property name="xmlUpdater">
+						<bean class="com.hannonhill.cascade.xml.XMLUpdater">
+							<property name="serviceProvider" ref="serviceProvider" />
+							<property name="structuredDataOptimizer">
+								<bean class="com.hannonhill.cascade.xml.StructuredDataOptimizerImpl">
+									<property name="databaseInformation" ref="dbInfo" />
+									<property name="dataSource" ref="dataSource" />
+									<property name="conditionalExecutor" ref="conditionalExecutor"/>
+								</bean>
+							</property>
+							<property name="dataSource" ref="dataSource"/>
+						</bean>
+					</property>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+				
+				<!-- Initialize transport passwords -->
+				
+				<bean class="com.hannonhill.cascade.model.init.EncryptTransportPasswordInitialization">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+							
+				<!-- initialization routine for updating entity relationships if none are set -->
+				
+				<bean class="com.hannonhill.cascade.model.init.EntityRelationshipInitialization">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+				
+				<bean class="com.hannonhill.cascade.model.init.RebuildEntityRelationships">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+
+				<!-- initialization routines that updates simple permissions objects to ACLs -->
+				
+				<bean class="com.hannonhill.cascade.model.init.RescheduleDynamicTriggers">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor" />
+				</bean>
+				
+				<!-- Clear all scheduled jobs if necessary -->
+				<bean class="com.hannonhill.cascade.model.init.RebuildReviewAndExpirationJobs">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+					<property name="scheduler" ref="scheduler"/>
+				</bean>
+				
+				<!-- Create jobs for all of the expiring entities if necessary -->
+				
+				<bean class="com.hannonhill.cascade.model.init.InitializeExpiringEntityJobs">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+				
+				<!-- Create jobs for reviewable assets -->
+				
+				<bean class="com.hannonhill.cascade.model.init.InitializeReviewableEntityJobs">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+				
+				<!-- Create jobs for all of the scheduled publishes if necessary -->
+				
+				<bean class="com.hannonhill.cascade.model.init.InitializeScheduledPublishJobs">
+					<property name="serviceProvider" ref="serviceProvider" />
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>
+			
+				<!-- Rebuild the search index if necessary -->
+				
+				<bean class="com.hannonhill.cascade.model.init.RebuildSearchIndexStartupTask">
+					<property name="serviceProvider" ref="serviceProvider"/>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+					<property name="directoryProvider" ref="luceneDirectoryProvider"/>
+				</bean>
+				
+				<bean class="com.hannonhill.cascade.model.init.DatabseEngineAndEncodingCheck">
+					<property name="databaseInformation" ref="dbInfo"/>
+					<property name="dataSource" ref="dataSource"/>
+				</bean>
+
+				<!-- Attempt to import configuration files into the database -->
+				
+				<bean class="com.hannonhill.cascade.model.init.ConfigurationFileImporter">
+					<property name="serviceProvider" ref="serviceProvider"/>
+					<property name="conditionalExecutor" ref="conditionalExecutor"/>
+				</bean>	
+
+        <!-- Run database optimizer to fix structured data and delete orphaned records -->
+        <bean class="com.hannonhill.cascade.model.init.OptimizeStructuredDataStartupTask">
+          <property name="serviceProvider" ref="serviceProvider" />
+          <property name="conditionalExecutor" ref="conditionalExecutor"/>
+        </bean>
+			</list>
+		</property>
+	</bean>	
+	
+	<!--  Start the quartz layer after all other startup tasks
+		  Deadlock situations can occur if Quartz startup is included with the the other startup tasks
+	 -->
+	<bean id="quartzInitializationTask" init-method="execute" class="com.hannonhill.cascade.model.init.QuartzLayerStartupTask" depends-on="postInitializationTasks">
+		<property name="scheduler" ref="scheduler"/>
+	</bean>
+	
+	<bean id="luceneDirectoryProvider" class="com.hannonhill.cascade.model.search.FilesystemDirectoryProvider">
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" depends-on="liquibase">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingResources">
+			<ref bean="hibernateMappings" />
+		</property>
+		<property name="hibernateProperties">
+			<bean class="com.hannonhill.cascade.model.database.HibernatePropertiesFactoryBean">
+                <property name="vendortToHibProps">
+                    <map>
+                        <entry key="mysql">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/mysql.properties" />
+                            </bean>
+                        </entry>
+						<entry key="mssql_2005">
+							<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+								<property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/mssql2005.properties" />
+							</bean>
+						</entry>
+						<entry key="mssql_2008">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/mssql2008.properties" />
+                            </bean>
+                        </entry>
+                        <entry key="mssql_2012">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/mssql2012.properties" />
+                            </bean>
+                        </entry>
+                        <entry key="oracle_9">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/oracle9i.properties" />
+                            </bean>
+                        </entry>
+                        <entry key="oracle_10">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/oracle10g.properties" />
+                            </bean>
+                        </entry>
+                        <entry key="oracle_11">
+                            <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                                <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/oracle11g.properties" />
+                            </bean>
+                        </entry>
+                    </map>
+                </property>
+                <property name="commonProperties">
+                    <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+                        <property name="location" value="classpath:com/hannonhill/cascade/config/hibernate/props/common.properties" />
+                    </bean>
+                </property>
+				<property name="schemaPropertyName" value="hibernate.default_schema"/>
+				<property name="schemaName" ref="schemaName" />
+                <property name="dbInfo" ref="dbInfo" />
+			</bean>
+		</property>
+		<property name="eventListeners">
+			<map>
+				<entry key="delete">
+					<bean class="com.hannonhill.cascade.config.hibernate.event.CascadeDeleteEntityListener">
+						<property name="cacheDiscarderProvider" ref="cacheDiscarderProvider"/>
+						<property name="serviceProvider" ref="serviceProvider"/>
+					</bean>
+				</entry>
+				<entry key="save">
+					<bean class="com.hannonhill.cascade.config.hibernate.event.CascadeSaveEventListener">
+						<property name="serviceProvider" ref="serviceProvider"/>
+					</bean>
+				</entry>
+				<entry key="merge">
+					<bean class="com.hannonhill.cascade.config.hibernate.event.CascadeMergeEventListener">
+						<property name="serviceProvider" ref="serviceProvider"/>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>

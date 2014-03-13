@@ -1,0 +1,173 @@
+<HTML>
+ <HEAD>
+  <!-- $MVD$:app("MicroVision WebExpress","769") -->
+  <!-- $MVD$:template("","0","0") -->
+  <!-- $MVD$:color("18","c0ffc0","Wintertree","0") -->
+  <!-- $MVD$:color("19","c0ff","Or1","0") -->
+  <TITLE>Sentry Spelling Checker Engine - Java Servlet Example</TITLE>
+ </HEAD>
+ <BODY BGCOLOR="WHITE">
+  <H1>
+   Sentry Spelling Checker Engine<BR>
+   Java SDK<BR>
+   Servlet Example</H1>
+  <P>
+   This directory contains an example program that implements a Java 
+   servlet which checks the spelling of text submitted by a Web-based 
+   client to a Web server. The servlet interacts with the client user to 
+   dispose of any spelling errors detected.</P>
+  <H3>
+   How to build SpellingServlet</H3>
+  <P>
+   <FONT COLOR="RED"><B><I>IMPORTANT</I></B></FONT>: Before building 
+   SpellingServlet, you must modify SpellingServlet.java to set your 
+   license key. See the &quot;Getting Started&quot; chapter of the 
+   Sentry Programmer's Guide for further instructions.</P>
+  <P>
+   Ensure the CLASSPATH setting includes the directory or JAR file 
+   containing the Sentry class library (packages com.wintertree.ssce and 
+   com.wintertree.util). Also, because the Java Servlet SDK (JSDK) is 
+   not part of the JDK, you may need to include the JSDK class library 
+   in your CLASSPATH.</P>
+  <P>
+   Run the following command:</P>
+  <UL>
+   <LISTING>
+    javac SpellingServlet.java</LISTING>
+   </UL>
+  <P>
+   Note that two versions of the Java Servlet API exist. One version 
+   uses <B>getAttribute</B> and <B>setAttribute</B> methods to save and 
+   retrieve state, while the other version uses <B>getValue</B> and <B>setValue</B> 
+   methods. If error messages are displayed by the Java compiler 
+   regarding <B>getAttribute</B> and <B>setAttribute</B> methods, edit 
+   SpellingServlet.java and replace <B>getAttribute</B> with <B>getValue</B>,
+    and <B>setAttribute</B> with <B>setValue</B>.</P>
+  <H3>
+   How to install and configure SpellingServlet</H3>
+  <P>
+   Instructions for setting up a servlet vary from server to server, so 
+   consult your server's documentation for detailed instructions. You 
+   will need to consider the following issues:</P>
+  <UL>
+   <LI>
+   <P>
+    Where is the SpellingServlet.class file located, and how does the 
+    server know where it is located? A common configuration is to create 
+    a directory structure like this on the server's file system:</P>
+   </UL><BLOCKQUOTE><BLOCKQUOTE><PRE>spellingservlet/<BR>    web-inf/<BR>        classes</PRE><P>
+     The SpellingServlet.class file is copied to the web-inf/classes 
+     directory. The Web server is configured to locate the servlet in the 
+     spellingservlet directory. Again, your Web server may use a different organization.</P>
+    </BLOCKQUOTE>
+   </BLOCKQUOTE>
+  <UL>
+   <LI>
+   <P>
+    Where are the .html files and lexicon files used by SpellingServlet 
+    located? SpellingServlet reads some template HTML files at run-time, 
+    and also opens lexicon files (ssceam.tlx and ssceam2.clx). These 
+    files are accessed using the getResourceAsStream method of the 
+    ServletContext class, and the files are accessed in the servlet's 
+    root directory like this:</P>
+   </UL><BLOCKQUOTE><BLOCKQUOTE><PRE>stream = getServletContext().getResourceAsStream(&quot;/ssceam.tlx&quot;);</PRE><P>
+     Typically, these files would be located in the spellingservlet 
+     directory, but you should consult your Web server's documentation for 
+     information on how the servlet's root directory is located.</P>
+    </BLOCKQUOTE>
+   </BLOCKQUOTE>
+  <UL>
+   <LI>
+   <P>
+    Where is the Sentry class library located? You may need to add the 
+    location of the class library or ssce.jar file to your server's CLASSPATH.</P>
+   <LI>
+   <P>
+    How is SpellingServlet's URL configured? Some Web servers require (or 
+    permit) a URL alias to be defined which maps to the server's 
+    location, so the full path to the servlet doesn't have to be entered 
+    in the URL that invokes it.</P>
+   </UL>
+  <P>
+   Before SpellingServlet can be used, you must copy ssceam.tlx and 
+   ssceam2.clx from the ssce/runtime/lex directory to SpellingServlet's 
+   root directory (the same directory containing the .html files used by SpellingServlet).</P>
+  <P>
+   SpellingServlet does not currently use servlet initialization parameters.</P>
+  <H3>
+   SpellingServlet design</H3>
+  <P>
+   When SpellingServlet is initially invoked by a client, it responds 
+   with the HTML contained in the file entryform.html. This file 
+   contains a simple form with a text area and buttons labeled 
+   &quot;Check Spelling&quot; and &quot;Submit.&quot; When the user 
+   clicks the Check Spelling button, the form is POSTed to 
+   SpellingServlet, which begins checking the spelling of text entered 
+   in the form's text area.</P>
+  <P>
+   If a spelling error is detected, SpellingServlet returns the contents 
+   of spellingform.html. This file contains a spelling-checker form 
+   which shows the text being spell-checked (with the misspelled word 
+   highlighted), suggested replacements for a misspelled word, a place 
+   to enter a correction, and buttons to dispose of the spelling error: 
+   Ignore, Ignore All, Change, and Change All. After the user disposes 
+   of the spelling problem, the next spelling error is located and 
+   spellingform.html is returned again.</P>
+  <P>
+   When all words in the text have been checked (or the user cancels the 
+   spelling check by pressing the Stop Checking button in 
+   spellingform.html), the contents of spellingcomplete.html is 
+   returned, which displays the status of the spelling check and gives 
+   the user the opportunity to submit the text to the server or continue 
+   editing it.</P>
+  <P>
+   All buttons in the forms displayed by SpellingServlet which require 
+   an action on the server have the same name (&quot;action&quot;) and 
+   result in the form being posted to SpellingServlet. SpellingServlet 
+   looks at the &quot;action&quot; button's value (i.e., its label) to 
+   determine which button was pressed and therefore which action to 
+   perform. Note that each button must have a different label for this 
+   to work.</P>
+  <P>
+   The HTML returned to the client is read from an HTML template file. 
+   Certain tokens in the file are replaced at run time with dynamic 
+   value. This approach is simpler than generating HTML on the fly using 
+   Java code, and has the added benefit of allowing the HTML template 
+   file to be edited using an HTML editor.</P>
+  <P>
+   SpellingServlet may be invoked by more than one client 
+   simultaneously, so issues relating to thread safety must be 
+   considered. One instance of SpellingSession is created for each 
+   servlet session, each time the Check Spelling button is pressed. Each 
+   client therefore has its own SpellingSession, and SpellingSessions 
+   are not shared among servlet sessions.</P>
+  <P>
+   For maximum thread safety, each instance of SpellingSession should 
+   open its own set of lexicons, so lexicons are not shared among 
+   servlet sessions. There are two drawbacks to this approach. First, 
+   lexicons typically consume at least as much memory as their 
+   corresponding files (the American English lexicon uses over 300K, for 
+   example). A Web site hosting multiple simultaneous spelling checks 
+   would need enough memory available to support all clients' lexicons. 
+   The second drawback is that time is required to open lexicons and 
+   load them into memory. If the text being checked was typically small 
+   (less than 1K for example), the time required to check the spelling 
+   of the text would be dwarfed by the initialization time.</P>
+  <P>
+   The approach used by SpellingServlet is to share lexicons among all 
+   servlet sessions. Lexicons opened as InputStreams are safe, provided 
+   words are not added to or removed from them at run time. 
+   SpellingServlet's init method opens ssceam.tlx and ssceam2.clx as 
+   InputStreams, which means the lexicons are safely sharable.</P>
+  <P>
+   A temporary MemTextLexicon is created for each servlet session when 
+   the Check Spelling button is pressed. This temporary lexicon is not shared.</P>
+  <P ALIGN=CENTER>
+   <HR ALIGN=CENTER WIDTH="100%" SIZE="2">
+   </P>
+  <P ALIGN=CENTER>
+   Copyright &copy; <A HREF="http://www.wintertree-software.com">Wintertree
+    Software Inc</A>.<BR>
+   $Id$
+ </BODY>
+</HTML>

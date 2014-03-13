@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.Folder" discriminator-value="FOL" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity">	
+	
+		<property name="root" column="folderIsRoot"/>
+		
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		
+		<!-- Dublin metadata entity relationships -->
+		<property name="displayName"/>
+		<property name="title"/>
+		<property name="summary" type="text"/>
+		<property name="teaser" type="text"/>
+		<property name="keywords" type="text"/>
+		<property name="description" type="text"/>
+		<property name="author"/>
+		<property name="startDate"/>
+		<property name="endDate"/>
+		<property name="reviewDate"/>
+		
+		<many-to-one
+			name="metadataSet"
+			column="metadataSetId"
+		/>		
+		
+		<!-- expiring entity relationships -->
+		<property name="expirationNoticeSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="firstExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="secondExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<many-to-one 
+			name="expirationFolder"
+			column="expirationFolderId"
+		/>
+		
+		<set name="workflowDefinitions" table="cxml_folders_wfdefs">
+			<key column="folderId"/>
+			<many-to-many column="definitionId" class="com.hannonhill.cascade.model.dom.WorkflowDefinition"/>
+		</set>
+		
+		<many-to-one
+			name="publishMergeFolder"
+			column="folderPublishMergeFolderId"
+		/>
+		
+		<set name="children" inverse="true" cascade="all">
+			<key column="parentFolderId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.FolderContainedEntity"/>
+		</set>
+		
+		<property name="inheritWorkflowDefinitions" column="folderWorkflowInheritDefs" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+
+		<property name="workflowRequired" column="folderWorkflowRequire" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+		
+		<set name="references" inverse="true" cascade="delete">
+			<key column="referenceFolderId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.Reference" />
+		</set>
+		
+		<set name="publishSetRecords" inverse="true" cascade="delete">
+			<key column="folderId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.PublishSetRecord" />
+		</set>
+		
+		<set name="indexingBlocks" inverse="true">
+			<key column="blockIndexedFolderId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.Block" />
+		</set>
+		
+		<property name="shouldBeIndexed" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="shouldBePublished" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="lastDatePublished" />
+		<property
+			name="lastPublishedById" 
+			column="lastPublishedBy"
+		/>
+		
+		<many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.Folder"
+     	/>
+		
+	</subclass>
+</hibernate-mapping>

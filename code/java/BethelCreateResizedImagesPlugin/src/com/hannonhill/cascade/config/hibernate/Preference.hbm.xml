@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.hannonhill.cascade.model.dom.Preference" table="cxml_preferences" >
+    <composite-id name="preferencePK" class="com.hannonhill.cascade.model.dom.PreferencePK">
+        <key-property name="key" column="fieldName" type="string"/>
+        <key-property name="username" />
+    </composite-id>
+        <property name="value" column="fieldValue" type="text"/>
+
+    </class>
+</hibernate-mapping>

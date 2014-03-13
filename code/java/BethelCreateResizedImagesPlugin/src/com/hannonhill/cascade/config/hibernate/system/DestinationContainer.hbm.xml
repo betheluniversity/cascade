@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hannonhill.cascade.model.dom.DestinationContainer" table="cxml_target" abstract="true">
+		<id name="id" type="string" unsaved-value="null" >
+			<generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+		</id>
+		<discriminator column="destinationContainerType" type="string" length="3" />
+		
+		<set name="children" inverse="true" cascade="all">
+			<key column="targetId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.Destination"/>
+		</set>
+		
+			
+		<!-- NamedEntity fields -->
+		<property name="name"/>
+		
+		<!-- MetadataAwareEntity fields -->
+		<many-to-one
+			name="metadata"
+			column="metadataId"
+			cascade="all"
+			unique="true"
+		/>
+			
+		<!-- VersionedEntity fields -->
+		<property name="currentVersion" column="isCurrentVersion" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+		<property name="versionDate"/>
+			
+		<!-- PermissionsCapableEntity fields -->
+		<many-to-one
+			name="permissions"
+			column="permissionsId"
+			cascade="all"
+		/>
+
+		<!-- SystemAreaEntity fields -->
+		<property name="path"/>				
+		<many-to-one 
+			name="site" 
+			column="siteId"
+			class="com.hannonhill.cascade.model.dom.Site"
+		/>
+		
+		<!-- SystemAreaEntityContainer fields -->
+		<property name="root" column="isRoot" />			
+	</class>
+</hibernate-mapping>

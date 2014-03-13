@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.DynamicMetadataField" table="cxml_dynamicmetadatafield" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<property name="value" column="metadataValue"/>
+		
+		<many-to-one 
+			unique="true" 
+			name="owningEntity"
+			column="owningEntityId"
+		/>
+		
+	</union-subclass>
+</hibernate-mapping>

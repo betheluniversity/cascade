@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hannonhill.cascade.model.dom.Group" table="cxml_group">
+		<id name="id" column="name" type="string" unsaved-value="null" />
+		
+		<property name="cssClasses" type="text" />
+		<property name="allowFontFormatting" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="allowFontAssignment" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="allowTextFormatting" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="allowViewSource" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="allowInsertTable" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="allowInsertImage" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+        
+        <set name="roles" table="cxml_role_group_link">
+            <key column="groupName"/>
+            <many-to-many class="com.hannonhill.cascade.model.dom.Role" column="roleId"/>
+        </set>
+        
+        <set name="roleGroupSites" inverse="true" table="cxml_role_group_site_link" cascade="all-delete-orphan">
+			<key column="groupName"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.RoleGroupSite"/>
+		</set>
+        
+        <set name="users" table="cxml_group_membership">
+            <key column="groupName"/>
+            <many-to-many class="com.hannonhill.cascade.model.dom.User" column="userName"/>
+        </set>
+        
+        <many-to-one 
+        	name="startingPage"
+        	column="startingPageId"
+        	class="com.hannonhill.cascade.model.dom.Page"
+        />
+        
+        <many-to-one 
+        	name="baseFolder"
+        	column="baseFolderId"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		
+		<many-to-one 
+			name="baseAssetFactoryContainer"
+			column="baseAssetFactoryContainerId"
+			class="com.hannonhill.cascade.model.dom.AssetFactoryContainer"
+		/>			
+	</class>
+</hibernate-mapping>

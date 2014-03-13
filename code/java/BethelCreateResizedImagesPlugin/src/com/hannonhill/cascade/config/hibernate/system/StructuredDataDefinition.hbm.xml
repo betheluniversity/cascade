@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.StructuredDataDefinition" table="cxml_structureddatadefinition" extends="com.hannonhill.cascade.model.dom.SystemAreaEntity">
+		<many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.StructuredDataDefinitionContainer"
+		/>
+		
+		<many-to-one 
+			name="xmlData"
+			column="xmlId"
+			cascade="all"
+			access="field"
+            lazy="false"
+		/>
+	</union-subclass>
+</hibernate-mapping>

@@ -1,0 +1,9 @@
+<font size="1" face="Verdana">
+	<br/>
+	#if( ${staticMessage} )
+	<br/>${staticMessage}
+	#end
+	#if( ${exceptionMessage} )
+	<br/>${exceptionMessage}
+	#end
+</font>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="6_0_004">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_004"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mysql"/>
+            </preConditions>
+           
+            <addAutoIncrement tableName="cxml_roles" columnName="id" columnDataType="INT(11)"/>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->                
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+            </modifySql>
+            
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="6_0_004_oracle">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_004"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="oracle"/>
+            </preConditions>
+            
+            <createSequence sequenceName="cxml_role_id_seq"  startValue="6" incrementBy="1" />
+            
+            <sql>create trigger cxml_role_id_inc_trigger
+before insert on cxml_roles
+for each row
+begin
+select cxml_role_id_seq.nextval into :new.id from dual;
+            </sql>
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="6_0_004_mssql">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_004"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mssql"/>
+            </preConditions>
+            
+            <createTable tableName="cxml_roles_temp">
+                <column name="id" type="INT" autoIncrement="true">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="roleName" type="NVARCHAR(250)"></column>
+                <column name="adminAreaAbilities" type="INT"></column>
+                <column name="securityAreaAbilities" type="INT"></column>
+                <column name="homeAreaAbilities" type="INT"></column>
+                <column name="toolsAbilities" type="INT"></column>
+                <column name="globalAbilities" type="INT"></column>
+            </createTable>
+            
+            <sql>
+	            INSERT INTO cxml_roles_temp (roleName, adminAreaAbilities, securityAreaAbilities, homeAreaAbilities, toolsAbilities, globalAbilities)
+				SELECT roleName, adminAreaAbilities, securityAreaAbilities, homeAreaAbilities, toolsAbilities, globalAbilities
+				FROM cxml_roles ORDER BY cxml_roles.id;
+            </sql>
+            
+            <dropForeignKeyConstraint baseTableName="cxml_role_group_link" constraintName="FK_ROLEGROUP_ROLE"/>
+            <dropForeignKeyConstraint baseTableName="cxml_role_user_link" constraintName="FK_ROLEUSER_ROLE"/>
+            <dropForeignKeyConstraint baseTableName="cxml_site_roles" constraintName="FK_SITEROLES_ROLE"/>            
+            
+            <dropTable tableName="cxml_roles"/>
+            
+            <renameTable newTableName="cxml_roles" oldTableName="cxml_roles_temp"/>
+            
+            <addForeignKeyConstraint referencedTableName="cxml_roles" baseColumnNames="roleId" baseTableName="cxml_role_group_link" referencedColumnNames="id" constraintName="FK_ROLEGROUP_ROLE"/>
+            <addForeignKeyConstraint referencedTableName="cxml_roles" baseColumnNames="roleId" baseTableName="cxml_role_user_link" referencedColumnNames="id" constraintName="FK_ROLEUSER_ROLE"/>
+            <addForeignKeyConstraint referencedTableName="cxml_roles" baseColumnNames="roleId" baseTableName="cxml_site_roles" referencedColumnNames="id" constraintName="FK_SITES_ROLES_ROLE"/>
+            
+        </changeSet>
+ 
+</databaseChangeLog>

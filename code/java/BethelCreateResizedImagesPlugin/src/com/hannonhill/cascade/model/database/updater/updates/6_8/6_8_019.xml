@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+	<changeSet author="artur.tomusiak" id="6_8_019">
+		<update tableName="cxml_target">
+			<column name="publishEvery" value="23"/>
+			<where>publishEvery>24 and publishEveryTimeUnit='Hours'</where>
+		</update>
+
+		<update tableName="cxml_target">
+			<column name="daysOfWeekToPublish" value="1,2,3,4,5,6,7"/>
+			<column name="publishEveryTimeUnit" value="Days"/>
+			<where>(publishEvery=24 and publishEveryTimeUnit='Hours') or publishEveryTimeUnit='Days'</where>
+		</update>
+
+		<update tableName="cxml_site">
+			<column name="publishEvery" value="23"/>
+			<where>publishEvery>24 and publishEveryTimeUnit='Hours'</where>
+		</update>
+
+		<update tableName="cxml_site">
+			<column name="daysOfWeekToPublish" value="1,2,3,4,5,6,7"/>
+			<column name="publishEveryTimeUnit" value="Days"/>
+			<where>(publishEvery=24 and publishEveryTimeUnit='Hours') or publishEveryTimeUnit='Days'</where>
+		</update>
+
+		<update tableName="cxml_destination">
+			<column name="publishEvery" value="23"/>
+			<where>publishEvery>24 and publishEveryTimeUnit='Hours'</where>
+		</update>
+
+		<update tableName="cxml_destination">
+			<column name="daysOfWeekToPublish" value="1,2,3,4,5,6,7"/>
+			<column name="publishEveryTimeUnit" value="Days"/>
+			<where>(publishEvery=24 and publishEveryTimeUnit='Hours') or publishEveryTimeUnit='Days'</where>
+		</update>
+
+		<update tableName="cxml_publishset">
+			<column name="publishEvery" value="23"/>
+			<where>publishEvery>24 and publishEveryTimeUnit='Hours'</where>
+		</update>
+
+		<update tableName="cxml_publishset">
+			<column name="daysOfWeekToPublish" value="1,2,3,4,5,6,7"/>
+			<column name="publishEveryTimeUnit" value="Days"/>
+			<where>(publishEvery=24 and publishEveryTimeUnit='Hours') or publishEveryTimeUnit='Days'</where>
+		</update>
+	</changeSet>
+ 
+</databaseChangeLog>

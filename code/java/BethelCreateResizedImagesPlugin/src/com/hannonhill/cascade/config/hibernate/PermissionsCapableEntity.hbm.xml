@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.PermissionsCapableEntity" abstract="true" extends="com.hannonhill.cascade.model.dom.MetadataAwareEntity">
+		<many-to-one
+			name="permissions"
+			column="permissionsId"
+			cascade="all"
+		/>
+	</union-subclass>
+</hibernate-mapping>

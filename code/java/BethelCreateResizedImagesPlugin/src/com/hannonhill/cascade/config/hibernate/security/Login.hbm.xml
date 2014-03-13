@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.Login" table="cxml_login" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		<many-to-one 
+            name="user" 
+            column="username"
+        />
+        <property name="loginTime" />
+        <property name="lastSeen" />
+        <property name="remoteHost" />
+        <property name="valid" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+        <property name="lastViewedScreen">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.ViewScreen</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		<property name="assetId"/>
+		<property name="assetType"/>
+		<property name="bootMessageKey"/>
+		<property name="bootMessageArg"/>
+		<property name="sessionId"/>
+		<property name="sessionCheckIn"/>
+	</union-subclass>
+</hibernate-mapping>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean name="authProtectFilter" class="com.hannonhill.cascade.view.struts.security.AuthProtectFilter">
+		<property name="loginChecks" ref="loginChecks"/>
+		<property name="serviceProvider" ref="serviceProvider"/>
+		<property name="performLogin" ref="performLogin"/>
+		<!-- These paths are excluded from the filter 
+			
+			** Please note: Actions that are excluded from the auth protect filter
+			   cannot rely on the cascade thread local to get the current user
+			   name as this information will not be populated.  You must query 
+			   the session to get it. **
+		-->
+		<property name="excludes">
+			<set>
+				<value>/rss.act</value>
+				<value>/login.act</value>
+				<value>/loginsubmit.act</value>
+				<value>/logoff.act</value>
+				<value>/jupload</value>
+				<value>/css</value>
+				<value>/javascript</value>
+				<value>/images</value>
+				<value>/validateLogin.act</value>
+				<value>/render/embedded.act</value>
+				<value>/customauth</value>
+				<value>/wsindex.jsp</value>
+				<value>/wsindex.html</value>
+				<value>/wsindex.jws</value>
+				<value>/ws/services</value>
+				<value>/uploadLicense.act</value>
+				<value>/uploadLicenseSubmit.act</value>
+				<value>/uploadLdapConfig.act</value>
+				<value>/uploadLdapConfigSubmit.act</value>
+			</set>
+		</property>
+		<!-- these are the paths for which no redirection will happen when the user is not authenticated -->
+		<property name="noredirects">
+			<set>
+				<value>/ajax/</value>
+			</set>
+		</property>
+	</bean>
+	
+	<bean name="siteFilter" class="com.hannonhill.cascade.view.struts.request.SiteFilter" />
+</beans>

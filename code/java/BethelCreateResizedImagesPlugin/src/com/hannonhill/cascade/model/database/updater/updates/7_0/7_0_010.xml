@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="adam.griffis" id="7_0_009">
+        
+        	<createTable tableName="cxml_unpublishable">
+                <column name="id" type="VARCHAR(32)">
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CXML_UNPUBLISHABLE"/>
+                </column>
+                <column name="name" type="VARCHAR(250)"></column>
+                <column name="title" type="VARCHAR(250)"></column>
+                <column name="cmsId" type="VARCHAR(32)"></column>
+                <column name="originalType" type="VARCHAR(32)"></column>
+                <column name="siteId" type="INT(10)"></column>
+                <column name="accountId" type="INT(10)"></column>
+                <column name="cachePath" type="VARCHAR(250)"></column>
+                <column name="publishPath" type="VARCHAR(250)"></column>
+                <column name="fullName" type="VARCHAR(250)"></column>
+                <column name="parentEntityId" type="VARCHAR(32)"></column>
+                <column name="destinationId" type="VARCHAR(32)"></column>
+                <column name="connectorId" type="VARCHAR(32)"></column>
+                <column name="unpublishType" type="TINYINT(4)"></column>
+            </createTable>
+            
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+	            <replace replace="TINYINT(1)" with="TINYINT"/>
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="TINYINT(5)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+
+            <modifySql dbms="mysql"> 
+                <append value="engine=innodb"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+            	<replace replace="TINYINT(1)" with="NUMBER(1)"/>
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <replace replace="TINYINT(5)" with="NUMBER(5)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 
+	Spring Configuration file for the publisher
+	
+	Author:  Collin VanDyck
+	Version: $Id$
+	Since:   4.0
+-->
+<beans>
+	<bean id="publisher"
+		class="com.hannonhill.cascade.model.publish.PublisherImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="jobConverter">
+			<ref bean="jobconverter" />
+		</property>
+		<property name="jobExpansion">
+			<ref bean="jobexpansion" />
+		</property>
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+		<property name="renderPool">
+			<ref bean="renderpool" />
+		</property>
+		<property name="transmissionPool">
+			<ref bean="transmissionpool" />
+		</property>
+		<property name="jobTracker">
+			<ref bean="jobtracker" />
+		</property>
+		<property name="reportsHandler">
+			<ref bean="reportshandler" />
+		</property>
+		<property name="triggerPool">
+			<ref bean="triggerpool" />
+		</property>
+	</bean>
+	<bean id="publishcontext"
+		class="com.hannonhill.cascade.model.publish.PublishContextImpl">
+		<property name="reports">
+			<ref bean="publishreports" />
+		</property>
+	</bean>
+	<bean id="faileddestinations"
+		class="com.hannonhill.cascade.model.publish.transmit.FailedDestinationsImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+	</bean>
+	<bean id="triggerpool"
+		class="com.hannonhill.cascade.model.publish.trigger.PublishTriggerPoolImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+	</bean>
+	<bean id="jobtracker"
+		class="com.hannonhill.cascade.model.publish.job.JobTrackerImpl">
+	</bean>
+	<bean id="publishabilitydetermine"
+		class="com.hannonhill.cascade.model.publish.job.PublishabilityDetermineImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+	</bean>
+	<bean id="publishreports"
+		class="com.hannonhill.cascade.model.publish.PublishReportsImpl">
+		<property name="jobTracker">
+			<ref bean="jobtracker" />
+		</property>
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="failedDestinations">
+			<ref bean="faileddestinations" />
+		</property>
+	</bean>
+	<bean id="reportshandler"
+		class="com.hannonhill.cascade.model.publish.ReportsHandlerImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+	</bean>
+	<bean id="jobconverter"
+		class="com.hannonhill.cascade.model.publish.job.JobConverterImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+	</bean>
+	<bean id="jobexpansion"
+		class="com.hannonhill.cascade.model.publish.job.JobExpansionImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+		<property name="targetBaseFolderLookup">
+			<ref bean="targetbasefolderlookup" />
+		</property>
+		<property name="publishabilityDetermine">
+			<ref bean="publishabilitydetermine" />
+		</property>
+	</bean>
+	<bean id="targetbasefolderlookup"
+		class="com.hannonhill.cascade.model.publish.job.TargetBaseFolderLookupImpl">
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+	</bean>
+	<bean id="renderpool"
+		class="com.hannonhill.cascade.model.publish.render.RenderPoolImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="transmissionPool">
+			<ref bean="transmissionpool" />
+		</property>
+		<property name="jobRenderFactory">
+			<ref bean="jobrenderfactory" />
+		</property>
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+		<property name="publishabilityDetermine">
+			<ref bean="publishabilitydetermine" />
+		</property>
+		<property name="failedDestinations">
+			<ref bean="faileddestinations" />
+		</property>
+		<property name="publisher">
+			<ref bean="publisher" />
+		</property>
+	</bean>
+	<bean id="transmissionpool"
+		class="com.hannonhill.cascade.model.publish.transmit.TransmissionPoolImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="transportSenderFactory">
+			<ref bean="transportsenderfactory" />
+		</property>
+		<property name="triggerPool">
+			<ref bean="triggerpool" />
+		</property>
+		<property name="failedDestinations">
+			<ref bean="faileddestinations" />
+		</property>
+	</bean>
+	<bean id="entitylocator"
+		class="com.hannonhill.environment.manager.locate.EntityLocatorImpl">
+	</bean>
+	<bean id="transportsenderfactory"
+		class="com.hannonhill.cascade.model.publish.transmit.TransportSenderFactoryImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+	</bean>
+	<bean id="jobrenderfactory"
+		class="com.hannonhill.cascade.model.publish.render.JobRenderFactoryImpl">
+		<property name="context">
+			<ref bean="publishcontext" />
+		</property>
+		<property name="locator">
+			<ref bean="entitylocator" />
+		</property>
+	</bean>
+</beans>

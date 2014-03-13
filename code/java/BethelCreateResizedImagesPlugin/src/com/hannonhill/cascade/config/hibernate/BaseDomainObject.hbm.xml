@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hannonhill.cascade.model.dom.BaseDomainObject" abstract="true">
+		<id name="id" type="string" unsaved-value="null" >
+			<generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+		</id>
+	</class>
+</hibernate-mapping>

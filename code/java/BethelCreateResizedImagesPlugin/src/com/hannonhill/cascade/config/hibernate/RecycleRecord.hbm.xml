@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.RecycleRecord" table="cxml_recyclerecord" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		
+		<property name="recycledBy" />
+		<property name="recycledOn" />
+		
+		<property name="recycleState">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.RecycleState</param>
+				<param name="type">-6</param>
+			</type>
+		</property>
+		
+		<many-to-one 
+			name="originalContainer"
+			column="parentFolderId"
+			class="com.hannonhill.cascade.model.dom.Folder"
+		/>
+		<many-to-one 
+			name="unpublishRequest"
+			column="unpublishRequestId"
+			class="com.hannonhill.cascade.model.dom.PublishRequest"
+		/>
+		<set name="recycledAssets" inverse="true">
+			<key column="recycleRecordId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.FolderContainedEntity"/>
+		</set>
+		<many-to-one 
+			name="baseEntity" 
+			column="baseEntityId"
+			class="com.hannonhill.cascade.model.dom.FolderContainedEntity"
+		/>
+	</union-subclass>
+</hibernate-mapping>

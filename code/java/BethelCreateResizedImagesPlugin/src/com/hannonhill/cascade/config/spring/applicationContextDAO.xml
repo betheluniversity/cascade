@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- aggregates the different DAOs into one service which may be injected -->
+	<bean id="daoProvider" class="com.hannonhill.cascade.model.dao.DAOProviderImpl">
+		<property name="optimizeDatabaseDAO" ref="optimizeDatabaseDAO" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="groupDAO" ref="groupDAO" />
+		<property name="roleDAO" ref="roleDAO" />
+		<property name="aclEntryDAO" ref="aclEntryDAO" />
+		<property name="permissionsDAO" ref="permissionsDAO" />
+		<property name="messageDAO" ref="messageDAO"/>
+		<property name="auditDAO" ref="auditDAO"/>
+		<property name="blobEntityDAO" ref="blobEntityDAO"/>
+		<property name="lockDAO" ref="lockDAO" />
+		<property name="blockDAO" ref="blockDAO" />
+		<property name="fileDAO" ref="fileDAO" />
+		<property name="templateDAO" ref="templateDAO" />
+		<property name="referenceDAO" ref="referenceDAO" />		
+		<property name="folderDAO" ref="folderDAO" />
+		<property name="dynamicMetadataFieldDAO" ref="dynamicMetadataFieldDAO"/>
+		<property name="dynamicMetadataFieldDefinitionDAO" ref="dynamicMetadataFieldDefinitionDAO"/>
+		<property name="transportDAO" ref="transportDAO"/>
+		<property name="transportContainerDAO" ref="transportContainerDAO"/>
+		<property name="assetFactoryDAO" ref="assetFactoryDAO"/>
+		<property name="destinationDAO" ref="destinationDAO"/>
+		<property name="destinationContainerDAO" ref="siteDestinationContainerDAO"/>
+		<property name="targetDAO" ref="targetDAO"/>
+		<property name="metadataDAO" ref="metadataDAO"/>
+		<property name="metadataSetDAO" ref="metadataSetDAO"/>
+		<property name="metadataSetContainerDAO" ref="metadataSetContainerDAO"/>
+		<property name="pageDAO" ref="pageDAO"/>
+		<property name="pageConfigurationDAO" ref="pageConfigurationDAO"/>
+		<property name="pageConfigurationSetDAO" ref="pageConfigurationSetDAO"/>
+		<property name="pageConfigurationSetContainerDAO" ref="pageConfigurationSetContainerDAO"/>
+		<property name="pageRegionDAO" ref="pageRegionDAO"/>
+		<property name="assetFactoryContainerDAO" ref="assetFactoryContainerDAO"/>
+		<property name="structuredDataDAO" ref="structuredDataDAO"/>
+		<property name="workflowDefinitionContainerDAO" ref="workflowDefinitionContainerDAO"/>
+		<property name="workflowDefinitionDAO" ref="workflowDefinitionDAO"/>
+		<property name="symlinkDAO" ref="symlinkDAO"/>
+		<property name="publishSetDAO" ref="publishSetDAO"/>
+		<property name="publishSetRecordDAO" ref="publishSetRecordDAO"/>
+		<property name="publishSetContainerDAO" ref="publishSetContainerDAO"/>
+		<property name="structuredDataDefinitionDAO" ref="structuredDataDefinitionDAO"/>
+		<property name="structuredDataDefinitionContainerDAO" ref="structuredDataDefinitionContainerDAO"/>
+		<property name="workflowDAO" ref="workflowDAO"/>
+		<property name="workflowTriggerDAO" ref="workflowTriggerDAO"/>
+		<property name="workflowTriggerParameterDAO" ref="workflowTriggerParameterDAO"/>
+		<property name="workflowActionDAO" ref="workflowActionDAO"/>
+		<property name="workflowStepDAO" ref="workflowStepDAO"/>
+		<property name="workflowHistoryDAO" ref="workflowHistoryDAO"/>
+		<property name="preferenceDAO" ref="preferenceDAO"/>
+		<property name="configurationFileDAO" ref="configurationFileDAO"/>
+		<property name="publishRequestDAO" ref="publishRequestDAO"/>
+		<property name="entityRelationDAO" ref="entityRelationDAO"/>
+		<property name="recycleRecordDAO" ref="recycleRecordDAO" />
+		<property name="typeToSysContainerDAO" ref="typeToSysContainerDAO" />
+		<property name="typeToSysEntityDAO" ref="typeToSysEntityDAO" />
+		<property name="typeToFolderContainedEntityDAO" ref="typeToFolderContainedEntityDAO" />
+		<property name="lexiconDAO" ref="lexiconDAO" />
+		<property name="loginDAO" ref="loginDAO" />
+		<property name="systemPropertyDAO" ref="systemPropertyDAO" />
+		<property name="versionManagementDAO" ref="versionManagementDAO" />
+		<property name="folderContentsDAO" ref="folderContentsDAO" />
+		<property name="contentTypeContainerDAO" ref="contentTypeContainerDAO"/>
+		<property name="contentTypeDAO" ref="contentTypeDAO"/>		
+		<property name="systemAreaEntityContainerContentsDAO" ref="systemAreaEntityContainerContentsDAO"/>
+		<property name="formatDAO" ref="formatDAO"/>
+		<property name="siteDAO" ref="siteDAO"/>
+		<property name="connectorContainerDAO" ref="connectorContainerDAO"/>
+		<property name="connectorDAO" ref="connectorDAO"/>
+		<property name="connectorPageMappingDAO" ref="connectorPageMappingDAO"/>
+		<property name="assetStatsDAO" ref="assetStatsDAO"/>
+		<property name="unpublishableEntityDAO" ref="unpublishableEntityDAO" />
+		<property name="historyItemDAO" ref="historyItemDAO"/>
+        <property name="dashboardDAO" ref="dashboardDAO"/>
+	</bean>
+	
+	<bean id="typeToFolderContainedEntityDAO" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key-ref="fileEntityType" value-ref="fileDAO" />
+				<entry key-ref="folderEntityType" value-ref="folderDAO" />
+				<entry key-ref="pageEntityType" value-ref="pageDAO" />
+				<entry key-ref="templateEntityType" value-ref="templateDAO" />
+				<entry key-ref="referenceEntityType" value-ref="referenceDAO" />
+				<entry key-ref="symlinkEntityType" value-ref="symlinkDAO" />
+				<entry key-ref="blockEntityType" value-ref="blockDAO" />
+				<entry key-ref="velocityFormatEntityType" value-ref="formatDAO"/>
+				<entry key-ref="xsltFormatEntityType" value-ref="formatDAO"/>
+				<entry key-ref="formatEntityType" value-ref="formatDAO"/>
+				
+				<!-- Include specific types of blocks -->
+				<entry key-ref="structuredDataBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="feedBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="indexBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="textBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="xmlBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="twitterFeedBlockEntityType" value-ref="blockDAO"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Map of entity types to system area entity container DAOs -->
+	<bean id="typeToSysContainerDAO" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key-ref="assetFactoryContainerType" value-ref="assetFactoryContainerDAO" />
+				<entry key-ref="metadataSetContainerType" value-ref="metadataSetContainerDAO" />
+				<entry key-ref="pageConfigurationSetContainerType" value-ref="pageConfigurationSetContainerDAO" />
+				<entry key-ref="publishSetContainerType" value-ref="publishSetContainerDAO" />
+				<entry key-ref="structuredDataDefinitionContainerType" value-ref="structuredDataDefinitionContainerDAO" />
+				<entry key-ref="workflowDefinitionContainerType" value-ref="workflowDefinitionContainerDAO" />
+				<entry key-ref="targetType" value-ref="targetDAO" />
+				<entry key-ref="siteDestinationContainerType" value-ref="siteDestinationContainerDAO" />
+				<entry key-ref="transportContainerType" value-ref="transportContainerDAO" />
+				<entry key-ref="contentTypeContainerType" value-ref="contentTypeContainerDAO"/>
+				<entry key-ref="connectorContainerType" value-ref="connectorContainerDAO"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Map of entity types to system area entity DAOs -->
+	<bean id="typeToSysEntityDAO" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key-ref="assetFactoryType" value-ref="assetFactoryDAO" />
+				<entry key-ref="assetFactoryContainerType" value-ref="assetFactoryContainerDAO" />
+				<entry key-ref="metadataSetType" value-ref="metadataSetDAO" />
+				<entry key-ref="metadataSetContainerType" value-ref="metadataSetContainerDAO" />
+				<entry key-ref="pageConfigurationSetType" value-ref="pageConfigurationSetDAO" />
+				<entry key-ref="pageConfigurationSetContainerType" value-ref="pageConfigurationSetContainerDAO" />
+				<entry key-ref="publishSetType" value-ref="publishSetDAO" />
+				<entry key-ref="publishSetContainerType" value-ref="publishSetContainerDAO" />
+				<entry key-ref="structuredDataDefinitionType" value-ref="structuredDataDefinitionDAO" />
+				<entry key-ref="structuredDataDefinitionContainerType" value-ref="structuredDataDefinitionContainerDAO" />
+				<entry key-ref="workflowDefinitionType" value-ref="workflowDefinitionDAO" />
+				<entry key-ref="workflowDefinitionContainerType" value-ref="workflowDefinitionContainerDAO" />
+				<entry key-ref="targetType" value-ref="targetDAO" />
+				<entry key-ref="siteDestinationContainerType" value-ref="siteDestinationContainerDAO" />
+				<entry key-ref="destinationType" value-ref="destinationDAO" />
+				<entry key-ref="transportType" value-ref="transportDAO" />
+				<entry key-ref="transportContainerType" value-ref="transportContainerDAO" />
+				<entry key-ref="contentTypeContainerType" value-ref="contentTypeContainerDAO"/>
+				<entry key-ref="contentTypeType" value-ref="contentTypeDAO"/>
+				<entry key-ref="connectorContainerType" value-ref="connectorContainerDAO"/>
+				<entry key-ref="connectorType" value-ref="connectorDAO"/>
+				<entry key-ref="wordPressConnectorType" value-ref="connectorDAO"/>
+				<entry key-ref="twitterConnectorType" value-ref="connectorDAO"/>
+				<entry key-ref="googleAnalyticsConnectorType" value-ref="connectorDAO"/>
+				<entry key-ref="facebookConnectorType" value-ref="connectorDAO"/>
+                <entry key-ref="spectateConnectorType" value-ref="connectorDAO"/>
+				
+				<!-- Include specific transport types -->
+				<entry key-ref="fsTransportType" value-ref="transportDAO" />
+				<entry key-ref="ftpTransportType" value-ref="transportDAO" />
+				<entry key-ref="dbTransportType" value-ref="transportDAO" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="typeToSearchableEntityDAO" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key-ref="fileEntityType" value-ref="fileDAO" />
+				<entry key-ref="folderEntityType" value-ref="folderDAO" />
+				<entry key-ref="pageEntityType" value-ref="pageDAO" />
+				<entry key-ref="templateEntityType" value-ref="templateDAO" />
+				<entry key-ref="referenceEntityType" value-ref="referenceDAO" />
+				<entry key-ref="symlinkEntityType" value-ref="symlinkDAO" />
+				<entry key-ref="blockEntityType" value-ref="blockDAO" />
+				<entry key-ref="velocityFormatEntityType" value-ref="formatDAO"/>
+				<entry key-ref="xsltFormatEntityType" value-ref="formatDAO"/>
+				<entry key-ref="formatEntityType" value-ref="formatDAO"/>
+				
+				<!-- Include specific types of blocks -->
+				<entry key-ref="structuredDataBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="feedBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="indexBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="textBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="xmlBlockEntityType" value-ref="blockDAO" />
+				<entry key-ref="twitterFeedBlockEntityType" value-ref="blockDAO"/>
+
+				<entry key-ref="assetFactoryType" value-ref="assetFactoryDAO" />
+				<entry key-ref="assetFactoryContainerType" value-ref="assetFactoryContainerDAO" />
+				<entry key-ref="metadataSetType" value-ref="metadataSetDAO" />
+				<entry key-ref="metadataSetContainerType" value-ref="metadataSetContainerDAO" />
+				<entry key-ref="pageConfigurationSetType" value-ref="pageConfigurationSetDAO" />
+				<entry key-ref="pageConfigurationSetContainerType" value-ref="pageConfigurationSetContainerDAO" />
+				<entry key-ref="publishSetType" value-ref="publishSetDAO" />
+				<entry key-ref="publishSetContainerType" value-ref="publishSetContainerDAO" />
+				<entry key-ref="structuredDataDefinitionType" value-ref="structuredDataDefinitionDAO" />
+				<entry key-ref="structuredDataDefinitionContainerType" value-ref="structuredDataDefinitionContainerDAO" />
+				<entry key-ref="workflowDefinitionType" value-ref="workflowDefinitionDAO" />
+				<entry key-ref="workflowDefinitionContainerType" value-ref="workflowDefinitionContainerDAO" />
+				<entry key-ref="targetType" value-ref="targetDAO" />
+				<entry key-ref="siteDestinationContainerType" value-ref="siteDestinationContainerDAO" />
+				<entry key-ref="destinationType" value-ref="destinationDAO" />
+				<entry key-ref="transportType" value-ref="transportDAO" />
+				<entry key-ref="transportContainerType" value-ref="transportContainerDAO" />
+				<entry key-ref="contentTypeContainerType" value-ref="contentTypeContainerDAO"/>
+				<entry key-ref="contentTypeType" value-ref="contentTypeDAO"/>
+				<entry key-ref="connectorContainerType" value-ref="connectorContainerDAO"/>
+				<entry key-ref="connectorType" value-ref="connectorDAO"/>
+				<entry key-ref="wordPressConnectorType" value-ref="connectorDAO"/>
+				<entry key-ref="twitterConnectorType" value-ref="connectorDAO"/>
+				<entry key-ref="googleAnalyticsConnectorType" value-ref="connectorDAO"/>
+				
+				<!-- Include specific transport types -->
+				<entry key-ref="fsTransportType" value-ref="transportDAO" />
+				<entry key-ref="ftpTransportType" value-ref="transportDAO" />
+				<entry key-ref="dbTransportType" value-ref="transportDAO" />
+							
+				<entry key-ref="userType" value-ref="userDAO" />
+				<entry key-ref="groupType" value-ref="groupDAO" />
+				<entry key-ref="roleType" value-ref="roleDAO" />
+				<entry key-ref="siteType" value-ref="siteDAO" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="daoProviderHolder" class="com.hannonhill.cascade.model.dao.DAOProviderHolderBean" destroy-method="destroy">
+		<property name="DAOProvider" ref="daoProvider"/>
+	</bean>
+
+	<bean id="baseDAO" class="com.hannonhill.cascade.model.dao.hibernate.BaseHibernateDAO" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory"/>
+		<property name="validatorProvider" ref="validatorProvider"/>
+		<property name="newMenuCache" ref="newMenuCache" />
+		<property name="indexBlockRenderCacheFactory" ref="indexBlockRenderCacheFactory" />
+		<property name="cacheDiscarderProvider" ref="cacheDiscarderProvider"/>
+	</bean>
+
+	<bean id="userDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateUserDAO" parent="baseDAO" />
+	<bean id="groupDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateGroupDAO" parent="baseDAO" />
+	<bean id="roleDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateRoleDAO" parent="baseDAO" />
+	<bean id="aclEntryDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateACLEntryDAO" parent="baseDAO" />
+	<bean id="permissionsDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePermissionsDAO" parent="baseDAO" />
+	<bean id="messageDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateMessageDAO" parent="baseDAO" />
+	<bean id="auditDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateAuditDAO" parent="baseDAO" />
+	<bean id="blobEntityDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateBlobEntityDAO" parent="baseDAO" />
+	<bean id="lockDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateLockDAO" parent="baseDAO" />
+	<bean id="referenceDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateReferenceDAO" parent="baseDAO" />
+	<bean id="blockDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateBlockDAO" parent="baseDAO" />
+	<bean id="configurationFileDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateConfigurationFileDAO" parent="baseDAO" />
+	<bean id="fileDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateFileDAO" parent="baseDAO" />
+	<bean id="templateDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateTemplateDAO" parent="baseDAO" />
+	<bean id="folderDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateFolderDAO" parent="baseDAO" />
+	<bean id="dynamicMetadataFieldDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateDynamicMetadataFieldDAO" parent="baseDAO"/>
+	<bean id="dynamicMetadataFieldDefinitionDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateDynamicMetadataFieldDefinitionDAO" parent="baseDAO"/>
+	<bean id="transportDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateTransportDAO" parent="baseDAO"/>
+	<bean id="transportContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateTransportContainerDAO" parent="baseDAO"/>
+	<bean id="assetFactoryDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateAssetFactoryDAO" parent="baseDAO"/>
+	<bean id="destinationDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateDestinationDAO" parent="baseDAO"/>
+	<bean id="siteDestinationContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateSiteDestinationContainerDAO" parent="baseDAO"/>
+	<bean id="targetDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateTargetDAO" parent="baseDAO"/>
+	<bean id="metadataDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateMetadataDAO" parent="baseDAO"/>
+	<bean id="metadataSetDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateMetadataSetDAO" parent="baseDAO"/>
+	<bean id="metadataSetContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateMetadataSetContainerDAO" parent="baseDAO"/>
+	<bean id="pageDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePageDAO" parent="baseDAO"/>
+	<bean id="pageConfigurationDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePageConfigurationDAO" parent="baseDAO"/>
+	<bean id="pageConfigurationSetDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePageConfigurationSetDAO" parent="baseDAO"/>
+	<bean id="pageConfigurationSetContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePageConfigurationSetContainerDAO" parent="baseDAO"/>
+	<bean id="pageRegionDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePageRegionDAO" parent="baseDAO"/>
+	<bean id="assetFactoryContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateAssetFactoryContainerDAO" parent="baseDAO"/>
+	<bean id="structuredDataDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateStructuredDataDAO" parent="baseDAO"/>
+	<bean id="workflowDefinitionContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowDefinitionContainerDAO" parent="baseDAO"/>
+	<bean id="workflowDefinitionDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowDefinitionDAO" parent="baseDAO"/>
+	<bean id="structuredDataDefinitionDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateStructuredDataDefinitionDAO" parent="baseDAO"/>
+	<bean id="structuredDataDefinitionContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateStructuredDataDefinitionContainerDAO" parent="baseDAO"/>
+	<bean id="symlinkDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateSymlinkDAO" parent="baseDAO"/>
+	<bean id="publishSetDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePublishSetDAO" parent="baseDAO"/>
+	<bean id="publishSetRecordDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePublishSetRecordDAO" parent="baseDAO"/>
+	<bean id="publishSetContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePublishSetContainerDAO" parent="baseDAO"/>
+	<bean id="workflowDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowDAO" parent="baseDAO"/>
+	<bean id="workflowTriggerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowTriggerDAO" parent="baseDAO"/>
+	<bean id="workflowTriggerParameterDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowTriggerParameterDAO" parent="baseDAO"/>
+	<bean id="workflowStepDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowStepDAO" parent="baseDAO"/>
+	<bean id="workflowActionDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowActionDAO" parent="baseDAO"/>
+	<bean id="workflowHistoryDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateWorkflowHistoryDAO" parent="baseDAO"/>
+	<bean id="preferenceDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePreferenceDAO" parent="baseDAO"/>
+	<bean id="publishRequestDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernatePublishRequestDAO" parent="baseDAO"/>
+	<bean id="entityRelationDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateEntityRelationDAO" parent="baseDAO"/>
+	<bean id="recycleRecordDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateRecycleRecordDAO" parent="baseDAO"/>
+	<bean id="loginDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateLoginDAO" parent="baseDAO"/>
+	<bean id="systemPropertyDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateSystemPropertyDAO" parent="baseDAO"/>
+	<bean id="versionManagementDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateVersionManagementDAO" parent="baseDAO"/>
+	<bean id="folderContentsDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateFolderContentsDAO" parent="baseDAO"/>
+	<bean id="contentTypeDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateContentTypeDAO" parent="baseDAO"/>
+	<bean id="contentTypeContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateContentTypeContainerDAO" parent="baseDAO"/>
+	<bean id="systemAreaEntityContainerContentsDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateSystemAreaEntityContainerContentsDAO" parent="baseDAO"/>
+	<bean id="formatDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateFormatDAO" parent="baseDAO"/>
+	<bean id="siteDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateSiteDAO" parent="baseDAO"/>
+	<bean id="connectorContainerDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateConnectorContainerDAO" parent="baseDAO"/>
+	<bean id="connectorDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateConnectorDAO" parent="baseDAO"/>				
+	<bean id="connectorPageMappingDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateConnectorPageMappingDAO" parent="baseDAO"/>		
+	<bean id="assetStatsDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateAssetStatsDAO" parent="baseDAO" />
+	<bean id="unpublishableEntityDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateUnpublishableEntityDAO" parent="baseDAO" />
+	<bean id="historyItemDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateHistoryItemDAO" parent="baseDAO"/>
+    <bean id="dashboardDAO" class="com.hannonhill.cascade.model.dao.hibernate.HibernateDashboardDAO" parent="baseDAO"/>
+					
+	<!-- JDBC DAOs -->
+	<bean id="lexiconDAO" class="com.hannonhill.cascade.model.dao.JdbcLexiconDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="optimizeDatabaseDAO" class="com.hannonhill.cascade.model.dao.jdbc.JDBCOptmizeDatabaseDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="dbInfo" ref="dbInfo"/>
+	</bean>
+	
+	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="globalRollbackOnParticipationFailure" value="true"/>
+	</bean>
+	
+	<bean id="hibernateMappings" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- Publish items -->
+				<value>/com/hannonhill/cascade/config/hibernate/PublishRequest.hbm.xml</value>
+				<!-- Security items -->
+				<value>/com/hannonhill/cascade/config/hibernate/security/User.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/security/Group.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/security/Role.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/security/Login.hbm.xml</value>
+				<!-- Permissions -->
+				<value>/com/hannonhill/cascade/config/hibernate/permissions/ACLEntry.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/permissions/Permissions.hbm.xml</value>
+				<!-- Workflow-->
+				<value>/com/hannonhill/cascade/config/hibernate/Workflow.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/WorkflowTrigger.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/WorkflowTriggerParameter.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/WorkflowAction.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/WorkflowStep.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/WorkflowHistory.hbm.xml</value>
+				<!-- Miscellaneous -->
+				<value>/com/hannonhill/cascade/config/hibernate/Message.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/PageRegion.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/PageConfiguration.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/Audit.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/BlobEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/Lock.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/Metadata.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/XMLData.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/StructuredData.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/Preference.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/AssetFactoryPlugin.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/AssetFactoryPluginParameter.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/ConfigurationFile.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/RecycleRecord.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/SystemProperty.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/stats/AssetStats.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/UnpublishableEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/HistoryItem.hbm.xml</value>
+                <value>/com/hannonhill/cascade/config/hibernate/UserDashboard.hbm.xml</value>
+				<!-- Home area assets -->
+				<value>/com/hannonhill/cascade/config/hibernate/home/Block.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/File.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Template.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Folder.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Page.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/XSLTFormat.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Symlink.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Reference.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/VelocityFormat.hbm.xml</value>
+				<!-- Admin area assets -->
+				<value>/com/hannonhill/cascade/config/hibernate/system/DynamicMetadataField.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/DynamicMetadataFieldDefinition.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/MetadataSet.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/MetadataSetContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/PageConfigurationSet.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/PageConfigurationSetContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/StructuredDataDefinition.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/StructuredDataDefinitionContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/Transport.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/FTPTransport.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/FileSystemTransport.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/DatabaseTransport.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/AssetFactory.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/AssetFactoryContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/Destination.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/DestinationContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/SiteDestinationContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/Target.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/WorkflowDefinition.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/WorkflowDefinitionContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/PublishSet.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/PublishSetRecord.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/PublishSetContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/EntityRelation.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/ContentType.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/ContentTypePageConfiguration.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/ContentTypeContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/TransportContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/Site.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/RoleUserSite.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/RoleGroupSite.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/ConnectorContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/Connector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/ConnectorParameter.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/WordPressConnector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/StatusUpdateConnector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/TwitterConnector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/FacebookConnector.hbm.xml</value>
+                <value>/com/hannonhill/cascade/config/hibernate/system/SpectateConnector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/GoogleAnalyticsConnector.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/ConnectorContentTypeLink.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/ConnectorPageMapping.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/ConnectorContentTypeLinkParam.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/helper/InlineEditableField.hbm.xml</value>
+				<!-- Abstract classes -->
+				<value>/com/hannonhill/cascade/config/hibernate/BaseDomainObject.hbm.xml</value>				
+				<value>/com/hannonhill/cascade/config/hibernate/NamedEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/VersionedEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/LockingEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/MetadataAwareEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/PermissionsCapableEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/FolderContainedEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/SystemAreaEntity.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/system/SystemAreaEntityContainer.hbm.xml</value>
+				<value>/com/hannonhill/cascade/config/hibernate/home/Format.hbm.xml</value>	
+			</list>
+		</constructor-arg>
+	</bean>
+</beans>

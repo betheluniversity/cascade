@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <!--  For MySQL/SQL Server which support changing type without dataloss -->
+    <changeSet author="bradley.wagner" id="7_8_004a" failOnError="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <dbms type="oracle" />
+            </not>
+        </preConditions>
+        <modifyColumn tableName="cxml_destination">
+            <column name="publishingBaseURL" type="text"/>
+        </modifyColumn>
+    </changeSet>
+    
+    <!--  For Oracle: need to store data in temporary column -->
+    <changeSet author="bradley.wagner" id="7_8_004b" failOnError="true">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="oracle"/>
+        </preConditions>
+        
+        <addColumn tableName="cxml_destination">
+            <column name="publishBaseURLTemp" type="CLOB"/>
+        </addColumn>
+
+        <sql><![CDATA[
+            UPDATE cxml_destination SET publishBaseURLTemp = publishingBaseURL;
+        ]]></sql>
+
+        <dropColumn tableName="cxml_destination" columnName="publishingBaseURL"/>
+        <renameColumn tableName="cxml_destination" oldColumnName="publishBaseURLTemp" newColumnName="publishingBaseURL"/>
+    </changeSet>
+</databaseChangeLog>

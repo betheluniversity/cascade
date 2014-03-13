@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <changeSet author="aubrey.rhodes" id="6_0_023">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_023"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            <addColumn tableName="cxml_roles">
+                <column name="sitesAbilities" type="INT" defaultValue="0">
+                    <constraints nullable="false"/>
+                </column>
+            </addColumn>
+            <sql>
+               update cxml_roles set
+				    /* global abilities */
+				    sitesAbilities = 
+				    (
+				        power(2, 0)  + /* Access site management */
+				        power(2, 1)    /* Create sites */
+				    )    
+				    where id=5
+            </sql>
+            <modifySql dbms="mysql">
+                <replace replace="power" with="pow"/>
+            </modifySql>
+         </changeSet>
+ 
+</databaseChangeLog>

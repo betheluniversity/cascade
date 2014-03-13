@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.InlineEditableField" table="cxml_ct_inline_field" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		<property name="fieldName" type="text"/>		
+		<many-to-one 
+			name="contentType" 
+			column="contentTypeId"
+			class="com.hannonhill.cascade.model.dom.ContentType"
+		/>	
+		<property name="editableFieldType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.InlineEditableFieldType</param>
+				<param name="type">12</param>
+			</type>
+		</property>	
+		<property name="pageConfigurationName"/>
+		<property name="pageRegionName"/>
+		<property name="structuredDataPath" type="text"/>
+	</union-subclass>
+</hibernate-mapping>

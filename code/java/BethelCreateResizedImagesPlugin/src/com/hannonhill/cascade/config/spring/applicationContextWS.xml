@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="baseBuilder" class="com.hannonhill.cascade.webservice.builder.BaseDomBuilder" abstract="true">
+		<property name="serviceProvider" ref="serviceProvider" />
+	</bean>
+	
+	<!-- Home area builders -->
+	<bean id="indexBlockBuilder" class="com.hannonhill.cascade.webservice.builder.IndexBlockBuilder" parent="baseBuilder" />
+	<bean id="feedBlockBuilder" class="com.hannonhill.cascade.webservice.builder.FeedBlockBuilder" parent="baseBuilder" />
+	<bean id="textBlockBuilder" class="com.hannonhill.cascade.webservice.builder.TextBlockBuilder" parent="baseBuilder" />
+	<bean id="xmlBlockBuilder" class="com.hannonhill.cascade.webservice.builder.XMLBlockBuilder" parent="baseBuilder" />
+	<bean id="xhtmlDataDefinitionBlockBuilder" class="com.hannonhill.cascade.webservice.builder.XHTMLDataDefinitionBlockBuilder" parent="baseBuilder" />
+	
+	<bean id="fileBuilder" class="com.hannonhill.cascade.webservice.builder.FileBuilder" parent="baseBuilder" />
+	<bean id="folderBuilder" class="com.hannonhill.cascade.webservice.builder.FolderBuilder" parent="baseBuilder" />
+	<bean id="pageBuilder" class="com.hannonhill.cascade.webservice.builder.PageBuilder" parent="baseBuilder" />
+	<bean id="referenceBuilder" class="com.hannonhill.cascade.webservice.builder.ReferenceBuilder" parent="baseBuilder" />
+	<bean id="xsltFormatBuilder" class="com.hannonhill.cascade.webservice.builder.XSLTFormatBuilder" parent="baseBuilder" />
+	<bean id="velocityFormatBuilder" class="com.hannonhill.cascade.webservice.builder.VelocityFormatBuilder" parent="baseBuilder"/>
+	<bean id="symlinkBuilder" class="com.hannonhill.cascade.webservice.builder.SymlinkBuilder" parent="baseBuilder" />
+	<bean id="templateBuilder" class="com.hannonhill.cascade.webservice.builder.TemplateBuilder" parent="baseBuilder" />
+	
+	<!-- Security entity builders -->
+	<bean id="userBuilder" class="com.hannonhill.cascade.webservice.builder.UserBuilder" parent="baseBuilder" />
+	<bean id="groupBuilder" class="com.hannonhill.cascade.webservice.builder.GroupBuilder" parent="baseBuilder" />
+	<bean id="roleBuilder" class="com.hannonhill.cascade.webservice.builder.RoleBuilder" parent="baseBuilder" />
+	
+	<!-- System area entity builders -->
+	<bean id="assetFactoryBuilder" class="com.hannonhill.cascade.webservice.builder.AssetFactoryBuilder" parent="baseBuilder" />
+	<bean id="assetFactoryContainerBuilder" class="com.hannonhill.cascade.webservice.builder.AssetFactoryContainerBuilder" parent="baseBuilder" />
+	<bean id="connectorContainerBuilder" class="com.hannonhill.cascade.webservice.builder.ConnectorContainerBuilder" parent="baseBuilder" />	
+	<bean id="contentTypeBuilder" class="com.hannonhill.cascade.webservice.builder.ContentTypeBuilder" parent="baseBuilder"/>
+	<bean id="contentTypeContainerBuilder" class="com.hannonhill.cascade.webservice.builder.ContentTypeContainerBuilder" parent="baseBuilder"/>
+	<bean id="fsTransBuilder" class="com.hannonhill.cascade.webservice.builder.FileSystemTransportBuilder" parent="baseBuilder" />
+	<bean id="ftpTransBuilder" class="com.hannonhill.cascade.webservice.builder.FTPTransportBuilder" parent="baseBuilder" />
+	<bean id="dbTransBuilder" class="com.hannonhill.cascade.webservice.builder.DatabaseTransportBuilder" parent="baseBuilder" />
+	<bean id="metadataSetBuilder" class="com.hannonhill.cascade.webservice.builder.MetadataSetBuilder" parent="baseBuilder" />
+	<bean id="metadataSetContainerBuilder" class="com.hannonhill.cascade.webservice.builder.MetadataSetContainerBuilder" parent="baseBuilder" />
+	<bean id="pageConfigSetBuilder" class="com.hannonhill.cascade.webservice.builder.PageConfigurationSetBuilder" parent="baseBuilder" />
+	<bean id="pageConfigSetContainerBuilder" class="com.hannonhill.cascade.webservice.builder.PageConfigurationSetContainerBuilder" parent="baseBuilder" />
+	<bean id="publishSetBuilder" class="com.hannonhill.cascade.webservice.builder.PublishSetBuilder" parent="baseBuilder" />
+	<bean id="publishSetContainerBuilder" class="com.hannonhill.cascade.webservice.builder.PublishSetContainerBuilder" parent="baseBuilder" />
+	<bean id="dataDefinitionBuilder" class="com.hannonhill.cascade.webservice.builder.DataDefinitionBuilder" parent="baseBuilder" />
+	<bean id="dataDefinitionContainerBuilder" class="com.hannonhill.cascade.webservice.builder.DataDefinitionContainerBuilder" parent="baseBuilder" />	
+	<bean id="transportContainerBuilder" class="com.hannonhill.cascade.webservice.builder.TransportContainerBuilder" parent="baseBuilder" />	
+	<bean id="twitterConnectorBuilder" class="com.hannonhill.cascade.webservice.builder.TwitterConnectorBuilder" parent="baseBuilder" />	
+	<bean id="facebookConnectorBuilder" class="com.hannonhill.cascade.webservice.builder.FacebookConnectorBuilder" parent="baseBuilder" />	
+	<bean id="wordPressConnectorBuilder" class="com.hannonhill.cascade.webservice.builder.WordPressConnectorBuilder" parent="baseBuilder" />	
+	<bean id="googleAnalyticsConnectorBuilder" class="com.hannonhill.cascade.webservice.builder.GoogleAnalyticsConnectorBuilder" parent="baseBuilder" />	
+	<bean id="workflowDefBuilder" class="com.hannonhill.cascade.webservice.builder.WorkflowDefinitionBuilder" parent="baseBuilder" />
+	<bean id="workflowDefContainerBuilder" class="com.hannonhill.cascade.webservice.builder.WorkflowDefinitionContainerBuilder" parent="baseBuilder" />
+	<bean id="destinationBuilder" class="com.hannonhill.cascade.webservice.builder.DestinationBuilder" parent="baseBuilder" />
+	<bean id="targetBuilder" class="com.hannonhill.cascade.webservice.builder.TargetBuilder" parent="baseBuilder" />
+	<bean id="siteDestinationContainerBuilder" class="com.hannonhill.cascade.webservice.builder.SiteDestinationContainerBuilder" parent="baseBuilder"/>
+	<bean id="twitterFeedBlockBuilder" class="com.hannonhill.cascade.webservice.builder.TwitterFeedBlockBuilder" parent="baseBuilder" />
+	
+	<!-- Other builders -->
+	<bean id="siteBuilder" class="com.hannonhill.cascade.webservice.builder.SiteBuilder" parent="baseBuilder"/>
+	
+	<bean id="schemaClassToBuilderMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="com.hannonhill.cascade.webservice.schema.File" value-ref="fileBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Folder" value-ref="folderBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Page" value-ref="pageBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Reference" value-ref="referenceBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.XSLTFormat" value-ref="xsltFormatBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.VelocityFormat" value-ref="velocityFormatBuilder"/>
+				<entry key="com.hannonhill.cascade.webservice.schema.Symlink" value-ref="symlinkBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Template" value-ref="templateBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.IndexBlock" value-ref="indexBlockBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.FeedBlock" value-ref="feedBlockBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.TextBlock" value-ref="textBlockBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.XHTMLDataDefinitionBlock" value-ref="xhtmlDataDefinitionBlockBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.XMLBlock" value-ref="xmlBlockBuilder" />
+				
+				<entry key="com.hannonhill.cascade.webservice.schema.User" value-ref="userBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Group" value-ref="groupBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Role" value-ref="roleBuilder" />
+				
+				<entry key="com.hannonhill.cascade.webservice.schema.AssetFactory" value-ref="assetFactoryBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.AssetFactoryContainer" value-ref="assetFactoryContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.ConnectorContainer" value-ref="connectorContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.ContentType" value-ref="contentTypeBuilder"/>
+				<entry key="com.hannonhill.cascade.webservice.schema.ContentTypeContainer" value-ref="contentTypeContainerBuilder"/>
+				<entry key="com.hannonhill.cascade.webservice.schema.FileSystemTransport" value-ref="fsTransBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.FTPTransport" value-ref="ftpTransBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.DatabaseTransport" value-ref="dbTransBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.MetadataSet" value-ref="metadataSetBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.MetadataSetContainer" value-ref="metadataSetContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.PageConfigurationSet" value-ref="pageConfigSetBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.PageConfigurationSetContainer" value-ref="pageConfigSetContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.PublishSet" value-ref="publishSetBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.PublishSetContainer" value-ref="publishSetContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.DataDefinition" value-ref="dataDefinitionBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.DataDefinitionContainer" value-ref="dataDefinitionContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.TransportContainer" value-ref="transportContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.TwitterConnector" value-ref="twitterConnectorBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.FacebookConnector" value-ref="facebookConnectorBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.WordPressConnector" value-ref="wordPressConnectorBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.GoogleAnalyticsConnector" value-ref="googleAnalyticsConnectorBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.WorkflowDefinition" value-ref="workflowDefBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.WorkflowDefinitionContainer" value-ref="workflowDefContainerBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Destination" value-ref="destinationBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.Target" value-ref="targetBuilder" />
+				<entry key="com.hannonhill.cascade.webservice.schema.SiteDestinationContainer" value-ref="siteDestinationContainerBuilder"/>
+				<entry key="com.hannonhill.cascade.webservice.schema.TwitterFeedBlock" value-ref="twitterFeedBlockBuilder" />
+				
+				<entry key="com.hannonhill.cascade.webservice.schema.Site" value-ref="siteBuilder"/>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>

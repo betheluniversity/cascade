@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="artur.tomusiak" id="6_8_006">
+        	<preConditions onFail="MARK_RAN">
+        		<not>
+        			<dbms type="mssql"/>
+        		</not>
+        	</preConditions>
+           	<renameColumn tableName="cxml_assetstats" oldColumnName="bounceRateChange" newColumnName="bounceRatePercentChange" columnDataType="FLOAT(12)" />
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+           
+             <modifySql dbms="mysql">
+                <replace replace="FLOAT(12)" with="FLOAT(12,2)"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace="NUMERIC\(12,2\)" with="NUMBER(12,2)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet> 
+        
+        <changeSet id="6_8_006_mssql" author="mike.strauch">
+        	<preConditions onFail="MARK_RAN">
+        		<dbms type="mssql"/>
+        	</preConditions>
+        	<!-- Liquibase has an issue with renaming columns in sql server http://liquibase.jira.com/browse/CORE-442 -->
+        	<sql>exec sp_rename 'cxml_assetstats.bounceRateChange' , 'bounceRatePercentChange', 'COLUMN';</sql>
+        </changeSet>
+</databaseChangeLog>

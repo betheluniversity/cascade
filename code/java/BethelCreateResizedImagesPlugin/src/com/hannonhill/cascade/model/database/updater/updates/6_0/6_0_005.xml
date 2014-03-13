@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="6_0_005">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_005"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+           
+            <createTable tableName="cxml_role_user_site_link">
+                <column name="id" type="VARCHAR(32)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="roleId" type="INT(11)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="userName" type="VARCHAR(250)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="siteId" type="VARCHAR(32)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <append value="engine=innodb"/>   
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+            
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="6_0_005_constraints">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_005"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            
+            <createIndex tableName="cxml_role_user_site_link" indexName="IDX_ROLEUSERSITE_ROLE">
+                <column name="roleId"></column>
+            </createIndex>
+            <createIndex tableName="cxml_role_user_site_link" indexName="IDX_ROLEUSERSITE_SITE">
+                <column name="siteId"></column>
+            </createIndex>
+            <createIndex tableName="cxml_role_user_site_link" indexName="IDX_ROLEUSERSITE_USER">
+                <column name="userName"></column>
+            </createIndex>
+            
+            <addForeignKeyConstraint referencedTableName="cxml_roles" baseColumnNames="roleId" baseTableName="cxml_role_user_site_link" referencedColumnNames="id" constraintName="FK_ROLEUSERSITE_ROLE"/>
+            <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_role_user_site_link" referencedColumnNames="id" constraintName="FK_ROLEUSERSITE_SITE"/>
+            <addForeignKeyConstraint referencedTableName="cxml_user" baseColumnNames="userName" baseTableName="cxml_role_user_site_link" referencedColumnNames="userName" constraintName="FK_ROLEUSERSITE_USER"/>
+            
+            <addPrimaryKey tableName="cxml_role_user_site_link" columnNames="id" constraintName="PK_CXML_ROLE_USER_SITE_LINK"/>
+        </changeSet>
+ 
+</databaseChangeLog>

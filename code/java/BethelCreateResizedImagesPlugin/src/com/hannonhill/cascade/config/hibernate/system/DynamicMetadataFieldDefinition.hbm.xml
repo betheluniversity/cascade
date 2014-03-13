@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.DynamicMetadataFieldDefinition" table="cxml_dynamicmetadatafielddef" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<many-to-one name="metadataSet" column="metadataSetId"/>
+		<property name="metadataType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldType</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		<property name="required" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+		<property name="listingOrder"/>
+		<property name="configuration" type="text"/>
+		<property name="visibility">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		<property name="label"/>
+	</union-subclass>
+</hibernate-mapping>

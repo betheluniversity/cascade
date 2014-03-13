@@ -1,0 +1,9 @@
+<label for="doWorkflow">PROMPT_WORKFLOW</label>
+<input type="checkbox" name="doWorkflow" id="doWorkflow" onchange="recordCheckboxStateChange('doWorkflow', 'doWorkflowStateChange', this.form)" DISABLED_WORKFLOW CHECKED_WORKFLOW/>
+<input type="hidden" name="doWorkflowStateChange" id="doWorkflowStateChange" value="WORKFLOW_STATE_CHANGE"/>
+<span id="workflowMessage">WORKFLOW_MESSAGE</span>
+<script type="text/javascript">
+	canSubmit = SUBMIT_ENABLED;
+	if (!canSubmit)
+		showInformationBar("WORKFLOW_MESSAGE");
+</script>

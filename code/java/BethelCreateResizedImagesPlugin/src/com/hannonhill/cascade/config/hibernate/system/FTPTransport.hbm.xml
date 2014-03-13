@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.FTPTransport" discriminator-value="FTP" extends="com.hannonhill.cascade.model.dom.Transport">
+		<property name="initialDirectory"/>
+		<property name="secure" column="isSecure" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="passive" column="isPassive" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="port" />
+		<property name="serverName" />
+		<property name="userName" />
+		<property name="password" />
+		<property 
+			name="version" 
+			type="com.hannonhill.cascade.config.hibernate.types.CascadeIntegerType"
+			column="ftpTransVersion"/>
+        <many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.TransportContainer"
+		/>
+	</subclass>
+</hibernate-mapping>

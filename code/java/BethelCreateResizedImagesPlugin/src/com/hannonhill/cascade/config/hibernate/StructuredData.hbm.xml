@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.StructuredData" table="cxml_structureddata" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<many-to-one
+			name="block"
+			column="blockId"
+		/>
+		<many-to-one
+			name="file"
+			column="fileId"
+		/>
+		<many-to-one
+			name="page"
+			column="pageId"
+		/>
+		<many-to-one
+			name="symlink"
+			column="symlinkId"
+		/>
+		<property name="text" column="textData" type="text" length="2147483647" access="field"/>
+        <property name="processXml" formula="1" access="field" />
+		<many-to-one
+			name="next"
+			column="structuredDataId"
+			cascade="all"
+		/>
+		<many-to-one
+			name="group"
+			column="groupStructuredDataId"
+			cascade="all"
+		/>
+		<many-to-one
+			name="ownerEntity"
+			column="ownerEntityId"
+		/>
+		<property name="nodeType" column="structuredDataType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.StructuredDataNodeType</param>
+				<param name="type">-6</param>
+			</type>
+		</property>
+		<property name="assetType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.StructuredDataAssetType</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		<property name="textVersion" type="com.hannonhill.cascade.config.hibernate.types.CascadeIntegerType" />
+	</union-subclass>
+</hibernate-mapping>

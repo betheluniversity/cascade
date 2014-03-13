@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <!-- Liquibase has an issue (http://liquibase.jira.com/browse/CORE-442) where column renaming is in brackets -->
+        <changeSet author="syl.turner" id="6_0_006_fixDeuceMSSQL">
+        	<preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_006"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mssql"/>
+            </preConditions>            
+            <sql>
+            	EXEC sp_rename 'cxml_transport.siteId', foreignSiteId, 'COLUMN'
+            </sql>        
+        </changeSet>
+        
+        <changeSet author="syl.turner" id="6_0_006_renameSiteId">
+        	<preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_006"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <not>
+                	<dbms type="mssql"/>
+                </not>
+            </preConditions>            
+           <renameColumn tableName="cxml_transport" oldColumnName="siteId" newColumnName="foreignSiteId" columnDataType="INT(11)"/>  
+        </changeSet>
+         
+        <changeSet author="aubrey.rhodes" id="6_0_006">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_006"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+           
+           <addColumn tableName="cxml_foldercontent">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_foldercontent" referencedColumnNames="id" constraintName="FK_FCE_SITE"/>
+           
+           <createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_pageconfigurationset">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_pageconfigurationset" referencedColumnNames="id" constraintName="FK_PCSET_SITE"/>
+           
+           <createIndex tableName="cxml_pageconfigurationset" indexName="IDX_PCSET_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_contenttype">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_contenttype" referencedColumnNames="id" constraintName="FK_CTYPE_SITE"/>
+           
+           <createIndex tableName="cxml_contenttype" indexName="IDX_CTYPE_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_assetfactory">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_assetfactory" referencedColumnNames="id" constraintName="FK_AF_SITE"/>
+           
+           <createIndex tableName="cxml_assetfactory" indexName="IDX_AF_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_destination">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_destination" referencedColumnNames="id" constraintName="FK_DEST_SITE"/>
+           
+           <createIndex tableName="cxml_destination" indexName="IDX_DEST_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_pageconfigsetcont">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_pageconfigsetcont" referencedColumnNames="id" constraintName="FK_PCSC_SITE"/>
+           
+           <createIndex tableName="cxml_pageconfigsetcont" indexName="IDX_PCSC_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           
+           <addColumn tableName="cxml_assetfactorycontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_assetfactorycontainer" referencedColumnNames="id" constraintName="FK_AFC_SITE"/>
+           
+           <createIndex tableName="cxml_assetfactorycontainer" indexName="IDX_AFC_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_contenttypecontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_contenttypecontainer" referencedColumnNames="id" constraintName="FK_CTYPECONTAINER_SITE"/>
+           
+           <createIndex tableName="cxml_contenttypecontainer" indexName="IDX_CTYPECONTAINER_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_metadataset">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_metadataset" referencedColumnNames="id" constraintName="FK_MDSET_SITE"/>
+           
+           <createIndex tableName="cxml_metadataset" indexName="IDX_MDSET_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_metadatasetcontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_metadatasetcontainer" referencedColumnNames="id" constraintName="FK_MSC_SITE"/>
+           
+           <createIndex tableName="cxml_metadatasetcontainer" indexName="IDX_MSC_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_publishset">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_publishset" referencedColumnNames="id" constraintName="FK_PUBSET_SITE"/>
+           
+           <createIndex tableName="cxml_publishset" indexName="IDX_PUBSET_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_publishsetcontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_publishsetcontainer" referencedColumnNames="id" constraintName="FK_PSC_SITE"/>
+           
+           <createIndex tableName="cxml_publishsetcontainer" indexName="IDX_PSC_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_structureddatadefinition">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_structureddatadefinition" referencedColumnNames="id" constraintName="FK_SDDEF_SITE"/>
+           
+           <createIndex tableName="cxml_structureddatadefinition" indexName="IDX_SDDEF_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_structureddatadefcont">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_structureddatadefcont" referencedColumnNames="id" constraintName="FK_SDDC_SITE"/>
+           
+           <createIndex tableName="cxml_structureddatadefcont" indexName="IDX_SDDC_SITE">
+            <column name="siteId"></column>
+           </createIndex>       
+            
+            
+           <addColumn tableName="cxml_transport">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_SITE"/>
+           
+           <createIndex tableName="cxml_transport" indexName="IDX_TRANSPORT_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_transportcontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_transportcontainer" referencedColumnNames="id" constraintName="FK_TRANSPORTCONT_SITE"/>
+           
+           <createIndex tableName="cxml_transportcontainer" indexName="IDX_TRANSPORTCONT_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           
+            <addColumn tableName="cxml_workflowdefinition">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_workflowdefinition" referencedColumnNames="id" constraintName="FK_WFDEF_SITE"/>
+           
+           <createIndex tableName="cxml_workflowdefinition" indexName="IDX_WFDEF_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+           <addColumn tableName="cxml_workflowdefcontainer">
+            <column name="siteId" type="VARCHAR(32)"></column>
+           </addColumn>
+           
+           <addForeignKeyConstraint referencedTableName="cxml_site" baseColumnNames="siteId" baseTableName="cxml_workflowdefcontainer" referencedColumnNames="id" constraintName="FK_WFDC_SITE"/>
+           
+           <createIndex tableName="cxml_workflowdefcontainer" indexName="IDX_WFDC_SITE">
+            <column name="siteId"></column>
+           </createIndex>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->                
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+                <replace replace="VARCHAR" with="VARCHAR2"/>
+            </modifySql>
+            
+        </changeSet>        
+        
+ 
+</databaseChangeLog>

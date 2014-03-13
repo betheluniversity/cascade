@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="serviceProviderHolder" class="com.hannonhill.cascade.model.service.ServiceProviderHolderBean" destroy-method="destroy">
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	
+	<bean id="serviceProvider" class="com.hannonhill.cascade.model.service.ServiceProviderImpl">
+		<property name="assetFactoryContainerService" ref="assetFactoryContainerService"/>
+		<property name="assetFactoryService" ref="assetFactoryService"/>
+		<property name="blobService" ref="blobService"/>
+		<property name="blockService" ref="blockService"/>
+		<property name="dynamicMetadataFieldDefinitionService" ref="dynamicMetadataFieldDefinitionService"/>
+		<property name="fileService" ref="fileService"/>
+		<property name="folderService" ref="folderService"/>
+		<property name="pageService" ref="pageService"/>
+		<property name="preferencesService" ref="preferencesService"/>
+		<property name="referenceService" ref="referenceService"/>
+		<property name="symlinkService" ref="symlinkService"/>
+		<property name="templateService" ref="templateService"/>
+		<property name="targetService" ref="targetService"/>
+		<property name="destinationService" ref="destinationService"/>
+		<property name="destinationContainerService" ref="destinationContainerService"/>
+		<property name="metadataSetContainerService" ref="metadataSetContainerService"/>
+		<property name="metadataSetService" ref="metadataSetService"/>
+		<property name="pageConfigurationService" ref="pageConfigurationService"/>
+		<property name="pageConfigurationSetContainerService" ref="pageConfigurationSetContainerService"/>
+		<property name="pageConfigurationSetService" ref="pageConfigurationSetService"/>
+		<property name="pageRegionService" ref="pageRegionService"/>
+		<property name="publishSetContainerService" ref="publishSetContainerService"/>
+		<property name="publishSetService" ref="publishSetService"/>
+		<property name="structuredDataService" ref="structuredDataService"/>
+		<property name="structuredDataDefinitionContainerService" ref="structuredDataDefinitionContainerService"/>
+		<property name="structuredDataDefinitionService" ref="structuredDataDefinitionService"/>
+		<property name="workflowDefinitionContainerService" ref="workflowDefinitionContainerService"/>
+		<property name="workflowDefinitionService" ref="workflowDefinitionService"/>
+		<property name="transportContainerService" ref="transportContainerService"/>
+		<property name="transportService" ref="transportService"/>
+		<property name="languageService" ref="languageService" />
+		<property name="resourceService" ref="resourceService" />
+		<property name="locatorService" ref="locatorService" />
+		<property name="navigationService" ref="navigationService" />
+		<property name="indexBlockService" ref="indexBlockService" />
+		<property name="permissionsService" ref="permissionsService" />
+		<property name="abilityService" ref="abilityService" />
+		<property name="auditService" ref="auditService"/>
+		<property name="authenticationService" ref="authenticationService"/>
+		<property name="ldapService" ref="ldapService"/>
+		<property name="configurationFileService" ref="configurationFileService"/>
+		<property name="emailService" ref="emailService"/>
+		<property name="licenseService" ref="licenseService"/>
+		<property name="renderService" ref="renderService"/>
+		<property name="dashboardViewService" ref="dashboardViewService" />
+		<property name="entityViewService" ref="entityViewService" />
+		<property name="toolsViewService" ref="toolsViewService" />
+		<property name="publishService" ref="publishService"/>
+		<property name="entityRelationService" ref="entityRelationService" />
+		<property name="relationshipManagementService" ref="relationshipManagementService" />
+		<property name="scheduleService" ref="scheduleService" />
+		<property name="deleteService" ref="deleteService" />
+		<property name="entityServices" ref="typeToServiceMap"/>
+		<property name="datacheckService" ref="datacheckService" />
+		<property name="spellcheckService" ref="spellcheckService" />
+		<property name="workflowService" ref="workflowService" />
+		<property name="messageService" ref="messageService"/>
+		<property name="metadataService" ref="metadataService" />
+		<property name="catalogService" ref="catalogService"/>
+		<property name="loggingService" ref="loggingService"/>
+		<property name="loginService" ref="loginService"/>
+		<property name="workflowManagementService" ref="workflowManagementService"/>
+		<property name="workflowHistoryService" ref="workflowHistoryService"/>
+		<property name="lockService" ref="lockService"/>
+		<property name="copyService" ref="copyService"/>
+		<property name="editViewService" ref="editViewService"/>
+		<property name="workflowViewService" ref="workflowViewService" />
+		<property name="versionManagementService" ref="versionManagementService"/>
+		<property name="mergingService" ref="mergingService"/>
+		<property name="userService" ref="userService"/>
+		<property name="groupService" ref="groupService"/>
+		<property name="roleService" ref="roleService"/>
+		<property name="integrateFolderService" ref="integrateFolderService"/>
+		<property name="optimizeDatabaseService" ref="optimizeDatabaseService"/>
+		<property name="systemPropertyService" ref="systemPropertyService"/>
+		<property name="zipArchiveService" ref="zipArchiveService"/>
+		<property name="searchService" ref="searchService"/>
+		<property name="searchAndReplaceService" ref="searchAndReplaceService"/>
+		<property name="bulkChangeService" ref="bulkChangeService" />
+		<property name="webServicesService" ref="webServicesService"/>
+		<property name="newSiteCreatorService" ref="newSiteCreatorService" />
+		<property name="assetFactoryPluginService" ref="assetFactoryPluginService"/>
+        <property name="xmlAccessService" ref="xmlAccessService" />
+        <property name="relativeLinkUpdateService" ref="relativeLinkUpdateService" />
+        <property name="rssService" ref="rssService" />
+        <property name="expirationService" ref="expirationService"/>
+        <property name="publishTriggerConfigurationService" ref="publishTriggerConfigurationService"/>
+        <property name="folderContentsService" ref="folderContentsService"/>
+		<property name="customAuthenticationConfigurationService" ref="customAuthenticationConfigurationService"/>
+        <property name="recycleBinService" ref="recycleBinService"/>
+        <property name="taskService" ref="taskService"/>
+        <property name="entityLifecycleService" ref="entityLifecycleService"/>
+        <property name="draftService" ref="draftService"/>
+        <property name="databasePublishEntityService" ref="databasePublishEntityService"/>
+        <property name="contentTypeContainerService" ref="contentTypeContainerService"/>
+        <property name="contentTypeService" ref="contentTypeService"/>
+        <property name="entityViewHelperService" ref="entityViewHelperService"/>
+        <property name="formatService" ref="formatService"/>
+        <property name="supportRequestService" ref="supportRequestService"/>
+        <property name="siteService" ref="siteService"/>
+        <property name="siteMigrationService" ref="siteMigrationService"/>
+        <property name="siteViewService" ref="siteViewService"/>
+        <property name="siteContentImportService" ref="siteContentImportService"/>
+        <property name="connectorContainerService" ref="connectorContainerService"/>
+        <property name="connectorService" ref="connectorService"/>
+        <property name="recycleBinViewService" ref="recycleBinViewService"></property>
+        <property name="assetStatsService" ref="assetStatsService"/>
+        <property name="recycleBinCheckerService" ref="recycleBinCheckerService"/>
+        <property name="pathRepairService" ref="pathRepairService"/>
+        <property name="databaseMigrationService" ref="databaseMigrationService"/>
+        <property name="siteImportExportService" ref="siteImportExportService"/>
+        <property name="unpublishableEntityService" ref="unpublishableEntityService" />
+        <property name="dynamicMetadataFieldService" ref="dynamicMetadataFieldService"/>
+        <property name="staleAssetService" ref="staleAssetService"/>
+        <property name="historyService" ref="historyService"/>
+        <property name="dashboardService" ref="dashboardService"/>
+	</bean>
+ 	
+	<!-- Abstract service bean for injecting service wide dependencies -->
+	<bean id="baseService" abstract="true">
+		<property name="daoProvider" ref="daoProvider"/>
+		<property name="serviceProvider" ref="serviceProvider"/>
+		<property name="txManager" ref="txManager" />
+		<property name="newMenuCache" ref="newMenuCache" />
+		<property name="indexBlockRenderCacheFactory" ref="indexBlockRenderCacheFactory" />
+	</bean>
+	
+	<bean id="systemInformation" class="com.hannonhill.cascade.model.sysinfo.SystemInformationImpl" parent="baseService">
+		<property name="dataSource" ref="dataSource" />	
+	</bean>
+	
+	<!-- Home area asset services -->
+	<bean id="blockService" class="com.hannonhill.cascade.model.service.BlockServiceImpl" parent="baseService"/>
+	<bean id="fileService" class="com.hannonhill.cascade.model.service.FileServiceImpl" parent="baseService"/>
+	<bean id="folderService" class="com.hannonhill.cascade.model.service.FolderServiceImpl" parent="baseService"/>
+	<bean id="pageService" class="com.hannonhill.cascade.model.service.PageServiceImpl" parent="baseService"/>
+	<bean id="referenceService" class="com.hannonhill.cascade.model.service.ReferenceServiceImpl" parent="baseService"/>
+	<bean id="symlinkService" class="com.hannonhill.cascade.model.service.SymlinkServiceImpl" parent="baseService"/>
+	<bean id="templateService" class="com.hannonhill.cascade.model.service.TemplateServiceImpl" parent="baseService"/>
+	<bean id="draftService" class="com.hannonhill.cascade.model.service.DraftServiceImpl" parent="baseService"/>
+	<bean id="formatService" class="com.hannonhill.cascade.model.service.FormatServiceImpl" parent="baseService"/>	
+	
+	<!-- Administration area services -->
+	<bean id="assetFactoryContainerService" class="com.hannonhill.cascade.model.service.AssetFactoryContainerServiceImpl" parent="baseService"/>
+	<bean id="assetFactoryService" class="com.hannonhill.cascade.model.service.AssetFactoryServiceImpl" parent="baseService"/>
+	<bean id="targetService" class="com.hannonhill.cascade.model.service.TargetServiceImpl" parent="baseService"/>
+	<bean id="destinationService" class="com.hannonhill.cascade.model.service.DestinationServiceImpl" parent="baseService"/>
+	<bean id="destinationContainerService" class="com.hannonhill.cascade.model.service.SiteDestinationContainerServiceImpl" parent="baseService"/>
+	<bean id="dynamicMetadataFieldDefinitionService" class="com.hannonhill.cascade.model.service.DynamicMetadataFieldDefinitionServiceImpl" parent="baseService"/>
+	<bean id="metadataSetContainerService" class="com.hannonhill.cascade.model.service.MetadataSetContainerServiceImpl" parent="baseService"/>
+	<bean id="metadataSetService" class="com.hannonhill.cascade.model.service.MetadataSetServiceImpl" parent="baseService"/>
+	<bean id="pageConfigurationSetContainerService" class="com.hannonhill.cascade.model.service.PageConfigurationSetContainerServiceImpl" parent="baseService"/>
+	<bean id="pageConfigurationSetService" class="com.hannonhill.cascade.model.service.PageConfigurationSetServiceImpl"	parent="baseService"/>
+	<bean id="publishSetContainerService" class="com.hannonhill.cascade.model.service.PublishSetContainerServiceImpl" parent="baseService"/>	
+	<bean id="publishSetService" class="com.hannonhill.cascade.model.service.PublishSetServiceImpl" parent="baseService"/>
+	<bean id="structuredDataService" class="com.hannonhill.cascade.model.service.StructuredDataServiceImpl" parent="baseService"/>		
+	<bean id="structuredDataDefinitionContainerService" class="com.hannonhill.cascade.model.service.StructuredDataDefinitionContainerServiceImpl" parent="baseService"/>		
+	<bean id="structuredDataDefinitionService" class="com.hannonhill.cascade.model.service.StructuredDataDefinitionServiceImpl" parent="baseService"/>	
+	<bean id="workflowDefinitionContainerService" class="com.hannonhill.cascade.model.service.WorkflowDefinitionContainerServiceImpl" parent="baseService"/>
+	<bean id="workflowDefinitionService" class="com.hannonhill.cascade.model.service.WorkflowDefinitionServiceImpl" parent="baseService"/>
+	<bean id="transportContainerService" class="com.hannonhill.cascade.model.service.TransportContainerServiceImpl" parent="baseService"/>	
+	<bean id="transportService" class="com.hannonhill.cascade.model.service.TransportServiceImpl" parent="baseService"/>
+	<bean id="userService" class="com.hannonhill.cascade.model.service.UserServiceImpl" parent="baseService"/>
+	<bean id="groupService" class="com.hannonhill.cascade.model.service.GroupServiceImpl" parent="baseService"/>
+	<bean id="roleService" class="com.hannonhill.cascade.model.service.RoleServiceImpl" parent="baseService"/>
+	<bean id="contentTypeContainerService" class="com.hannonhill.cascade.model.service.ContentTypeContainerServiceImpl" parent="baseService"/>
+	<bean id="contentTypeService" class="com.hannonhill.cascade.model.service.ContentTypeServiceImpl" parent="baseService"/>
+    <bean id="connectorContainerService" class="com.hannonhill.cascade.model.service.ConnectorContainerServiceImpl" parent="baseService"/>
+    <bean id="connectorService" class="com.hannonhill.cascade.model.service.ConnectorServiceImpl" parent="baseService"/>    
+    
+    <bean id="siteService" class="com.hannonhill.cascade.model.service.SiteServiceImpl" parent="baseService"/>
+        			
+    			
+	<!-- Miscellaneous services -->
+	<bean id="supportRequestService" class="com.hannonhill.cascade.model.service.SupportRequestServiceImpl" parent="baseService">
+		<property name="systemInformation" ref="systemInformation"/>
+	</bean>
+	<bean id="blobService" class="com.hannonhill.cascade.model.service.BlobServiceImpl" parent="baseService">
+		<property name="dbInfo" ref="dbInfo"/>
+	</bean>
+	<bean id="emailService" class="com.hannonhill.cascade.model.service.EmailServiceImpl" parent="baseService">
+		<property name="emailQueue" ref="emailQueue"/>
+		<property name="fromName" value="Cascade Server"/>
+	</bean>
+	<bean id="licenseService" class="com.hannonhill.cascade.model.service.LicenseServiceImpl" parent="baseService"/>
+	<bean id="pageRegionService" class="com.hannonhill.cascade.model.service.PageRegionServiceImpl" parent="baseService"/>
+	<bean id="pageConfigurationService" class="com.hannonhill.cascade.model.service.PageConfigurationServiceImpl" parent="baseService"/>
+	<bean id="preferencesService" class="com.hannonhill.cascade.model.service.PreferencesServiceImpl" parent="baseService"/>
+	<bean id="languageService" class="com.hannonhill.cascade.model.service.LanguageServiceImpl" parent="baseService" />
+	<bean id="resourceService" class="com.hannonhill.cascade.model.service.ResourceServiceImpl" parent="baseService">
+		<property name="messageSource" ref="messageSource" />
+	</bean>
+	<bean id="locatorService" class="com.hannonhill.cascade.model.service.LocatorServiceImpl" parent="baseService">
+		<property name="folderContainedEntityDAOs" ref="typeToFolderContainedEntityDAO" />
+		<property name="systemAreaEntityDAOs" ref="typeToSysEntityDAO" /> 
+	</bean>
+	<bean id="navigationService" class="com.hannonhill.cascade.model.service.NavigationServiceImpl" parent="baseService"/>
+	<bean id="indexBlockService" class="com.hannonhill.cascade.model.service.IndexBlockServiceImpl" parent="baseService"/>
+	<bean id="permissionsService" class="com.hannonhill.cascade.model.service.PermissionsServiceImpl" parent="baseService"/>
+	<bean id="abilityService" class="com.hannonhill.cascade.model.service.AbilityServiceImpl" parent="baseService" />
+	<bean id="auditService" class="com.hannonhill.cascade.model.service.AuditServiceImpl" parent="baseService"/>
+	<bean id="authenticationService" class="com.hannonhill.cascade.model.service.AuthenticationServiceImpl" parent="baseService"/>
+	<bean id="ldapService" class="com.hannonhill.cascade.model.service.LdapServiceImpl" parent="baseService"/>
+	<bean id="configurationFileService" class="com.hannonhill.cascade.model.service.ConfigurationFileServiceImpl" parent="baseService"/>
+	<bean id="renderService" class="com.hannonhill.cascade.model.service.TaskBasedRenderServiceImpl" parent="baseService"/>	
+	<bean id="siteImportExportService" class="com.hannonhill.cascade.model.service.SiteImportExportServiceImpl" parent="baseService"/>
+	
+	<bean id="publishService" class="com.hannonhill.cascade.model.service.PublishServiceImpl" parent="baseService" init-method="init" destroy-method="destroy">
+		<property name="scheduler" ref="scheduler"/>
+		<property name="requestCheckQuartzName" value="Publish Request Check"/>
+		<property name="requestCheckInterval" value="1000"/>
+		<property name="worker" ref="publishServiceWorker" />	
+		<property name="clusterLocker" ref="clusterLocker" />
+	</bean>
+	
+	<bean id="publishServiceWorker" class="com.hannonhill.cascade.model.service.PublishServiceWorkerImpl" parent="baseService">
+		<property name="clusterLocker" ref="clusterLocker" />
+	</bean>
+	
+	<bean id="unpublishableEntityService" class="com.hannonhill.cascade.model.service.UnpublishableEntityServiceImpl" parent="baseService" />
+	<bean id="databasePublishEntityService" class="com.hannonhill.cascade.model.service.DatabasePublishEntityServiceImpl" parent="baseService"/>
+	<bean id="deleteService" class="com.hannonhill.cascade.model.service.DeleteServiceImpl" parent="baseService"/>
+	<bean id="recycleBinService" class="com.hannonhill.cascade.model.recycle.RecycleBinServiceImpl" parent="baseService">
+        <property name="recycleBinServiceWorker" ref="recycleBinServiceWorker"/>      
+    </bean>
+    <!-- Declare this bean individually for testing purposes -->
+   	<bean id="recycleBinServiceWorker" class="com.hannonhill.cascade.model.recycle.RecycleBinServiceWorkerImpl" parent="baseService"/> 
+   
+
+	<bean id="copyService" class="com.hannonhill.cascade.model.service.CopyServiceImpl" parent="baseService">
+		<property name="worker">
+			<bean class="com.hannonhill.cascade.model.service.CopyServiceWorkerImpl" parent="baseService"/>
+		</property>
+	</bean>
+	<bean id="folderContentsService" class="com.hannonhill.cascade.model.service.FolderContentsServiceImpl" parent="baseService"/>
+	
+	<bean id="workflowService" class="com.hannonhill.cascade.model.service.WorkflowServiceImpl" parent="baseService"/>
+	<bean id="messageService" class="com.hannonhill.cascade.model.service.MessageServiceImpl" parent="baseService"/>
+	<bean id="entityRelationService" class="com.hannonhill.cascade.model.service.EntityRelationServiceImpl" parent="baseService" />
+	<bean id="relationshipManagementService" class="com.hannonhill.cascade.model.xml.RelationshipManagementServiceImpl" parent="baseService">
+		<property name="worker">
+			<bean class="com.hannonhill.cascade.model.xml.RelationshipManagementServiceWorkerImpl" parent="baseService"/>
+		</property>
+	</bean>
+	<bean id="catalogService" class="com.hannonhill.cascade.model.service.CatalogServiceImpl" parent="baseService"/>
+	<bean id="loggingService" class="com.hannonhill.cascade.model.service.LoggingServiceImpl" parent="baseService"/>
+	<bean id="loginService" class="com.hannonhill.cascade.model.service.LoginServiceImpl" parent="baseService">
+		<property name="checkinDurationBeforeInvalid" ref="checkinDurationBeforeInvalid"/>
+	</bean>
+	<bean id="checkinDurationBeforeInvalid" class="java.lang.Long">
+		<constructor-arg value="60000"/>
+	</bean>
+	
+	<bean id="workflowManagementService" class="com.hannonhill.cascade.model.workflow.WorkflowManagementServiceImpl" parent="baseService"/>
+	<bean id="lockService" class="com.hannonhill.cascade.model.service.LockServiceImpl" parent="baseService"/>
+	<bean id="workflowHistoryService" class="com.hannonhill.cascade.model.service.WorkflowHistoryServiceImpl" parent="baseService"/>
+	<bean id="versionManagementService" class="com.hannonhill.cascade.model.service.VersionManagementServiceImpl" parent="baseService">
+		<property name="copyWorker">
+			<bean class="com.hannonhill.cascade.model.service.CopyServiceWorkerImpl" parent="baseService"/>
+		</property>
+		<property name="transferHandlerProvider" ref="transferHandlerProvider"/>
+	</bean>
+	
+	<bean id="entityLifecycleService" class="com.hannonhill.cascade.model.entity.lifecycle.EntityLifecycleServiceImpl" parent="baseService">
+		<property name="lifecycleServiceWorker">
+			<bean class="com.hannonhill.cascade.model.entity.lifecycle.LifecycleServiceWorkerImpl" parent="baseService">
+				<property name="copyServiceWorker">
+					<bean class="com.hannonhill.cascade.model.service.CopyServiceWorkerImpl" parent="baseService"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="mergingService" class="com.hannonhill.cascade.model.service.MergingServiceImpl" parent="baseService"/>
+	<bean id="integrateFolderService" class="com.hannonhill.cascade.model.integrate.IntegrateFolderServiceImpl" parent="baseService"/>
+	<bean id="optimizeDatabaseService" class="com.hannonhill.cascade.model.optimize.OptimizeDatabaseServiceImpl" parent="baseService"/>
+	<bean id="systemPropertyService" class="com.hannonhill.cascade.model.service.SystemPropertyServiceImpl" parent="baseService"/>
+	<bean id="zipArchiveService" class="com.hannonhill.cascade.model.zip.ZipArchiveServiceImpl" parent="baseService">
+		<property name="unpackArchiveWorker">
+			<bean class="com.hannonhill.cascade.model.zip.UnpackArchiveWorkerImpl" parent="baseService"/>
+		</property>
+	</bean>
+	<bean id="recycleBinCheckerService" class="com.hannonhill.cascade.model.recycle.RecycleBinCheckerServiceImpl" parent="baseService">
+		<property name="recycleBinServiceWorker" ref="recycleBinServiceWorker"/>
+	</bean>
+	<bean id="pathRepairService" class="com.hannonhill.cascade.model.service.PathRepairServiceImpl" parent="baseService"/>
+	<bean id="searchService" class="com.hannonhill.cascade.model.search.SearchServiceImpl" parent="baseService">
+		<property name="directoryProvider" ref="luceneDirectoryProvider"/>
+		<property name="analyzerProvider">
+			<bean class="com.hannonhill.cascade.model.search.DefaultAnalyzerProvider"/>
+		</property>
+		<property name="searchJobScheduler" ref="searchJobScheduler"/>
+		<property name="maxResults" value="100"/>
+		<property name="worker">
+			<bean class="com.hannonhill.cascade.model.search.SearchWorkerImpl" parent="baseService">
+				<property name="searchableDaoLookup" ref="typeToSearchableEntityDAO"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="searchJobScheduler" class="com.hannonhill.cascade.model.search.MemoryQueueSearchJobScheduler">
+		<property name="serviceProvider" ref="serviceProvider"/>
+		<property name="consumptionBatchSize" value="50"/>
+	</bean>
+	
+	<bean id="searchAndReplaceService" class="com.hannonhill.cascade.model.service.SearchAndReplaceServiceImpl" parent="baseService" />
+	<bean id="luceneDirectoryProvider" class="com.hannonhill.cascade.model.search.FilesystemDirectoryProvider">
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	<bean id="assetFactoryPluginService" class="com.hannonhill.cascade.model.service.AssetFactoryPluginServiceImpl" parent="baseService">
+		<property name="utilityProvider" ref="utilityProvider" />
+	</bean>
+	<bean id="utilityProvider" class="com.hannonhill.cascade.api.adapters.UtilityProviderImpl">
+		<property name="filenameNormalizer">
+			<bean class="com.hannonhill.cascade.api.adapters.FilenameNormalizerImpl"/>
+		</property>
+	</bean>
+	<bean id="bulkChangeService" class="com.hannonhill.cascade.model.bulkchange.BulkChangeServiceImpl" parent="baseService">
+        <property name="bulkChangeWorker">
+            <bean class="com.hannonhill.cascade.model.bulkchange.BulkChangeServiceWorkerImpl" parent="baseService" />
+        </property>
+    </bean>
+    <bean id="newSiteCreatorService" class="com.hannonhill.cascade.model.newsite.NewSiteCreatorServiceImpl" parent="baseService">
+		<property name="newSiteCreatorWorker">
+			<bean class="com.hannonhill.cascade.model.newsite.NewSiteCreatorWorkerImpl" parent="baseService"/>
+		</property>
+	</bean>
+	
+	<bean id="rssService" class="com.hannonhill.cascade.model.service.RSSServiceImpl" parent="baseService"/>
+	<bean id="expirationService" class="com.hannonhill.cascade.model.service.ExpirationServiceImpl" parent="baseService"/>
+	<bean id="publishTriggerConfigurationService" class="com.hannonhill.cascade.model.service.PublishTriggerConfigurationServiceImpl" parent="baseService"/>
+	<bean id="customAuthenticationConfigurationService" class="com.hannonhill.cascade.model.service.CustomAuthenticationConfigurationServiceImpl" parent="baseService"/>
+	<bean id="taskService" class="com.hannonhill.cascade.model.service.TaskServiceImpl" parent="baseService"/>
+	<bean id="historyService" class="com.hannonhill.cascade.model.service.HistoryServiceImpl" parent="baseService"/>
+    <bean id="dashboardService" class="com.hannonhill.cascade.model.service.DashboardServiceImpl" parent="baseService"/>
+
+	<!-- Quartz scheduling service -->
+	<bean id="scheduleService" class="com.hannonhill.cascade.model.service.ScheduleServiceImpl" parent="baseService">
+		<property name="scheduler" ref="scheduler" />
+		<property name="cacheDiscarderProvider" ref="cacheDiscarderProvider"/>
+	</bean>
+    
+	<!-- XML services -->
+    <bean id="xmlAccessService" class="com.hannonhill.cascade.model.xml.XMLAccessServiceImpl" parent="baseService" />
+    <bean id="relativeLinkUpdateService" class="com.hannonhill.cascade.model.service.RelativeLinkUpdateServiceImpl" parent="baseService" />	
+
+	<bean id="datacheckService" class="com.hannonhill.cascade.model.service.DatacheckServiceImpl" parent="baseService" />
+	<bean id="spellcheckService" class="com.hannonhill.cascade.model.service.SpellcheckServiceImpl" parent="baseService" />
+	<bean id="metadataService" class="com.hannonhill.cascade.model.service.MetadataServiceImpl" parent="baseService" />
+	
+	
+	<!-- View services -->
+	<bean id="baseViewService" class="com.hannonhill.cascade.model.service.view.BaseViewService" abstract="true" parent="baseService">
+	</bean>
+	
+	<bean id="recycleBinViewService" class="com.hannonhill.cascade.model.service.view.RecycleBinViewServiceImpl" parent="baseViewService">
+		<property name="validatorProvider" ref="validatorProvider"/>
+	</bean>
+	
+	<bean id="dashboardViewService" class="com.hannonhill.cascade.model.service.view.DashboardViewServiceImpl" parent="baseViewService">
+		<property name="systemInformation" ref="systemInformation"/>
+	</bean>
+	
+	<bean id="entityViewService" class="com.hannonhill.cascade.model.service.view.EntityViewServiceImpl" parent="baseViewService">
+		<property name="transferHandlerProvider" ref="transferHandlerProvider"/> 
+		<property name="viewBuilderProvider" ref="viewBuilderProvider"/>
+	</bean>
+	<bean id="siteViewService" class="com.hannonhill.cascade.model.service.view.SiteViewServiceImpl" parent="baseService">
+		<property name="transferHandlerProvider" ref="transferHandlerProvider"/> 	
+	</bean>
+	<bean id="entityViewHelperService" class="com.hannonhill.cascade.model.service.view.EntityViewHelperServiceImpl" parent="baseViewService"/>	
+	<bean id="toolsViewService" class="com.hannonhill.cascade.model.service.view.ToolsViewServiceImpl" parent="baseViewService"/>
+	<bean id="editViewService" class="com.hannonhill.cascade.model.service.view.EditViewServiceImpl" parent="baseViewService">
+		<property name="transferHandlerProvider" ref="transferHandlerProvider"/>
+	</bean>
+	<bean id="workflowViewService" class="com.hannonhill.cascade.model.service.view.WorkflowViewServiceImpl" parent="baseViewService">
+		<property name="viewBuilderProvider" ref="viewBuilderProvider"/>
+	</bean>
+	<bean id="webServicesService" class="com.hannonhill.cascade.webservice.WebServicesServiceImpl" parent="baseService">
+        <property name="typeToSchemaAssetClasses" ref="typeToSchemaClassNameMap" />
+        <property name="classNameToDomBuilder" ref="schemaClassToBuilderMap" />
+        <property name="typeToEntityService" ref="typeToServiceMap" />
+    </bean>
+    <bean id="siteMigrationService" class="com.hannonhill.cascade.model.sites.SiteMigrationServiceImpl" parent="baseService"/>
+	<bean id="siteContentImportService" class="com.hannonhill.cascade.model.sites.SiteContentImportServiceImpl" parent="baseService"/>
+	<bean id="assetStatsService" class="com.hannonhill.cascade.model.stats.AssetStatsServiceImpl" parent="baseService"/>
+		
+	<bean id="databaseMigrationService" class="com.hannonhill.cascade.model.database.export.DatabaseMigrationServiceImpl" parent="baseService">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="schemaName" ref="schemaName"/>
+	</bean>	
+	<bean id="dynamicMetadataFieldService" class="com.hannonhill.cascade.model.service.DynamicMetadataFieldServiceImpl" parent="baseService"/>
+		
+	<bean id="transferHandlerProvider" class="com.hannonhill.cascade.transfer.TransferHandlerProviderImpl">
+		<property name="transferHandlers">
+			<list>
+				<ref bean="assetFactoryContainerTransferHandler"/>
+				<ref bean="feedBlockTransferHandler"/>
+				<ref bean="fileTransferHandler"/>
+				<ref bean="folderTransferHandler"/>
+				<ref bean="indexBlockTransferHandler"/>
+				<ref bean="twitterFeedBlockTransferHandler"/>
+				<ref bean="pageTransferHandler"/>
+				<ref bean="referenceTransferHandler"/>
+				<ref bean="xsltFormatTransferHandler"/>
+				<ref bean="velocityFormatTransferHandler"/>
+				<ref bean="symlinkTransferHandler"/>
+				<ref bean="templateTransferHandler"/>
+				<ref bean="textBlockTransferHandler"/>
+				<ref bean="structuredDataBlockTransferHandler"/>
+				<ref bean="xmlBlockTransferHandler"/>
+				<ref bean="assetFactoryTransferHandler"/>
+				<ref bean="destinationTransferHandler"/>
+				<ref bean="destinationContainerTransferHandler"/>
+				<ref bean="targetTransferHandler"/>
+				<ref bean="metadataSetTransferHandler"/>
+				<ref bean="metadataSetContainerTransferHandler"/>
+				<ref bean="pageConfigurationSetTransferHandler"/>
+				<ref bean="pageConfigurationSetContainerTransferHandler"/>
+				<ref bean="structuredDataDefinitionTransferHandler"/>
+				<ref bean="structuredDataDefinitionContainerTransferHandler"/>
+				<ref bean="publishSetTransferHandler"/>
+				<ref bean="publishSetContainerTransferHandler"/>
+				<ref bean="workflowDefinitionTransferHandler"/>
+				<ref bean="workflowDefinitionContainerTransferHandler"/>
+				<ref bean="groupTransferHandler"/>
+				<ref bean="userTransferHandler"/>
+				<ref bean="fileSystemTransportTransferHandler"/>
+				<ref bean="ftpTransportTransferHandler"/>
+				<ref bean="databaseTransportTransferHandler"/>
+				<ref bean="transportContainerTransferHandler"/>
+				<ref bean="roleTransferHandler"/>
+				<ref bean="contentTypeTransferHandler"/>
+				<ref bean="contentTypeContainerTransferHandler"/>
+				<ref bean="siteTransferHandler"/>
+				<ref bean="wordpressConnectorTransferHandler"/>
+				<ref bean="twitterConnectorTransferHandler"/>
+				<ref bean="googleAnalyticsConnectorTransferHandler"/>
+				<ref bean="facebookConnectorTransferHandler"/>
+                <ref bean="spectateConnectorTransferHandler"/>
+				<ref bean="connectorContainerTransferHandler"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="baseTransferHandler" class="com.hannonhill.cascade.transfer.BaseTransferHandler" abstract="true">
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	
+	<bean id="assetFactoryContainerTransferHandler" class="com.hannonhill.cascade.transfer.AssetFactoryContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="feedBlockTransferHandler" class="com.hannonhill.cascade.transfer.FeedBlockTransferHandler" parent="baseTransferHandler"/>
+	<bean id="fileTransferHandler" class="com.hannonhill.cascade.transfer.FileTransferHandler" parent="baseTransferHandler"/>
+	<bean id="folderTransferHandler" class="com.hannonhill.cascade.transfer.FolderTransferHandler" parent="baseTransferHandler"/>
+	<bean id="indexBlockTransferHandler" class="com.hannonhill.cascade.transfer.IndexBlockTransferHandler" parent="baseTransferHandler"/>
+	<bean id="pageTransferHandler" class="com.hannonhill.cascade.transfer.PageTransferHandler" parent="baseTransferHandler"/>
+	<bean id="referenceTransferHandler" class="com.hannonhill.cascade.transfer.ReferenceTransferHandler" parent="baseTransferHandler"/>
+	<bean id="xsltFormatTransferHandler" class="com.hannonhill.cascade.transfer.XSLTFormatTransferHandler" parent="baseTransferHandler"/>
+	<bean id="velocityFormatTransferHandler" class="com.hannonhill.cascade.transfer.VelocityFormatTransferHandler" parent="baseTransferHandler"/>
+	<bean id="symlinkTransferHandler" class="com.hannonhill.cascade.transfer.SymlinkTransferHandler" parent="baseTransferHandler"/>
+	<bean id="templateTransferHandler" class="com.hannonhill.cascade.transfer.TemplateTransferHandler" parent="baseTransferHandler"/>
+	<bean id="textBlockTransferHandler" class="com.hannonhill.cascade.transfer.TextBlockTransferHandler" parent="baseTransferHandler"/>
+	<bean id="structuredDataBlockTransferHandler" class="com.hannonhill.cascade.transfer.StructuredDataBlockTransferHandler" parent="baseTransferHandler"/>
+	<bean id="xmlBlockTransferHandler" class="com.hannonhill.cascade.transfer.XMLBlockTransferHandler" parent="baseTransferHandler" />
+	<bean id="assetFactoryTransferHandler" class="com.hannonhill.cascade.transfer.AssetFactoryTransferHandler" parent="baseTransferHandler"/>
+	<bean id="destinationTransferHandler" class="com.hannonhill.cascade.transfer.DestinationTransferHandler" parent="baseTransferHandler"/>
+	<bean id="destinationContainerTransferHandler" class="com.hannonhill.cascade.transfer.SiteDestinationContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="targetTransferHandler" class="com.hannonhill.cascade.transfer.TargetTransferHandler" parent="baseTransferHandler"/>
+	<bean id="metadataSetTransferHandler" class="com.hannonhill.cascade.transfer.MetadataSetTransferHandler" parent="baseTransferHandler"/>
+	<bean id="metadataSetContainerTransferHandler" class="com.hannonhill.cascade.transfer.MetadataSetContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="pageConfigurationSetTransferHandler" class="com.hannonhill.cascade.transfer.PageConfigurationSetTransferHandler" parent="baseTransferHandler"/>
+	<bean id="pageConfigurationSetContainerTransferHandler" class="com.hannonhill.cascade.transfer.PageConfigurationSetContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="structuredDataDefinitionTransferHandler" class="com.hannonhill.cascade.transfer.StructuredDataDefinitionTransferHandler" parent="baseTransferHandler"/>
+	<bean id="structuredDataDefinitionContainerTransferHandler" class="com.hannonhill.cascade.transfer.StructuredDataDefinitionContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="publishSetTransferHandler" class="com.hannonhill.cascade.transfer.PublishSetTransferHandler" parent="baseTransferHandler"/>
+	<bean id="publishSetContainerTransferHandler" class="com.hannonhill.cascade.transfer.PublishSetContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="workflowDefinitionTransferHandler" class="com.hannonhill.cascade.transfer.WorkflowDefinitionTransferHandler" parent="baseTransferHandler"/>
+	<bean id="workflowDefinitionContainerTransferHandler" class="com.hannonhill.cascade.transfer.WorkflowDefinitionContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="groupTransferHandler" class="com.hannonhill.cascade.transfer.GroupTransferHandler" parent="baseTransferHandler"/>
+	<bean id="userTransferHandler" class="com.hannonhill.cascade.transfer.UserTransferHandler" parent="baseTransferHandler"/>
+	<bean id="databaseTransportTransferHandler" class="com.hannonhill.cascade.transfer.DatabaseTransportTransferHandler" parent="baseTransferHandler"/>
+	<bean id="ftpTransportTransferHandler" class="com.hannonhill.cascade.transfer.FTPTransportTransferHandler" parent="baseTransferHandler"/>
+	<bean id="fileSystemTransportTransferHandler" class="com.hannonhill.cascade.transfer.FileSystemTransportTransferHandler" parent="baseTransferHandler"/>
+	<bean id="transportContainerTransferHandler" class="com.hannonhill.cascade.transfer.TransportContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="roleTransferHandler" class="com.hannonhill.cascade.transfer.RoleTransferHandler" parent="baseTransferHandler"/>
+	<bean id="contentTypeTransferHandler" class="com.hannonhill.cascade.transfer.ContentTypeTransferHandler" parent="baseTransferHandler"/>
+	<bean id="contentTypeContainerTransferHandler" class="com.hannonhill.cascade.transfer.ContentTypeContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="siteTransferHandler" class="com.hannonhill.cascade.transfer.SiteTransferHandler" parent="baseTransferHandler"/>
+	<bean id="wordpressConnectorTransferHandler" class="com.hannonhill.cascade.transfer.WordPressConnectorTransferHandler" parent="baseTransferHandler"/>
+	<bean id="twitterConnectorTransferHandler" class="com.hannonhill.cascade.transfer.TwitterConnectorTransferHandler" parent="baseTransferHandler"/>
+	<bean id="googleAnalyticsConnectorTransferHandler" class="com.hannonhill.cascade.transfer.GoogleAnalyticsConnectorTransferHandler" parent="baseTransferHandler"/>
+	<bean id="facebookConnectorTransferHandler" class="com.hannonhill.cascade.transfer.FacebookConnectorTransferHandler" parent="baseTransferHandler"/>
+    <bean id="spectateConnectorTransferHandler" class="com.hannonhill.cascade.transfer.SpectateConnectorTransferHandler" parent="baseTransferHandler"/>
+	<bean id="connectorContainerTransferHandler" class="com.hannonhill.cascade.transfer.ConnectorContainerTransferHandler" parent="baseTransferHandler"/>
+	<bean id="twitterFeedBlockTransferHandler" class="com.hannonhill.cascade.transfer.TwitterFeedBlockTransferHandler" parent="baseTransferHandler"/>
+		
+	<!--  Map of fce entity types to fce services -->
+	<bean id="typeToFceServiceMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<!-- Home area services -->
+				<entry key-ref="feedBlockEntityType" value-ref="blockService" />
+				<entry key-ref="indexBlockEntityType" value-ref="blockService" />
+				<entry key-ref="textBlockEntityType" value-ref="blockService" />
+				<entry key-ref="structuredDataBlockEntityType" value-ref="blockService" />
+				<entry key-ref="xmlBlockEntityType" value-ref="blockService" />
+				<entry key-ref="twitterFeedBlockEntityType" value-ref="blockService"/>
+				<entry key-ref="blockEntityType" value-ref="blockService" />
+				<entry key-ref="fileEntityType" value-ref="fileService" />
+				<entry key-ref="folderEntityType" value-ref="folderService" />
+				<entry key-ref="pageEntityType" value-ref="pageService" />
+				<entry key-ref="referenceEntityType" value-ref="referenceService" />
+				<entry key-ref="symlinkEntityType" value-ref="symlinkService" />
+				<entry key-ref="templateEntityType" value-ref="templateService" />
+				<entry key-ref="formatEntityType" value-ref="formatService"/>
+				<entry key-ref="velocityFormatEntityType" value-ref="formatService"/>
+				<entry key-ref="xsltFormatEntityType" value-ref="formatService"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Map of entity types to services -->
+	<bean id="typeToServiceMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<!-- Home area services -->
+				<entry key-ref="feedBlockEntityType" value-ref="blockService" />
+				<entry key-ref="indexBlockEntityType" value-ref="blockService" />
+				<entry key-ref="textBlockEntityType" value-ref="blockService" />
+				<entry key-ref="structuredDataBlockEntityType" value-ref="blockService" />
+				<entry key-ref="xmlBlockEntityType" value-ref="blockService" />
+				<entry key-ref="twitterFeedBlockEntityType" value-ref="blockService"/>
+				<entry key-ref="blockEntityType" value-ref="blockService" />
+				<entry key-ref="fileEntityType" value-ref="fileService" />
+				<entry key-ref="folderEntityType" value-ref="folderService" />
+				<entry key-ref="pageEntityType" value-ref="pageService" />
+				<entry key-ref="referenceEntityType" value-ref="referenceService" />
+				<entry key-ref="symlinkEntityType" value-ref="symlinkService" />
+				<entry key-ref="templateEntityType" value-ref="templateService" />
+				<entry key-ref="formatEntityType" value-ref="formatService"/>
+				<entry key-ref="velocityFormatEntityType" value-ref="formatService"/>
+				<entry key-ref="xsltFormatEntityType" value-ref="formatService"/>
+				
+				<!--  Admin area services -->
+				<entry key-ref="assetFactoryType" value-ref="assetFactoryService" />
+				<entry key-ref="assetFactoryContainerType" value-ref="assetFactoryContainerService" />
+				<entry key-ref="connectorType" value-ref="connectorService"/>
+				<entry key-ref="connectorContainerType" value-ref="connectorContainerService"/>
+				<entry key-ref="contentTypeType" value-ref="contentTypeService"/>
+				<entry key-ref="contentTypeContainerType" value-ref="contentTypeContainerService"/>
+				<entry key-ref="wordPressConnectorType" value-ref="connectorService"/>
+				<entry key-ref="twitterConnectorType" value-ref="connectorService"/>
+				<entry key-ref="googleAnalyticsConnectorType" value-ref="connectorService"/>
+				<entry key-ref="facebookConnectorType" value-ref="connectorService"/>
+                <entry key-ref="spectateConnectorType" value-ref="connectorService"/>
+				<entry key-ref="destinationType" value-ref="destinationService" />
+				<entry key-ref="siteDestinationContainerType" value-ref="destinationContainerService" />
+				<entry key-ref="metadataSetContainerType" value-ref="metadataSetContainerService" />
+				<entry key-ref="metadataSetType" value-ref="metadataSetService" />
+				<entry key-ref="pageConfigurationSetContainerType" value-ref="pageConfigurationSetContainerService" />
+				<entry key-ref="pageConfigurationSetType" value-ref="pageConfigurationSetService" />
+				<entry key-ref="publishSetType" value-ref="publishSetService" />
+				<entry key-ref="publishSetContainerType" value-ref="publishSetContainerService" />
+				<entry key-ref="siteType" value-ref="siteService"/>
+				<entry key-ref="structuredDataDefinitionType" value-ref="structuredDataDefinitionService" />
+				<entry key-ref="structuredDataDefinitionContainerType" value-ref="structuredDataDefinitionContainerService" />
+				<entry key-ref="targetType" value-ref="targetService" />
+				<entry key-ref="transportContainerType" value-ref="transportContainerService" />
+				<entry key-ref="transportType" value-ref="transportService" />
+				<entry key-ref="ftpTransportType" value-ref="transportService" />
+				<entry key-ref="fsTransportType" value-ref="transportService" />
+				<entry key-ref="dbTransportType" value-ref="transportService" />
+				<entry key-ref="workflowDefinitionType" value-ref="workflowDefinitionService" />
+				<entry key-ref="workflowDefinitionContainerType" value-ref="workflowDefinitionContainerService" />
+				
+				<!--  Misc services -->
+				<entry key-ref="workflowType" value-ref="workflowService"/>
+				<entry key-ref="messageType" value-ref="messageService"/>
+				<entry key-ref="userType" value-ref="userService"/>
+				<entry key-ref="groupType" value-ref="groupService"/>
+				<entry key-ref="roleType" value-ref="roleService"/>
+				<entry key-ref="auditType" value-ref="auditService"/>
+				<entry key-ref="pageConfigurationType" value-ref="pageConfigurationService"/>
+				<entry key-ref="assetStatsType" value-ref="assetStatsService"/>
+				<entry key-ref="blobType" value-ref="blobService"/>
+				<entry key-ref="pageRegionType" value-ref="pageRegionService"/>
+				<entry key-ref="structuredDataType" value-ref="structuredDataService"/>
+				<entry key-ref="unpublishableEntityType" value-ref="unpublishableEntityService" />
+			</map>
+		</constructor-arg>
+	</bean>
+    
+    <!-- Map of EntityType objects to package qualified Schema class names -->
+    <bean id="typeToSchemaClassNameMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map>
+                <!-- Home area entities -->
+                <entry key-ref="feedBlockEntityType" value="com.hannonhill.cascade.webservice.schema.FeedBlock" />
+                <entry key-ref="indexBlockEntityType" value="com.hannonhill.cascade.webservice.schema.IndexBlock" />
+                <entry key-ref="textBlockEntityType" value="com.hannonhill.cascade.webservice.schema.TextBlock" />
+                <entry key-ref="structuredDataBlockEntityType" value="com.hannonhill.cascade.webservice.schema.XHTMLDataDefinitionBlock" />
+                <entry key-ref="xmlBlockEntityType" value="com.hannonhill.cascade.webservice.schema.XMLBlock" />
+              	<entry key-ref="twitterFeedBlockEntityType" value="com.hannonhill.cascade.webservice.schema.TwitterFeedBlock"/>
+                <entry key-ref="fileEntityType" value="com.hannonhill.cascade.webservice.schema.File" />
+                <entry key-ref="folderEntityType" value="com.hannonhill.cascade.webservice.schema.Folder" />
+                <entry key-ref="pageEntityType" value="com.hannonhill.cascade.webservice.schema.Page" />
+                <entry key-ref="referenceEntityType" value="com.hannonhill.cascade.webservice.schema.Reference" />
+                <entry key-ref="symlinkEntityType" value="com.hannonhill.cascade.webservice.schema.Symlink" />
+                <entry key-ref="templateEntityType" value="com.hannonhill.cascade.webservice.schema.Template" />
+                <entry key-ref="xsltFormatEntityType" value="com.hannonhill.cascade.webservice.schema.XSLTFormat"/>
+                <entry key-ref="velocityFormatEntityType" value="com.hannonhill.cascade.webservice.schema.VelocityFormat"/>
+                           
+                <!--  Admin area entities -->
+                <entry key-ref="assetFactoryType" value="com.hannonhill.cascade.webservice.schema.AssetFactory" />
+                <entry key-ref="assetFactoryContainerType" value="com.hannonhill.cascade.webservice.schema.AssetFactoryContainer" />
+                <entry key-ref="connectorContainerType" value="com.hannonhill.cascade.webservice.schema.ConnectorContainer" />
+                <entry key-ref="contentTypeType" value="com.hannonhill.cascade.webservice.schema.ContentType"/>
+                <entry key-ref="contentTypeContainerType" value="com.hannonhill.cascade.webservice.schema.ContentTypeContainer"/>
+                <entry key-ref="destinationType" value="com.hannonhill.cascade.webservice.schema.Destination" />
+                <entry key-ref="metadataSetContainerType" value="com.hannonhill.cascade.webservice.schema.MetadataSetContainer" />
+                <entry key-ref="metadataSetType" value="com.hannonhill.cascade.webservice.schema.MetadataSet" />
+                <entry key-ref="pageConfigurationSetContainerType" value="com.hannonhill.cascade.webservice.schema.PageConfigurationSetContainer" />
+                <entry key-ref="pageConfigurationSetType" value="com.hannonhill.cascade.webservice.schema.PageConfigurationSet" />
+                <entry key-ref="publishSetType" value="com.hannonhill.cascade.webservice.schema.PublishSet" />
+                <entry key-ref="publishSetContainerType" value="com.hannonhill.cascade.webservice.schema.PublishSetContainer" />
+                <entry key-ref="structuredDataDefinitionType" value="com.hannonhill.cascade.webservice.schema.DataDefinition" />
+                <entry key-ref="structuredDataDefinitionContainerType" value="com.hannonhill.cascade.webservice.schema.DataDefinitionContainer" />
+                <entry key-ref="targetType" value="com.hannonhill.cascade.webservice.schema.Target" />
+                <entry key-ref="siteDestinationContainerType" value="com.hannonhill.cascade.webservice.schema.SiteDestinationContainer"/>
+                <entry key-ref="ftpTransportType" value="com.hannonhill.cascade.webservice.schema.FTPTransport" />
+                <entry key-ref="dbTransportType" value="com.hannonhill.cascade.webservice.schema.DatabaseTransport" />
+                <entry key-ref="fsTransportType" value="com.hannonhill.cascade.webservice.schema.FileSystemTransport" />
+                <entry key-ref="transportContainerType" value="com.hannonhill.cascade.webservice.schema.TransportContainer" />
+                <entry key-ref="twitterConnectorType" value="com.hannonhill.cascade.webservice.schema.TwitterConnector" />
+                <entry key-ref="facebookConnectorType" value="com.hannonhill.cascade.webservice.schema.FacebookConnector" />
+                <entry key-ref="wordPressConnectorType" value="com.hannonhill.cascade.webservice.schema.WordPressConnector" />
+                <entry key-ref="googleAnalyticsConnectorType" value="com.hannonhill.cascade.webservice.schema.GoogleAnalyticsConnector" />
+                <entry key-ref="workflowDefinitionType" value="com.hannonhill.cascade.webservice.schema.WorkflowDefinition" />
+                <entry key-ref="workflowDefinitionContainerType" value="com.hannonhill.cascade.webservice.schema.WorkflowDefinitionContainer" />
+                
+                <!-- Security area entities -->
+                <entry key-ref="userType" value="com.hannonhill.cascade.webservice.schema.User" />
+                <entry key-ref="roleType" value="com.hannonhill.cascade.webservice.schema.Role" />
+                <entry key-ref="groupType" value="com.hannonhill.cascade.webservice.schema.Group" />
+                
+                <!--  Other entities -->
+                <entry key-ref="siteType" value="com.hannonhill.cascade.webservice.schema.Site"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="staleAssetService" class="com.hannonhill.cascade.model.service.StaleAssetServiceImpl" parent="baseService"/>
+</beans>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.ContentTypePageConfiguration" table="cxml_ct_pageconfiguration" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		<many-to-one 
+			name="contentType" 
+			column="contentTypeId"
+			class="com.hannonhill.cascade.model.dom.ContentType"
+		/>		
+		<many-to-one
+			name="pageConfiguration"
+			column="pageConfigurationId"
+			class="com.hannonhill.cascade.model.dom.PageConfiguration"
+		/>
+		<set name="destinations" table="cxml_ct_pageconfig_dest">
+			<key column="contentTypePageConfigurationId"/>
+			<many-to-many column="destinationId" class="com.hannonhill.cascade.model.dom.Destination"/>
+		</set>
+	</union-subclass>
+</hibernate-mapping>

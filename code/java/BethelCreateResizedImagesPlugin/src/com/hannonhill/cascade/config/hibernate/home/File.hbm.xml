@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.File" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity" discriminator-value="FIL">
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.File"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.File"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.File"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.File"
+		/>
+		
+		<!-- Dublin metadata entity relationships -->
+		<property name="displayName"/>
+		<property name="title"/>
+		<property name="summary" type="text"/>
+		<property name="teaser" type="text"/>
+		<property name="keywords" type="text"/>
+		<property name="description" type="text"/>
+		<property name="author"/>
+		<property name="startDate"/>
+		<property name="endDate"/>
+		<property name="reviewDate"/>
+		
+		<many-to-one
+			name="metadataSet"
+			column="metadataSetId"
+		/>
+		
+		<!-- expiring entity relationships -->
+		<property name="expirationNoticeSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="firstExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="secondExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<many-to-one 
+			name="expirationFolder"
+			column="expirationFolderId"
+		/>
+        
+        <property 
+        	name="rewriteContents" 
+        	column="fileRewriteFileContents" 
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+        
+        <property 
+        	name="maintainAbsoluteLinks"
+        	column="maintainAbsoluteLinks"
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+        
+        <many-to-one
+            name="blob"
+            column="fileBlobId"
+            class="com.hannonhill.cascade.model.dom.BlobEntity"
+            cascade="all"
+		/>
+		
+		<set name="entityRelations" table="cxml_entityrelation" inverse="true" cascade="all-delete-orphan">
+            <key column="fileId"/>
+            <one-to-many class="com.hannonhill.cascade.model.dom.EntityRelation"/>
+        </set>
+		
+		<set name="references" inverse="true" cascade="delete">
+			<key column="referenceFileId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.Reference" />
+		</set>
+		
+		<set name="publishSetRecords" inverse="true" cascade="delete">
+			<key column="fileId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.PublishSetRecord" />
+		</set>
+		
+		<property name="shouldBeIndexed" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="shouldBePublished" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="lastDatePublished" />
+		<property
+			name="lastPublishedById" 
+			column="lastPublishedBy"
+		/>
+       
+		<property name="byteLength"/>
+		
+		<many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.File"
+     	/>
+     	
+     	<set name="allDrafts" inverse="true" cascade="all-delete-orphan">
+     		<key column="draftOriginalId"/>
+     		<one-to-many class="com.hannonhill.cascade.model.dom.File"/>
+     	</set>
+       		
+	</subclass>
+</hibernate-mapping>

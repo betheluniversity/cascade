@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	    <property name="jndiName" value="jdbc/CascadeDS" />
+	    <property name="resourceRef" value="true"/>
+	    <property name="cache" value="true"/>
+	</bean>
+	
+	<!-- Information bean containing vendor -->
+	<bean id="dbInfo" class="com.hannonhill.cascade.model.database.DatabaseInformationImpl" singleton="true">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="dataSourceHolder" class="com.hannonhill.cascade.model.database.DataSourceHolderBean" destroy-method="destroy"> 
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- Bean that defines the schema name of the database -->
+	<bean id="schemaName" class="com.hannonhill.cascade.model.database.JNDISchemaFactoryBean" />
+</beans>

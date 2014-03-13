@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.Site" table="cxml_site" extends="com.hannonhill.cascade.model.dom.PermissionsCapableEntity">
+		<property name="url"/>
+		<set name="roles" table="cxml_site_roles">
+        	<key column="siteId"/>
+        	<many-to-many class="com.hannonhill.cascade.model.dom.Role" column="roleId"/>
+        </set>
+        
+        <set name="roleUserSites" inverse="true" cascade="all-delete-orphan">
+			<key column="siteId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.RoleUserSite"/>
+		</set>
+		
+		<set name="roleGroupSites" inverse="true" cascade="all-delete-orphan">
+			<key column="siteId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.RoleGroupSite"/>
+		</set>
+		
+		<set name="destinations" inverse="true" cascade="all-delete-orphan">
+			<key column="siteId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.Destination"/>
+		</set>
+		
+        <set name="userDashboards" inverse="true" table="cxml_user_dashboard" cascade="all-delete-orphan">
+            <key column="siteId"/>
+            <one-to-many class="com.hannonhill.cascade.model.dom.UserDashboard"/>
+        </set>
+        
+		<many-to-one 
+			name="cssFile" 
+			column="cssfileId"
+		/>
+		
+		<many-to-one
+			name="defaultMetadataSet"
+			column="defaultMetadataSetId"
+		/>
+		       
+        <property 
+        	name="usesScheduledPublishing" 
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+        <property name="unpublishOnExpiration" />
+		<property name="publishEvery"/>
+		<property name="publishEveryTimeUnit"/>
+		<property name="timeToPublish"/>
+		<property name="daysOfWeekToPublish"/>
+		<property name="cronExpression"/>
+		<property name="sendReportToUsers" type="text"/>
+		<property name="sendReportToGroups" type="text"/>
+		<property 
+        	name="sendReportOnErrorOnly" 
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+
+		<property name="cssClasses" type="text"/>
+		<property name="recycleBinExpiration"/>
+		
+		<many-to-one 
+			name="baseAssetFactoryContainer"
+			column="baseAssetFactoryContainerId"
+			class="com.hannonhill.cascade.model.dom.AssetFactoryContainer"
+		/>	
+		
+		<many-to-one 
+        	name="startingPage"
+        	column="startingPageId"
+        	class="com.hannonhill.cascade.model.dom.Page"
+        />
+
+        <property name="state">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.hannonhill.cascade.model.dom.SiteState</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+	</union-subclass>
+</hibernate-mapping>

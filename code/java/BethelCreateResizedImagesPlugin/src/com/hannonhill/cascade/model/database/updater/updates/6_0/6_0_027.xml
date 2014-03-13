@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <changeSet author="aubrey.rhodes" id="6_0_027">
+            <preConditions onFail="MARK_RAN">
+                <dbms type="oracle"/>
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_027"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            <sql>
+	            create--
+				or replace trigger cxml_role_id_inc_trigger--
+				before insert on cxml_roles--
+				for each row--
+				when (new.id is null)--
+				begin--
+				select cxml_role_id_seq.nextval into :new.id from dual;--
+				end;--
+            </sql>
+         </changeSet>
+ 
+</databaseChangeLog>

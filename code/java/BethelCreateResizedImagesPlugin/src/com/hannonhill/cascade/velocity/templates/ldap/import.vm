@@ -1,0 +1,7 @@
+The results of the LDAP Import are as follows:
+
+Started: ${startTime}
+Finished: ${endTime}
+Successful: #if( ${importResult.success} ) Yes #else No #end
+  
+${importResult.render()}

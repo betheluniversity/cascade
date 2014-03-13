@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.WorkflowStep" table="cxml_workflowstep" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<many-to-one 
+			name="workflow" 
+			column="workflowId"
+		/>
+		
+		<many-to-one 
+			name="nextStep" 
+			column="nextStepId"
+			cascade="all"
+			unique="true"
+		/>
+		
+		<many-to-one 
+			name="previousStep" 
+			column="prevStepId"
+			cascade="all"
+			unique="true"
+		/>
+		
+		<property name="escalateBy"/>
+		
+		<many-to-one 
+			name="escalateStep" 
+			column="escalationStepId"
+			cascade="all"
+			unique="true"
+		/>
+		
+		<property name="escalationDuration" column="escalationDurationInSeconds"/>
+		<property name="displayName"/>
+		
+		<set name="actions" inverse="true" cascade="all">
+			<key column="stepId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.WorkflowAction"/>
+		</set>
+		
+		<property 
+			name="ordered" 
+			column="isOrdered" 
+			type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+		/>
+		<property name="owner"/>
+		<property name="ownerType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.WorkflowStepOwnerType</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="stepType"/>
+		
+		<many-to-one 
+			name="unorderedStepWorkflow" 
+			column="unorderedStepWorkflowId"
+		/>
+		
+		<property name="startedOn"/>
+		<property name="finishBy"/>
+		<property 
+			name="expirationWarningSent" 
+			type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+		/>		
+	</union-subclass>
+</hibernate-mapping>

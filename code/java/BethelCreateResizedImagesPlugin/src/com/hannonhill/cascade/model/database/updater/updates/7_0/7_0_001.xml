@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="artur.tomusiak" id="7_0_001">
+        	<addColumn tableName="cxml_site">
+        		<column name="state" type="VARCHAR(32)" defaultValue="READY"/>
+        	</addColumn>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(3)" with="NVARCHAR(3)"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+
+            <modifySql dbms="mysql">
+                <replace replace="FLOAT(12)" with="FLOAT(12,2)"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace="NUMERIC\(12,2\)" with="NUMBER(12,2)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet>
+</databaseChangeLog>

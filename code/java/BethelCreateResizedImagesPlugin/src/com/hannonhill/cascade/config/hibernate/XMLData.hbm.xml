@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.XMLData" table="cxml_xml" extends="com.hannonhill.cascade.model.dom.BaseDomainObject">
+		<property name="xml" column="xmlData" type="text" length="2147483647"/>
+		<property name="version" type="com.hannonhill.cascade.config.hibernate.types.CascadeIntegerType"/>
+	</union-subclass>
+</hibernate-mapping>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system-workflow-definition name="Base Workflow Example" initial-step="initialize">
+	<!-- triggers that will be available to actions in the workflow -->
+	<triggers>
+		<trigger class="com.cms.workflow.function.EmailProvider" name="email"/>
+		<trigger class="com.cms.workflow.function.Publisher" name="publish"/>
+		<trigger class="com.cms.workflow.function.Merge" name="merge"/>
+		<trigger class="com.cms.workflow.function.Version" name="version"/>
+		<trigger class="com.cms.workflow.function.AssignStepIfUser" name="assignStepIfUser"/>
+		<trigger class="com.cms.workflow.function.AssignToGroupOwningAsset" name="assignToGroupOwningAsset"/>
+		<trigger class="com.cms.workflow.function.AssignToWorkflowOwner" name="assignToWorkflowOwner"/>
+		<trigger class="com.cms.workflow.function.Delete" name="delete"/>
+		<trigger class="com.cms.workflow.function.DeleteAndUnpublish" name="deleteAndUnpublish"/>
+		<trigger class="com.cms.workflow.function.PreserveCurrentUser" name="preserveCurrentUser"/>
+		<trigger class="com.cms.workflow.function.PublishSetTrigger" name="publishSet"/>
+	</triggers>
+	<!-- steps that should happen in order -->
+	<steps>
+		<step identifier="initialize" type="system" label="Initialization">
+			<actions>
+				<action identifier="initialize" label="Initialization" type="auto" move="forward"/>
+			</actions>
+		</step>
+		<step default-user="admin" identifier="user-step" type="transition" label="Transition Step" restrict-to-type="role" restrict-to-value="publisher">
+			<actions>
+				<action identifier="move-forward" label="Transition to next step" move="forward"/>
+			</actions>
+		</step>
+		<step identifier="finalize-edit" type="system" label="Finalizing">
+			<actions>
+				<action identifier="finalize" label="Finish Workflow" type="auto" move="forward">
+					<trigger name="merge" />
+					<trigger name="email" />
+	            </action>
+			</actions>
+		</step>
+		<step identifier="publish" type="system" label="Publishing">
+			<actions>
+				<action identifier="publish" label="Completed" type="auto" move="forward">
+					<trigger name="publish" />
+					<trigger name="email">
+						<parameter>
+							<name>mode</name>
+							<value>completed</value>
+						</parameter>
+					</trigger>
+				</action>
+			</actions>
+		</step>
+		<step type="system" identifier="finish" label="Finished" />
+	</steps>
+</system-workflow-definition>

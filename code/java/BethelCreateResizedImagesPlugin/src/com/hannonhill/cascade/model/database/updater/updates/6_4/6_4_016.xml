@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<!--
+		Id field must be the next consecutive value for the current release
+		Example: if the last update id was 6_7_002, your update would be
+		6_7_003
+	-->
+	<!--  Indexes added between 5.7.5 and 6.0  -->
+	<changeSet author="mike.strauch" id="6_4_016_1">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<customPrecondition
+					className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+					<param name="changeVersion" value="6_0_024" />
+					<param name="compareMethod" value="GREATER_THAN" />
+				</customPrecondition>
+				<not>
+					<dbms type="mysql"/>
+				</not>
+			</and>
+		</preConditions>
+		<createIndex tableName="cxml_aclentry" indexName="IDX_ACL_USER">
+			<column name="userName" />
+		</createIndex>
+		<createIndex tableName="cxml_aclentry" indexName="IDX_ACL_GROUP">
+			<column name="groupName" />
+		</createIndex>
+		<createIndex tableName="cxml_assetfactory" indexName="IDX_AF_WORKFLOWDEF">
+			<column name="workflowDefinitionId" />
+		</createIndex>
+		<createIndex tableName="cxml_assetfactory" indexName="IDX_AF_BASEASSET">
+			<column name="baseAssetId" />
+		</createIndex>
+		<createIndex tableName="cxml_assetfactory" indexName="IDX_AF_PLACEMENTFOLDER">
+			<column name="placementFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_dbpub_entity" indexName="IDX_DBPUB_ENT_DEST">
+			<column name="destinationId" />
+		</createIndex>
+		<createIndex tableName="cxml_dbpub_metadata" indexName="IDX_DBPUB_META_ENTITY">
+			<column name="entityId" />
+		</createIndex>
+		<createIndex tableName="cxml_destination" indexName="IDX_DEST_TRANSPORT">
+			<column name="transportId" />
+		</createIndex>
+		<createIndex tableName="cxml_dynamicmetadatafield"
+			indexName="IDX_DMF_DEFINITION">
+			<column name="definitionId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_ORIGINAL">
+			<column name="originalCopyId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_DRAFTORIGINAL">
+			<column name="draftOriginalId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_FILE">
+			<column name="referenceFileId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_BLOCK">
+			<column name="referenceBlockId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_WORKING_COPY">
+			<column name="workingCopyId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_SYMLINK">
+			<column name="referenceSymlinkId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_FORMAT">
+			<column name="referenceStylesheetId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_DEFAULTCONFIGURATION">
+			<column name="pageDefaultConfigurationId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_FOLDER">
+			<column name="referenceFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_CONTENTTYPE">
+			<column name="contentTypeId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_TEMPLATE">
+			<column name="referenceTemplateId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_TEMPLATE_FORMAT">
+			<column name="templateStylesheetId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_TEMPLATE_TARG">
+			<column name="templateTargetId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_PUB_MERGE_FOLDER">
+			<column name="folderPublishMergeFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_METADATASET">
+			<column name="metadataSetId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_CONFIGSET">
+			<column name="pageConfigurationSetId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_EXPIRATIONFOLDER">
+			<column name="expirationFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_REF_PAGE">
+			<column name="referencePageId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_DRAFT_USER">
+			<column name="draftUserId" />
+		</createIndex>
+		<createIndex tableName="cxml_foldercontent" indexName="IDX_FCE_BLO_INDEXED_FOLD">
+			<column name="blockIndexedFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_group" indexName="IDX_GROUP_BASE_AF_CONT">
+			<column name="baseAssetFactoryContainerId" />
+		</createIndex>
+		<createIndex tableName="cxml_group" indexName="IDX_GROUP_START_PAGE">
+			<column name="startingPageId" />
+		</createIndex>
+		<createIndex tableName="cxml_group" indexName="IDX_GROUP_BASE_FOLDER">
+			<column name="baseFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_pageconfiguration" indexName="IDX_PGCFG_PARENT">
+			<column name="parentConfigurationId" />
+		</createIndex>
+		<createIndex tableName="cxml_pageconfiguration" indexName="IDX_PGCFG_STYLESHEET">
+			<column name="stylesheetId" />
+		</createIndex>
+		<createIndex tableName="cxml_pageconfiguration" indexName="IDX_PGCFG_TEMPLATE">
+			<column name="templateId" />
+		</createIndex>
+		<createIndex tableName="cxml_pageregion" indexName="IDX_PAGEREGION_STYLESHEET">
+			<column name="stylesheetId" />
+		</createIndex>
+		<createIndex tableName="cxml_pageregion" indexName="IDX_PAGEREGION_BLOCK">
+			<column name="blockId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_PUB_SET">
+			<column name="publishSetId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_USER">
+			<column name="username" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_FILE">
+			<column name="fileId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_DESTINATION">
+			<column name="destinationId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_FOLDER">
+			<column name="folderId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_PAGE">
+			<column name="pageId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest" indexName="IDX_PUBREQ_TARGET">
+			<column name="targetId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishrequest_dest"
+			indexName="IDX_PUBREQ_DEST_DEST">
+			<column name="destinationId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishsetrecord" indexName="IDX_PUBSETREC_PAGE">
+			<column name="pageId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishsetrecord" indexName="IDX_PUBSETREC_FILE">
+			<column name="fileId" />
+		</createIndex>
+		<createIndex tableName="cxml_publishsetrecord" indexName="IDX_PUBSETREC_FOLDER">
+			<column name="folderId" />
+		</createIndex>
+
+		<createIndex tableName="cxml_recyclerecord" indexName="IDX_RECYCLERECORD_UNPUB">
+			<column name="unpublishRequestId" />
+		</createIndex>
+		<createIndex tableName="cxml_role_user_link" indexName="IDX_ROLEUSER_USER">
+			<column name="userName" />
+		</createIndex>
+		<createIndex tableName="cxml_structureddata" indexName="IDX_SDATA_PAGE">
+			<column name="pageId" />
+		</createIndex>
+		<createIndex tableName="cxml_structureddata" indexName="IDX_SDATA_BLOCK">
+			<column name="blockId" />
+		</createIndex>
+		<createIndex tableName="cxml_structureddata" indexName="IDX_SDATA_SYMLINK">
+			<column name="symlinkId" />
+		</createIndex>
+		<createIndex tableName="cxml_structureddata" indexName="IDX_SDATA_FILE">
+			<column name="fileId" />
+		</createIndex>
+		<createIndex tableName="cxml_target" indexName="IDX_TARGET_BASE_FOLDER">
+			<column name="baseFolderId" />
+		</createIndex>
+		<createIndex tableName="cxml_target" indexName="IDX_TARGET_CSS_FILE">
+			<column name="cssfileId" />
+		</createIndex>
+		<createIndex tableName="cxml_user" indexName="IDX_USER_DEF_GROUP">
+			<column name="defaultGroup" />
+		</createIndex>
+
+		<createIndex tableName="cxml_workflowaction" indexName="IDX_WFACTION_RESULT_STEP">
+			<column name="resultStepId" />
+		</createIndex>
+
+		<createIndex tableName="cxml_workflowstep" indexName="IDX_WFSTEP_ESCAL_STEP">
+			<column name="escalationStepId" />
+		</createIndex>
+
+	</changeSet>
+
+	<!--  Indexes added from 6.0 to 6.0.1 -->
+	<changeSet author="mike.strauch" id="6_4_016_2">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<customPrecondition
+					className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+					<param name="changeVersion" value="6_0_028" />
+					<param name="compareMethod" value="GREATER_THAN" />
+				</customPrecondition>
+				<not>
+					<dbms type="mysql"/>
+				</not>
+			</and>			
+		</preConditions>
+		<createIndex tableName="cxml_entityrelation" indexName="IDX_EREL_FILE">
+			<column name="fileId" />
+		</createIndex>
+		<createIndex tableName="cxml_entityrelation" indexName="IDX_EREL_VELOCITY">
+			<column name="velocityId" />
+		</createIndex>
+	</changeSet>
+
+	<!--  Indexes added for 6.4.3 -->
+	<changeSet author="mike.strauch" id="6_4_016_3">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<dbms type="mysql"/>
+			</not>
+		</preConditions>
+		<createIndex tableName="cxml_site" indexName="IDX_SITE_STARTPAGE">
+			<column name="startingPageId" />
+		</createIndex>
+		<createIndex tableName="cxml_site" indexName="IDX_SITE_BASEAFCON">
+			<column name="baseAssetFactoryContainerId" />
+		</createIndex>
+	</changeSet>
+
+	<!--
+		This index is named incorrectly in 6_0_021.xml. It was, however, named
+		correctly before 6.4 (when we added Liquibase). So, we attempt to drop
+		the index with the wrong name and then try adding it back with the
+		correct name
+	-->
+	<changeSet author="mike.strauch" id="6_4_016_4" failOnError="false" >
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<dbms type="mysql"/>
+			</not>
+		</preConditions>
+		<comment>Update 6_4_016_4 will fail in some cases because an index with this name does not exist.  Please disregard this failure.</comment>
+		<dropIndex tableName="cxml_publishrequest_config" indexName="DX_PUBREQ_CONFIG_CONFIG" />
+	</changeSet>
+	<!--
+		If this update fails, that means the index already exists with the
+		correct name
+	-->
+	<changeSet author="mike.strauch" id="6_4_016_5" failOnError="false">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<dbms type="mysql"/>
+			</not>
+		</preConditions>
+		<comment>Update 6_4_016_5 will fail if this index already exists.  Please disregard this failure.</comment>
+		<createIndex tableName="cxml_publishrequest_config"
+			indexName="IDX_PUBREQ_CONFIG_CONFIG">
+			<column name="pageConfigurationId" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

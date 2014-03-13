@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="artur.tomusiak" id="6_7_024_pre">
+        	<preConditions onFail="MARK_RAN">
+                <dbms type="mssql"/>
+            </preConditions>
+
+			<sql>
+				DECLARE @defname VARCHAR(100), @cmd VARCHAR(1000)
+				SET @defname =
+				(
+					SELECT name
+					FROM sysobjects so JOIN sysconstraints sc
+					ON so.id = sc.constid
+					WHERE OBJECT_NAME(so.parent_obj) = 'cxml_workflowaction'
+					AND so.xtype = 'D'
+					AND sc.colid =
+					(
+						SELECT colid FROM syscolumns
+						WHERE id = OBJECT_ID('cxml_workflowaction') AND
+						name = 'isAutomatic'
+					)
+				)
+
+				IF @defname IS NOT NULL
+				BEGIN
+					SET @cmd = 'ALTER TABLE cxml_workflowaction DROP CONSTRAINT '
+					+ @defname
+					EXEC(@cmd)
+				END
+			</sql>
+        </changeSet>
+
+         <changeSet author="artur.tomusiak" id="6_7_024">
+			<dropColumn tableName="cxml_workflowaction" columnName="isAutomatic"/>
+        </changeSet>
+ 
+</databaseChangeLog>

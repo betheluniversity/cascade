@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="artur.tomusiak" id="6_7_007">
+        	<!-- Rename column pageStructuredDataDefinitionId to structuredDataDefinitionId to make it applicable also for blocks-->
+           	<addForeignKeyConstraint referencedTableName="cxml_structureddatadefinition" baseColumnNames="structuredDataDefinitionId" baseTableName="cxml_foldercontent" referencedColumnNames="id" constraintName="FK_FCE_DATADEF" onDelete="SET NULL"/>
+           	
+        	<!-- Rename column ownerPageId to ownerEntityId to make it applicable also to blocks -->
+           	<addForeignKeyConstraint referencedTableName="cxml_foldercontent" baseColumnNames="ownerEntityId" baseTableName="cxml_structureddata" referencedColumnNames="id" constraintName="FK_SDATA_OWNERENTITY"/>
+
+			<!-- Rename column pageStructuredDataId to structuredDataId to make it applicable also for blocks -->
+           	<addForeignKeyConstraint referencedTableName="cxml_structureddata" baseColumnNames="structuredDataId" baseTableName="cxml_foldercontent" referencedColumnNames="id" constraintName="FK_FCE_STRUCTUREDDATA" onDelete="SET NULL"/>
+
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+            	<!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+            
+        </changeSet>
+ 
+</databaseChangeLog>

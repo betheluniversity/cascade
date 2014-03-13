@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="6_0_020">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_020"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            <addColumn tableName="cxml_roles">
+                <column name="permissionsId" type="VARCHAR(32)"></column>
+            </addColumn>
+            <addForeignKeyConstraint referencedTableName="cxml_permissions" baseColumnNames="permissionsId" baseTableName="cxml_roles" referencedColumnNames="id" constraintName="FK_ROLES_PERMISSIONS"/>
+            
+            <modifySql dbms="mssql">
+                <replace replace="VARCHAR" with="NVARCHAR"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="6_0_020_fixConstraints">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_020"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            
+            <dropForeignKeyConstraint baseTableName="cxml_roles" constraintName="FK_ROLES_PERMISSIONS"/>
+            <addForeignKeyConstraint referencedTableName="cxml_permissions" baseColumnNames="permissionsId" baseTableName="cxml_roles" referencedColumnNames="id" constraintName="FK_ROLES_PERMISSIONS" onDelete="SET NULL"/>
+            
+        </changeSet>
+ 
+</databaseChangeLog>

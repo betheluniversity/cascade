@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.Template" discriminator-value="TEM" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity">
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.Template"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.Template"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.Template"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.Template"
+		/>
+		
+		<many-to-one 
+			name="xmlData"
+            class="com.hannonhill.cascade.model.dom.XMLData"
+			column="xmlId"
+			cascade="all"
+			access="field"
+            fetch="join"
+            lazy="false"
+		/>
+        <property name="processXml" formula="1" access="field" />
+				
+		<many-to-one 
+			name="format"
+			column="templateStylesheetId"
+			class="com.hannonhill.cascade.model.dom.XSLTFormat"
+		/>
+				
+		<set name="pageRegions" inverse="true" cascade="all-delete-orphan">
+			<key column="templateId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.PageRegion"/>
+		</set>
+		
+		<many-to-one
+			name="target"
+			column="templateTargetId"
+			class="com.hannonhill.cascade.model.dom.Target"
+		/>
+		
+		<set name="entityRelations" table="cxml_entityrelation" inverse="true" cascade="all-delete-orphan">
+            <key column="templateId"/>
+            <one-to-many class="com.hannonhill.cascade.model.dom.EntityRelation"/>
+        </set>
+        
+        <many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.Template"
+     	/>
+     	
+     	<set name="allDrafts" inverse="true" cascade="all-delete-orphan">
+     		<key column="draftOriginalId"/>
+     		<one-to-many class="com.hannonhill.cascade.model.dom.Template"/>
+     	</set>
+	</subclass>
+</hibernate-mapping>

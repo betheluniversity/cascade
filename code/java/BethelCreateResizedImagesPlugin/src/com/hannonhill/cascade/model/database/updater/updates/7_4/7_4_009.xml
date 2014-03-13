@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+        
+        <!-- 
+         - CSCD-9066:
+         - Removes orphaned recycle records and installs unique constraint on cxml_recyclerecord baseEntityId
+         --> 
+        <changeSet author="john.lazos" id="7_4_009">
+        	<delete tableName="cxml_recyclerecord">
+        		<where>id not in (select recycleRecordId from cxml_foldercontent where recycleRecordId is not null)</where>
+        	</delete>
+        </changeSet>
+        
+        <!-- 
+         - Add unique constraint in every vendor except SQL Server, which does not support unique constraints on nullable fields
+         -->
+        <changeSet author="john.lazos" id="7_4_009a">
+        	<preConditions onFail="MARK_RAN">
+        		<not>
+        			<dbms type="mssql"/>
+        		</not>
+        	</preConditions>
+   	
+        	<addUniqueConstraint tableName="cxml_recyclerecord" columnNames="baseEntityId" constraintName="UQ_RECYCLERECORD_BASEENTITYID"/>
+        </changeSet>
+  
+</databaseChangeLog>

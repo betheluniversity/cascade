@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hannonhill.cascade.model.dom">
+	<class name="FolderContainedEntity" abstract="true" table="cxml_foldercontent">
+		<id name="id" type="string" unsaved-value="null" >
+			<generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+		</id>
+		<discriminator column="assetType" type="string" length="3" />
+		
+		<!-- NamedEntity fields -->
+		<property name="name"/>
+		
+		<!-- LockingEntity fields -->
+		<many-to-one 
+			name="lock"
+			column="lockId"
+		/>
+		
+		<!-- VersionedEntity fields -->
+		<property name="currentVersion" column="isCurrentVersion" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+		<property name="versionDate"/>
+		
+		<!-- MetadataAwareEntity fields -->
+		<many-to-one
+			name="metadata"
+			column="metadataId"
+			cascade="all"
+			unique="true"
+		/>
+		
+		<!-- PermissionsCapableEntity fields -->
+		<many-to-one
+			name="permissions"
+			column="permissionsId"
+			cascade="all"
+		/>
+		
+		<!-- WorkflowEnabledEntity fields -->
+		<many-to-one
+			name="workflow"
+			column="workflowId"
+		/>
+		<property name="isWorkingCopy" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		
+		<!-- FolderContainedEntity fields -->
+		<many-to-one
+			name="parentFolder"
+			column="parentFolderId"
+		/>
+		
+		<set name="dynamicMetadataFields" inverse="true" cascade="all-delete-orphan">
+			<key column="owningEntityId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.DynamicMetadataField"/>
+		</set>
+		
+		<property name="relativeOrder"/>
+		
+		<property name="path" column="cachePath"/>
+		
+		<property name="recycled" column="isRecycled" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"/>
+		<many-to-one
+			name="recycleRecord"
+			column="recycleRecordId"
+		/>		
+		<property name="versionComment" column="workflowComment" type="text"/>		
+		<many-to-one name="draftUser" column="draftUserId"/>
+		<many-to-one name="draftAssetFactory" column="draftAssetFactoryId"/>
+		
+		<many-to-one 
+			name="site" 
+			column="siteId"
+			class="com.hannonhill.cascade.model.dom.Site"
+		/>
+	</class>
+</hibernate-mapping>

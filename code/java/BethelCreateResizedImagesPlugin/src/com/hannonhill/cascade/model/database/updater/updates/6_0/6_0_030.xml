@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <changeSet author="aubrey.rhodes" id="6_0_030">   
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_030"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mysql"/>
+            </preConditions>         
+            
+            <modifyColumn tableName="cxml_target">
+                <column name="cssClasses" type="text"></column>
+            </modifyColumn>
+            
+            <modifyColumn tableName="cxml_site">
+                <column name="cssClasses" type="text"></column>
+            </modifyColumn>
+         </changeSet>
+         
+         <changeSet author="aubrey.rhodes" id="6_0_030_oracle">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_030"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="oracle"/>
+            </preConditions>
+            <addColumn tableName="cxml_site">
+                <column name="tempCssClasses" type="text"></column>
+            </addColumn>
+            <sql>update cxml_site set tempCssClasses = cssClasses</sql>
+            <dropColumn tableName="cxml_site" columnName="cssClasses"/>
+            <renameColumn tableName="cxml_site" oldColumnName="tempCssClasses" newColumnName="cssClasses"/>
+            
+            <addColumn tableName="cxml_target">
+                <column name="tempCssClasses" type="text"></column>
+            </addColumn>
+            <sql>update cxml_target set tempCssClasses = cssClasses</sql>
+            <dropColumn tableName="cxml_target" columnName="cssClasses"/>
+            <renameColumn tableName="cxml_target" oldColumnName="tempCssClasses" newColumnName="cssClasses"/>
+         </changeSet>
+         
+         <changeSet author="aubrey.rhodes" id="6_0_030_mssql">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_030"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mssql"/>
+            </preConditions>
+            
+            <modifyColumn tableName="cxml_target">
+                <column name="cssClasses" type="text"></column>
+            </modifyColumn>
+            
+            <modifyColumn tableName="cxml_site">
+                <column name="cssClasses" type="text"></column>
+            </modifyColumn>            
+            
+         </changeSet>
+         
+         
+ 
+</databaseChangeLog>

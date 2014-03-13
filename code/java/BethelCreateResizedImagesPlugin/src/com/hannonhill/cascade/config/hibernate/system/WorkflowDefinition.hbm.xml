@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.WorkflowDefinition" table="cxml_workflowdefinition" extends="com.hannonhill.cascade.model.dom.SystemAreaEntity">
+		<many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.WorkflowDefinitionContainer"
+		/>
+		
+		<property name="workflowType"/>		
+		<property name="applicableGroups" column="groups" type="text"/>
+		
+		<property name="namingValue">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.WorkflowNamingType</param>
+				<param name="type">-6</param>
+			</type>
+		</property>
+		
+		<many-to-one 
+			name="xmlData"
+			column="xmlId"
+			cascade="all"
+			access="field"
+            lazy="false"
+		/>
+		
+		<set name="subscribingFolders" access="field" table="cxml_folders_wfdefs">
+			<key column="definitionId"/>
+			<many-to-many column="folderId" class="com.hannonhill.cascade.model.dom.Folder"/>
+		</set>
+	</union-subclass>
+</hibernate-mapping>

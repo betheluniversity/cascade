@@ -1,0 +1,3 @@
+<div style="float:left; position:absolute; z-index:100;" onclick="return overlib('OVERLIBCODE', STICKY, MOUSEOFF, NOCLOSE, FGCOLOR, '#FFFFFF', BGCOLOR, '#003366', CAPCOLOR, '#EFF0EB', BORDER, 1, CLOSECOLOR, '#EFF0EB', WIDTH, 400, CAPTION, 'REGIONNAME');" onmouseout="return nd();" class="overlibCMS">
+	<img alt="" border="0" src="CONTEXT_PATH/css/icons/ICONTYPE.gif"/>
+</div>

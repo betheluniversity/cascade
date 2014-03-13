@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+      <include file="com/hannonhill/cascade/model/database/updater/updates/7_8/7_8_001.xml"/>
+      <include file="com/hannonhill/cascade/model/database/updater/updates/7_8/7_8_002.xml"/>
+      <include file="com/hannonhill/cascade/model/database/updater/updates/7_8/7_8_003.xml"/>
+      <include file="com/hannonhill/cascade/model/database/updater/updates/7_8/7_8_004.xml"/>
+      <include file="com/hannonhill/cascade/model/database/updater/updates/7_8/7_8_005.xml"/>
+</databaseChangeLog>

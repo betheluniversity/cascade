@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.UnpublishableEntity" table="cxml_unpublishable" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<property name="accountId" />
+		<property name="siteId" />
+		<property name="cmsId" />
+		<property name="originalType" />
+		<property name="cachePath" />
+		<property name="publishPath" />
+		<property name="fullName" />
+		<property name="title" />
+		
+		<many-to-one name="destination" column="destinationId" />
+		<many-to-one name="parent" column="parentEntityId" />
+		<many-to-one name="connector" column="connectorId" />
+		<many-to-one name="originalSite" column="originalSiteId" />
+		
+		<set name="children" inverse="true" cascade="all" fetch="join" lazy="false">
+			<key column="parentEntityId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.UnpublishableEntity"/>
+		</set>
+		
+		<property name="unpublishType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.UnpublishableEntityType</param>
+				<param name="type">-6</param>
+			</type>			
+		</property>
+	</union-subclass>
+</hibernate-mapping>

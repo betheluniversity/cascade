@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+        <changeSet author="artur.tomusiak" id="6_7_016" runOnChange="true">
+           <sql>
+				update cxml_roles set
+				globalAbilities = 3,
+				adminAreaAbilities = 114687,
+				securityAreaAbilities = 130047,
+				homeAreaAbilities = 503312383,
+				toolsAbilities = 32767,
+				sitesAbilities = 7
+				where (globalAbilities &amp; 1) = 1
+				and global = 1 /* Enable all abilities for global roles that have "Global Admin" ability */
+            </sql>
+            
+            <sql>
+				update cxml_roles set
+				globalAbilities = globalAbilities - 1
+				where id != 5 
+				and (globalAbilities &amp; 1) = 1 /* Remove "Global Admin" ability from all roles but global admin */
+            </sql>
+            
+            <modifySql dbms="oracle">
+            	<replace replace="(globalAbilities &amp; 1)" with="bitand(globalAbilities, 1)"/>            	
+           	</modifySql>  
+        </changeSet>
+</databaseChangeLog>

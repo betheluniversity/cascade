@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    
+    <!-- 
+     - CSCD-9816 Increase the size of cxml_history_item.entityId from 32 to 255 characters
+     - to accomodate users and groups
+     -->
+
+    <changeSet author="john.lazos" id="7_8_005">
+        <modifyColumn tableName="cxml_history_item">
+            <column name="entityId" type="VARCHAR(255)"/>
+        </modifyColumn>
+        
+        <modifySql dbms="mssql">
+            <replace replace="VARCHAR(255)" with="NVARCHAR(255)"/>
+        </modifySql>
+    </changeSet>
+        
+</databaseChangeLog>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.Block" discriminator-value="BLO" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity">
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.Block"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.Block"
+		/>
+		
+		<!-- Dublin metadata entity relationships -->
+		<property name="displayName"/>
+		<property name="title"/>
+		<property name="summary" type="text"/>
+		<property name="teaser" type="text"/>
+		<property name="keywords" type="text"/>
+		<property name="description" type="text"/>
+		<property name="author"/>
+		<property name="startDate"/>
+		<property name="endDate"/>
+		<property name="reviewDate"/>
+		
+		<many-to-one
+			name="metadataSet"
+			column="metadataSetId"
+		/>
+		
+		<!-- expiring entity relationships -->
+		<property name="expirationNoticeSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="firstExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="secondExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<many-to-one 
+			name="expirationFolder"
+			column="expirationFolderId"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.Block"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.Block"
+		/>		
+		
+		<many-to-one
+			name="xmlData"
+			cascade="all"
+			column="xmlId"
+			access="field"
+			lazy="false"
+		/>
+        <property name="processXml" formula="1" access="field" />
+		
+		<many-to-one
+			name="indexedFolder"
+			column="blockIndexedFolderId"
+		/>
+		<many-to-one
+		    name="indexedContentType"
+		    column="blockIndexedContentTypeId"
+		/>
+		<many-to-one
+			name="structuredDataDefinition"
+			column="structuredDataDefinitionId"
+		/>
+		<property name="blockType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.BlockType</param>
+				<param name="type">12</param>
+			</type>
+		</property>
+		
+		<property name="indexBlockType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.hannonhill.cascade.model.dom.IndexBlockType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+		
+		<property 
+			name="feedURL"
+			column="blockFeedURL"
+		/>
+		<property 
+			name="indexAssetTypesOptions"
+			column="blockIndexTypesBitmask"
+		/>
+		<property 
+			name="indexAssetContentsOptions"
+			column="blockIndexContentBitmask"
+		/>
+		<property 
+			name="indexOtherInformationOptions"
+			column="blockIndexOtherBitmask"
+		/>
+		<property 
+			name="sortOption"
+			column="blockSortOption"
+		/>
+        <property name="sortOrder" column="blockSortOrder">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.hannonhill.cascade.model.compare.Order</param>
+                <param name="type">-5</param>
+            </type>
+           </property>
+		<property 
+			name="depthOfIndex"
+			column="blockDepthOfIndex"
+		/>
+		<property 
+			name="includePageXML"
+			type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+			column="blockIncludePageXML"
+		/>
+		<property 
+			name="maxRenderedEntities"
+			column="blockMaxRenderedEntities"
+		/>    
+		
+		<set name="entityRelations" table="cxml_entityrelation" inverse="true" cascade="all-delete-orphan">
+            <key column="blockId"/>
+            <one-to-many class="com.hannonhill.cascade.model.dom.EntityRelation"/>
+        </set>
+        
+        <many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.Block"
+     	/>
+     	
+     	<set name="allDrafts" inverse="true" cascade="all-delete-orphan">
+     		<key column="draftOriginalId"/>
+     		<one-to-many class="com.hannonhill.cascade.model.dom.Block"/>
+     	</set>
+     	
+     	<many-to-one 
+			name="structuredData"
+			column="structuredDataId"
+			cascade="all"
+		/>
+		
+		<set name="allStructuredData" inverse="true" cascade="all-delete-orphan">
+			<key column="ownerEntityId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.StructuredData" />
+		</set>
+		
+		<property name="accountName" column="blockTwitterAccountName"/>
+		<property name="searchString" column="blockTwitterSearchString"/>
+		
+		<property name="queryType" column="blockTwitterQueryType">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.TwitterQueryType</param>
+				<param name="type">12</param>
+			</type>
+		</property>
+		
+		<property name="useDefaultStyle" column="blockTwitterDefaultStyle"/>
+		<property name="excludeJQuery" column="blockTwitterExcludeJquery"/>
+	</subclass>
+</hibernate-mapping>

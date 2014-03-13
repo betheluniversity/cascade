@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.StructuredDataDefinitionContainer" table="cxml_structureddatadefcont" extends="com.hannonhill.cascade.model.dom.SystemAreaEntityContainer">
+		<many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.StructuredDataDefinitionContainer"
+		/>
+		<set name="childContainers" inverse="true" cascade="all">
+			<key column="containerId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.StructuredDataDefinitionContainer"/>
+		</set>
+		
+		<set name="children" inverse="true" cascade="all">
+			<key column="containerId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.StructuredDataDefinition"/>
+		</set>
+	</union-subclass>
+</hibernate-mapping>

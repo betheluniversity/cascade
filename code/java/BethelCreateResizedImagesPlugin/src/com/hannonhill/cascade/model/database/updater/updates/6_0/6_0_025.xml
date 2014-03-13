@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <changeSet author="aubrey.rhodes" id="6_0_025">
+             <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_025"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            <addColumn tableName="cxml_site">
+                <column name="baseAssetFactoryContainerId" type="VARCHAR(32)" defaultValue="NULL" />
+                <column name="startingPageId" type="VARCHAR(32)" defaultValue="NULL"></column>
+            </addColumn>
+            <addForeignKeyConstraint referencedTableName="cxml_assetfactorycontainer" baseColumnNames="baseAssetFactoryContainerId" baseTableName="cxml_site" referencedColumnNames="id" constraintName="FK_SITE_AFC"/>
+            <addForeignKeyConstraint referencedTableName="cxml_foldercontent" baseColumnNames="startingPageId" baseTableName="cxml_site" referencedColumnNames="id" constraintName="FK_SITE_STARTPAGE"/>
+            <modifySql dbms="mssql">
+                <replace replace="VARCHAR" with="NVARCHAR"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+         </changeSet>
+         
+         <changeSet author="aubrey.rhodes" id="6_0_025_fixConstraints">
+         	<validCheckSum>e0fdd99684f49fca58d3593d363832</validCheckSum>
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="6_0_025"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <not>
+                	<dbms type="mssql"/>
+                </not>
+            </preConditions>
+            
+            <dropForeignKeyConstraint baseTableName="cxml_site" constraintName="FK_SITE_STARTPAGE"/>
+            <addForeignKeyConstraint referencedTableName="cxml_foldercontent" baseColumnNames="startingPageId" baseTableName="cxml_site" referencedColumnNames="id" constraintName="FK_SITE_STARTPAGE" onDelete="SET NULL"/>
+            
+            <dropForeignKeyConstraint baseTableName="cxml_site" constraintName="FK_SITE_AFC"/>
+            <addForeignKeyConstraint referencedTableName="cxml_assetfactorycontainer" baseColumnNames="baseAssetFactoryContainerId" baseTableName="cxml_site" referencedColumnNames="id" constraintName="FK_SITE_AFC" onDelete="SET NULL" />
+         </changeSet>
+ 
+</databaseChangeLog>

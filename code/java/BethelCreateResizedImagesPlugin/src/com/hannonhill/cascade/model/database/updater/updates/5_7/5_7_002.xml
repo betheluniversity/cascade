@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="5_7_002">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_002"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+           
+           <createTable tableName="cxml_transport">
+                <column name="id" type="VARCHAR(32)">
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CXML_TRANSPORT"/>
+                </column>
+                <column name="transportType" type="VARCHAR(3)"></column>
+                <column name="name" type="VARCHAR(250)"></column>
+                <column name="permissionsId" type="VARCHAR(32)"></column>
+                <column name="metadataId" type="VARCHAR(32)"></column>
+                <column name="containerId" type="VARCHAR(32)"></column>
+                <column name="path" type="VARCHAR(250)"></column>
+                <column name="prevVersionId" type="VARCHAR(32)"></column>
+                <column name="versionDate" type="BIGINT(20)"></column>
+                <column name="nextVersionId" type="VARCHAR(32)"></column>
+                <column name="lockId" type="VARCHAR(32)"></column>
+                <column name="isCurrentVersion" type="TINYINT(4)" defaultValueNumeric="1">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="directory" type="VARCHAR(250)"></column>
+                <column name="writeToZipFile" type="TINYINT(4)"></column>
+                <column name="serverName" type="VARCHAR(250)"></column>
+                <column name="port" type="INT(11)"></column>
+                <column name="userName" type="VARCHAR(250)"></column>
+                <column name="password" type="VARCHAR(250)"></column>
+                <column name="initialDirectory" type="VARCHAR(250)"></column>
+                <column name="isSecure" type="TINYINT(4)"></column>
+                <column name="isPassive" type="TINYINT(4)"></column>
+                <column name="ftpTransVersion" type="TINYINT(3) UNSIGNED"></column>
+                <column name="packetSize" type="INT(11)"></column>
+                <column name="siteId" type="INT(11)"></column>
+                <column name="accountId" type="INT(11)"></column>
+                <column name="databaseName" type="VARCHAR(250)"></column>
+           </createTable>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+                <replace replace="TINYINT(3)" with="TINYINT"/>
+            </modifySql>
+            <modifySql dbms="mysql"> 
+                <append value="engine=innodb"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+                <replace replace="TINYINT(3)" with="NUMBER(4)"/>
+            </modifySql>
+            
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="5_7_002_contraints">
+             <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_002"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+            </preConditions>
+            
+            <addForeignKeyConstraint referencedTableName="cxml_permissions" baseColumnNames="permissionsId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_PERMISSIONS" onDelete="SET NULL"/>
+            
+            
+            <addForeignKeyConstraint referencedTableName="cxml_entitymetadata" baseColumnNames="metadataId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_METADATA"/>
+            
+            
+            <addForeignKeyConstraint referencedTableName="cxml_transportcontainer" baseColumnNames="containerId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_CONTAINER"/>
+            
+            <addForeignKeyConstraint referencedTableName="cxml_transport" baseColumnNames="prevVersionId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_PREVVERSION"/>
+            
+            
+            <addForeignKeyConstraint referencedTableName="cxml_transport" baseColumnNames="nextVersionId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_NEXTVERSION"/>
+            
+            
+            <addForeignKeyConstraint referencedTableName="cxml_entitylock" baseColumnNames="lockId" baseTableName="cxml_transport" referencedColumnNames="id" constraintName="FK_TRANSPORT_LOCK" onDelete="SET NULL"/>
+            
+            
+            <createIndex tableName="cxml_transport" indexName="IDX_TRANSPORT_CONTAINER">
+                <column name="containerId"></column>
+            </createIndex>
+            
+            
+            <createIndex tableName="cxml_transport" indexName="IDX_TRANSPORT_PATH">
+                <column name="path"></column>
+            </createIndex>
+            
+            <sql>
+                <![CDATA[
+                    insert into cxml_transport
+					(
+					    id,
+					    transportType,
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    containerId,
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    serverName,
+					    port,
+					    userName,
+					    password,
+					    initialDirectory,
+					    isSecure,
+					    isPassive,
+					    ftpTransVersion,
+					    packetSize
+					) 
+					select
+					    id,
+					    'FTP',
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    'FTP',
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    serverName,
+					    port,
+					    userName,
+					    password,
+					    initialDirectory,
+					    isSecure,
+					    isPassive,
+					    version,
+					    packetSize
+					from cxml_transport_ftp
+                ]]>
+            </sql>
+            
+            <sql>
+                <![CDATA[
+                    insert into cxml_transport
+					(
+					    id,
+					    transportType,
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    containerId,
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    directory,
+					    writeToZipFile
+					) 
+					select
+					    id,
+					    'FST',
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    'FS',
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    directory,
+					    writeToZipFile
+					from cxml_transport_fs
+                ]]>
+            </sql>
+            
+            <sql>
+                <![CDATA[
+                    insert into cxml_transport
+					(
+					    id,
+					    transportType,
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    containerId,
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    serverName,
+					    port,
+					    userName,
+					    password,
+					    siteId,
+					    accountId,
+					    databaseName
+					) 
+					select
+					    id,
+					    'DB',
+					    name,
+					    path,
+					    permissionsId,
+					    metadataId,
+					    'DB',
+					    prevVersionId,
+					    versionDate,
+					    nextVersionId,
+					    lockId,
+					    isCurrentVersion,
+					    serverName,
+					    port,
+					    userName,
+					    password,
+					    siteId,
+					    accountId,
+					    databaseName
+					from cxml_transport_db
+                ]]>
+            </sql>
+        </changeSet>
+
+        <changeSet author="aubrey.rhodes" id="5_7_002_2">
+            <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_002"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <not>
+                    <dbms type="mssql"/>
+                </not>
+            </preConditions>
+            
+            <addUniqueConstraint tableName="cxml_transport" columnNames="permissionsId" constraintName="UQ_TRANSPORT_PERMISSIONS"/>
+            <addUniqueConstraint tableName="cxml_transport" columnNames="metadataId" constraintName="UQ_TRANSPORT_METADATA"/>
+            <addUniqueConstraint tableName="cxml_transport" columnNames="prevVersionId" constraintName="UQ_TRANSPORT_PREVVERSION"/>
+            <addUniqueConstraint tableName="cxml_transport" columnNames="nextVersionId" constraintName="UQ_TRANSPORT_NEXTVERSION"/>
+            <addUniqueConstraint tableName="cxml_transport" columnNames="lockId" constraintName="UQ_TRANSPORT_LOCK"/>
+            
+        </changeSet>
+ 
+</databaseChangeLog>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="mike.strauch" id="6_4_012">
+           <createIndex tableName="cxml_mail" indexName="IDX_MAIL_SEND_DATE">
+           	<column name="sendDate"/>
+           </createIndex>
+           
+           <createIndex tableName="cxml_mail" indexName="IDX_MAIL_RECEIVE_DATE">
+           	<column name="receiveDate"/>
+           </createIndex>
+            
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+	            <replace replace="TINYINT(1)" with="TINYINT"/>
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="TINYINT(5)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <!--  only use if creating a table 
+                <append value="engine=innodb"/>
+                -->                
+            </modifySql>
+            <modifySql dbms="oracle">
+            	<replace replace="TINYINT(1)" with="NUMBER(1)"/>
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <replace replace="TINYINT(5)" with="NUMBER(5)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>           
+        </changeSet> 
+</databaseChangeLog>

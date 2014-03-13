@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.SystemAreaEntity" abstract="true" extends="com.hannonhill.cascade.model.dom.PermissionsCapableEntity">
+		<property name="path"/>
+		
+		<many-to-one 
+			name="site" 
+			column="siteId"
+			class="com.hannonhill.cascade.model.dom.Site"
+		/>		
+	</union-subclass>
+</hibernate-mapping>

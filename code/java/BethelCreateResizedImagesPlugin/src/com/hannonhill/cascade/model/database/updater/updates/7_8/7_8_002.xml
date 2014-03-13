@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+         <changeSet author="mike.strauch" id="7_8_002">        
+      <createTable tableName="cxml_history_item">
+        <column name="id" type="VARCHAR(32)">
+          <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CXML_HISTORY_ITEM"/>
+        </column>
+        <column name="entityId" type="VARCHAR(32)">
+          <constraints nullable="false"/>
+        </column>
+        <column name="entityType" type="VARCHAR(250)">
+          <constraints nullable="false"/>
+        </column>
+        <column name="timestamp" type="BIGINT(20)">
+          <constraints nullable="false"/>
+        </column>
+        <column name="username" type="VARCHAR(250)">
+          <constraints nullable="false"/>
+        </column>
+      </createTable>
+      
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(1)" with="TINYINT"/>
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="TINYINT(5)" with="TINYINT"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+            <modifySql dbms="mysql">
+                <append value="engine=innodb"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(1)" with="NUMBER(1)"/>
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <replace replace="TINYINT(5)" with="NUMBER(5)"/>
+                <regExpReplace replace="NUMBER\(19,0\)\([0-9]*\)" with="NUMBER(19,0)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet>
+        
+        <changeSet author="mike.strauch" id="7_8_002a">
+          <createIndex tableName="cxml_history_item" indexName="IDX_HISTORY_ITEM_USER">
+        <column name="username"/>
+      </createIndex>
+      <createIndex tableName="cxml_history_item" indexName="IDX_HISTORY_ITEM_ENTITYID">
+        <column name="entityId"/>
+      </createIndex>
+      <addUniqueConstraint tableName="cxml_history_item" columnNames="username,entityId,entityType" constraintName="UQ_HISTORY_ITEM_IDTYPENAME"/>
+        </changeSet>
+</databaseChangeLog>

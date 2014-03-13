@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="cacheManager" class="com.hannonhill.cascade.cache.CascadeEhCacheManagerFactoryBean">
+		<property name="propertiesLocation" value="file:${catalina.home}/conf/ehcache.properties"/>
+	</bean>
+	
+	<bean id="baseCache" class="com.hannonhill.cascade.cache.BaseCache" abstract="true">
+		<property name="cacheManager" ref="cacheManager"/>
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	
+	<bean id="newMenuCache" class="com.hannonhill.cascade.cache.NewMenuCache" parent="baseCache" />	
+	<bean id="indexBlockRenderPropertiesCache" class="com.hannonhill.cascade.cache.IndexBlockRenderPropertiesCache" parent="baseCache" />
+	<bean id="defaultIndexBlockRenderCache" class="com.hannonhill.cascade.cache.DefaultEhcacheIndexBlockRenderCache" parent="baseCache">
+		<property name="props" ref="indexBlockRenderPropertiesCache"/>
+	</bean>
+	<bean id="indexBlockRenderCacheFactory" class="com.hannonhill.cascade.cache.IndexBlockRenderCacheFactory">
+		<property name="defaultCache" ref="defaultIndexBlockRenderCache"/>
+		<property name="serviceProvider" ref="serviceProvider"/>
+	</bean>
+	
+	<bean id="cacheDiscarderProvider" class="com.hannonhill.cascade.cache.discarder.CacheDiscarderProviderImpl">
+		<property name="typeToCacheDiscardersMap" ref="typeToCacheDiscardersMap"/>
+	</bean>
+	<bean id="typeToCacheDiscardersMap" class="java.util.HashMap">	
+		<constructor-arg>
+			<map>
+				<entry key-ref="blockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="indexBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="feedBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="structuredDataBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="textBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="xmlBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="twitterFeedBlockEntityType" value-ref="blockCacheDiscarer"/>
+				<entry key-ref="folderEntityType" value-ref="folderCacheDiscarder"/>
+				<entry key-ref="pageEntityType" value-ref="pageCacheDiscarder"/>
+				<entry key-ref="fileEntityType" value-ref="fileCacheDiscarder"/>
+				<entry key-ref="referenceEntityType" value-ref="referenceCacheDiscarder"/>
+				<entry key-ref="symlinkEntityType" value-ref="symlinkCacheDiscarder"/>
+				<entry key-ref="assetFactoryType" value-ref="assetFactoryCacheDiscarder"/>
+				<entry key-ref="assetFactoryContainerType" value-ref="assetFactoryContainerCacheDiscarder"/>
+				<entry key-ref="siteType" value-ref="siteCacheDiscarder"/>
+				<entry key-ref="userType" value-ref="userCacheDiscarder"/>
+				<entry key-ref="groupType" value-ref="groupCacheDiscarder"/>
+				<entry key-ref="roleType" value-ref="roleCacheDiscarder"/>
+				<entry key-ref="contentTypeType" value-ref="contentTypeCacheDiscarder"/>
+				<entry key-ref="metadataSetType" value-ref="metadataSetCacheDiscarder"/>
+				<entry key-ref="structuredDataDefinitionType" value-ref="structuredDataDefinitionCacheDiscarder"/>
+				<entry key-ref="structuredDataDefinitionContainerType" value-ref="structuredDataDefinitionContainerCacheDiscarder"/>
+				<entry key-ref="workflowType" value-ref="workflowCacheDiscarder"/>
+			</map>
+		</constructor-arg>	
+	</bean>
+	
+	<!-- Abstract view builder bean for injecting service wide dependencies -->
+	<bean id="baseCacheDiscarder" abstract="true">
+		<property name="indexBlockRenderCacheFactory" ref="indexBlockRenderCacheFactory"/>
+		<property name="newMenuCache" ref="newMenuCache"/>
+	</bean>
+	
+	<bean id="blockCacheDiscarer" class="com.hannonhill.cascade.cache.discarder.BlockCacheDiscarder" parent="baseCacheDiscarder"/>
+	<bean id="folderCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.FolderCacheDiscarder" parent="baseCacheDiscarder"/>
+	<bean id="pageCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.PageCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="fileCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.FileCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="referenceCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.ReferenceCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="symlinkCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.SymlinkCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="assetFactoryCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.AssetFactoryCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="assetFactoryContainerCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.AssetFactoryContainerCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="siteCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.SiteCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="userCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.UserCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="groupCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.GroupCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="roleCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.RoleCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="contentTypeCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.ContentTypeCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="metadataSetCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.MetadataSetCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="structuredDataDefinitionCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.StructuredDataDefinitionCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="structuredDataDefinitionContainerCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.StructuredDataDefinitionContainerCacheDiscarder" parent="baseCacheDiscarder" />
+	<bean id="workflowCacheDiscarder" class="com.hannonhill.cascade.cache.discarder.WorkflowCacheDiscarder" parent="baseCacheDiscarder" />
+</beans>

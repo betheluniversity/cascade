@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.hannonhill.cascade.model.dom.ConnectorParameter" table="cxml_connectorparameter">
+    	<id name="id" type="string" unsaved-value="null" >
+			<generator class="com.hannonhill.cascade.model.util.keygen.CascadeHibernateKeyGenerator"/>
+		</id>
+		<many-to-one name="connector">
+			<column name="connectorId"/>
+		</many-to-one>
+		<property name="paramName"/>
+		<property name="value" column="paramValue" type="text"/>
+		<property name="hidden" column="isHidden"/>
+	</class>
+</hibernate-mapping>

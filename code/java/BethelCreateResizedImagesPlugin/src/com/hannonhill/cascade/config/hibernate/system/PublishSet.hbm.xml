@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.PublishSet" table="cxml_publishset" extends="com.hannonhill.cascade.model.dom.SystemAreaEntity">
+		<many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.PublishSetContainer"
+		/>
+		<set name="publishSetRecords" inverse="true" cascade="all-delete-orphan">
+			<key column="publishSetId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.PublishSetRecord"/>
+		</set>
+		
+		<property name="publishEvery"/>
+		<property name="publishEveryTimeUnit"/>
+		<property name="timeToPublish"/>
+		<property 
+        	name="usesScheduledPublishing" 
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+        <property name="daysOfWeekToPublish"/>
+		<property name="cronExpression"/>
+		<property name="sendReportToUsers" type="text"/>
+		<property name="sendReportToGroups" type="text"/>
+		<property 
+        	name="sendReportOnErrorOnly" 
+        	type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+        />
+	</union-subclass>
+</hibernate-mapping>

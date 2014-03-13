@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="5_5_014_mysql">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_5_014"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mysql"/>
+            </preConditions>
+           
+           
+           <sql>
+            update cxml_pageconfiguration child, cxml_pageconfiguration parent
+			set child.name = parent.name
+			where child.parentConfigurationId = parent.id
+			and child.name like '(child)'
+			and child.parentConfigurationId is not null;
+           </sql>           
+            
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="5_5_014_mssql">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_5_014"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mssql"/>
+            </preConditions>
+           
+           
+           <sql>
+            UPDATE child
+			SET child.name = parent.name
+			FROM cxml_pageconfiguration child, cxml_pageconfiguration parent
+			WHERE child.parentConfigurationId = parent.id 
+			AND child.name LIKE '(child)' 
+			AND child.parentConfigurationId IS NOT null;
+           </sql>           
+            
+        </changeSet>
+        
+        <changeSet author="aubrey.rhodes" id="5_5_014_oracle">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_5_014"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="oracle"/>
+            </preConditions>
+           
+           
+           <sql>
+            update cxml_pageconfiguration child
+			set child.name = 
+			    (select name
+			    from cxml_pageconfiguration
+			    where id = child.parentConfigurationId)
+			where child.name like '(child)' and child.parentConfigurationId is not null
+           </sql>           
+            
+        </changeSet>
+ 
+</databaseChangeLog>

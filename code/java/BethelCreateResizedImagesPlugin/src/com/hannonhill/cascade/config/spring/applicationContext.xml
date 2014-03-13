@@ -1,0 +1,62 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+  
+	<!-- enable annotation-driven AOP advice -->
+	<aop:aspectj-autoproxy/>
+	
+	<bean name="baseAspect" class="com.hannonhill.cascade.aspect.BaseAspect" abstract="true">
+	</bean>
+	
+	<bean id="cacheAspect" class="com.hannonhill.cascade.aspect.CachingAspect" parent="baseAspect">
+		<property name="order" value="5"/>
+	</bean>
+	
+	<!-- start transactional aspects -->
+	
+	<bean id="transactionExceptionAspect" class="com.hannonhill.cascade.aspect.TransactionExceptionAspect" parent="baseAspect">
+		<property name="order" value="10"/>
+	</bean>
+	
+	<bean id="retryTransactionAspect" class="com.hannonhill.cascade.aspect.RetryTransactionAspect" parent="baseAspect">
+		<property name="numberOfRetries" value="3"/>
+		<property name="order" value="20"/>
+	</bean>
+	
+	<bean id="retryMethodAspect" class="com.hannonhill.cascade.aspect.RetryMethodAspect" parent="baseAspect"/>
+	
+	<bean id="transactionExceptionDecoderAspect" class="com.hannonhill.cascade.aspect.TransactionalExceptionDecoderAspect" parent="baseAspect">
+		<property name="order" value="30"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="txManager" order="40"/>
+	
+	<bean id="transactionTimerAspect" class="com.hannonhill.cascade.aspect.TransactionTimer" parent="baseAspect">
+		<property name="order" value="45"/>
+		<property name="warnThreshold" value="1500"/>
+	</bean>
+	
+	<bean id="transactionExceptionEncoderAspect" class="com.hannonhill.cascade.aspect.TransactionalExceptionEncoderAspect" parent="baseAspect">
+		<property name="order" value="50"/>
+	</bean>
+	
+	<!-- end transactional aspects -->
+
+	<bean class="com.hannonhill.cascade.aspect.DAOAspectLogger">
+		<property name="warnThreshold" value="1000" />
+	</bean>
+
+	<bean class="com.hannonhill.cascade.aspect.ServiceAspectLogger">
+		<property name="warnThreshold" value="10000" />
+	</bean>
+
+	<!-- message bundle bean -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames" value="com.hannonhill.cascade.resources.application,resources.customer"/>
+	</bean>
+</beans>

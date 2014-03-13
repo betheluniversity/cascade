@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+         <!-- Because of alphabetically sorting, 6_10 would come before 6_8, so we call it 6_A to work around that fact  -->
+        <changeSet author="adam.griffis" id="6_A_001" runOnChange="false">
+        	<!-- Add the basePublishingURL for destination -->
+         	<addColumn tableName="cxml_destination">
+         		<column name="publishingBaseURL" type="VARCHAR(64)"/>
+         	</addColumn>
+        </changeSet>
+ 
+</databaseChangeLog>

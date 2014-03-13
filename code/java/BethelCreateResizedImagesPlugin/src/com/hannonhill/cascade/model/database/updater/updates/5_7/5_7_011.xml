@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="aubrey.rhodes" id="5_7_011_mysql">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_011"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mysql"/>
+            </preConditions>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='folder' WHERE a.entityId=fc.id AND fc.assetType='FOL' AND a.entityType='foldercontained';
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='page' WHERE a.entityId=fc.id AND fc.assetType='PAG' AND a.entityType='foldercontained'; 
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='block' WHERE a.entityId=fc.id AND fc.assetType='BLO' AND a.entityType='foldercontained';
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='file' WHERE a.entityId=fc.id AND fc.assetType='FIL' AND a.entityType='foldercontained';
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='template' WHERE a.entityId=fc.id AND fc.assetType='TEM' AND a.entityType='foldercontained';
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='format' WHERE a.entityId=fc.id AND fc.assetType='XSL' AND a.entityType='foldercontained';
+           </sql>
+           
+           <sql>
+                UPDATE cxml_audit a, cxml_foldercontent fc SET a.entityType='symlink' WHERE a.entityId=fc.id AND fc.assetType='SYM' AND a.entityType='foldercontained';
+           </sql>          
+            
+            
+        </changeSet>
+        
+         <changeSet author="aubrey.rhodes" id="5_7_011_mssql">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_011"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="mssql"/>
+            </preConditions>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='folder' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='FOL' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='page' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='PAG' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='block' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='BLO' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='file' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='FIL' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='template' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='TEM' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='format' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='XSL' AND a.entityType='foldercontained';
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit SET entityType='symlink' FROM cxml_audit a, cxml_foldercontent fc WHERE a.entityId=fc.id AND fc.assetType='SYM' AND a.entityType='foldercontained';
+            </sql>
+            
+         </changeSet>
+         
+         <changeSet author="aubrey.rhodes" id="5_7_011_oracle">
+           <preConditions onFail="MARK_RAN">
+                <customPrecondition className="com.hannonhill.cascade.model.database.updater.DatabaseVersionPrecondition">
+                    <param name="changeVersion" value="5_7_011"/>
+                    <param name="compareMethod" value="GREATER_THAN"/>
+                </customPrecondition>
+                <dbms type="oracle"/>
+            </preConditions>
+                
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='folder'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='FOL'
+				    and ad.entityType='foldercontained')
+            </sql>  
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='page'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='PAG'
+				    and ad.entityType='foldercontained')
+            </sql>        
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='block'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='BLO'
+				    and ad.entityType='foldercontained')
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='file'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='FIL'
+				    and ad.entityType='foldercontained')
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='template'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='TEM'
+				    and ad.entityType='foldercontained')
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='format'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='XSL'
+				    and ad.entityType='foldercontained')
+            </sql>
+            
+            <sql>
+                UPDATE cxml_audit a
+				SET a.entityType='symlink'
+				WHERE a.entityId in
+				    (select ad.entityId
+				    from cxml_audit ad, cxml_foldercontent fc
+				    where a.entityId=fc.id
+				    and fc.assetType='SYM'
+				    and ad.entityType='foldercontained')
+            </sql>
+                
+            </changeSet>
+ 
+</databaseChangeLog>

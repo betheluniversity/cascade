@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<subclass name="com.hannonhill.cascade.model.dom.Page" discriminator-value="PAG" extends="com.hannonhill.cascade.model.dom.FolderContainedEntity">
+		<!-- Versioned entity relationships -->
+		<many-to-one
+			name="previousVersion"
+			column="prevVersionId"
+			cascade="all"
+			class="com.hannonhill.cascade.model.dom.Page"
+		/>
+		<many-to-one
+			name="nextVersion"
+			column="nextVersionId"
+			cascade="save-update"
+			class="com.hannonhill.cascade.model.dom.Page"
+		/>
+		
+		<!-- workflow enabled entity relationships -->
+		<many-to-one
+			name="originalCopy"
+			column="originalCopyId"
+			class="com.hannonhill.cascade.model.dom.Page"
+		/>
+		<many-to-one
+			name="workingCopy"
+			column="workingCopyId"
+			class="com.hannonhill.cascade.model.dom.Page"
+		/>
+		
+		<!-- Dublin metadata entity relationships -->
+		<property name="displayName"/>
+		<property name="title"/>
+		<property name="summary" type="text"/>
+		<property name="teaser" type="text"/>
+		<property name="keywords" type="text"/>
+		<property name="description" type="text"/>
+		<property name="author"/>
+		<property name="startDate"/>
+		<property name="endDate"/>
+		<property name="reviewDate"/>
+		
+		<many-to-one
+			name="metadataSet"
+			column="metadataSetId"
+			access="field"
+		/>		
+		
+		<!-- expiring entity relationships -->
+		<property name="expirationNoticeSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="firstExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="secondExpirationWarningSent" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<many-to-one 
+			name="expirationFolder"
+			column="expirationFolderId"
+		/>
+		
+		<property 
+			name="shouldMaintainAbsoluteLinks" 
+			type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType"
+			column="maintainAbsoluteLinks"
+		/>
+	
+		<many-to-one 
+			name="xmlData"
+			column="xmlId"
+			cascade="all"
+			access="field"
+			fetch="join"
+            lazy="false"
+		/>
+        <property name="processXml" formula="1" access="field" />
+		
+		<many-to-one 
+			name="structuredDataDefinition"
+			column="structuredDataDefinitionId"
+			access="field"
+		/>
+		<many-to-one 
+			name="pageConfigurationSet"
+			column="pageConfigurationSetId"
+			access="field"
+		/>
+		<many-to-one 
+			name="structuredDataPersisted"
+			column="structuredDataId"
+			cascade="all"
+		/>
+		<property 
+			name="structuredDataVersion"
+			column="pageStructuredDataVersion"
+		/>
+	
+		<set name="pageConfigurations" inverse="true" cascade="all-delete-orphan">
+			<key column="pageId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.PageConfiguration"/>
+		</set>
+		
+		<set name="entityRelations" table="cxml_entityrelation" inverse="true" cascade="all-delete-orphan">
+            <key column="pageId"/>
+            <one-to-many class="com.hannonhill.cascade.model.dom.EntityRelation"/>
+        </set>
+		
+		<set name="references" inverse="true" cascade="delete">
+			<key column="referencePageId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.Reference" />
+		</set>
+		
+		<set name="publishSetRecords" inverse="true" cascade="delete">
+			<key column="pageId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.PublishSetRecord" />
+		</set>
+		
+		<set name="allStructuredData" inverse="true" cascade="all-delete-orphan">
+			<key column="ownerEntityId" />
+			<one-to-many class="com.hannonhill.cascade.model.dom.StructuredData" />
+		</set>
+		
+		<property name="shouldBeIndexed" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="shouldBePublished" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" />
+		<property name="lastDatePublished" />
+		<property
+			name="lastPublishedById" 
+			column="lastPublishedBy"
+		/>
+		
+		<many-to-one
+     		name="draftOriginal" 
+     		column="draftOriginalId"
+     		class="com.hannonhill.cascade.model.dom.Page"
+     	/>
+     	
+     	<set name="allDrafts" inverse="true" cascade="all-delete-orphan">
+     		<key column="draftOriginalId"/>
+     		<one-to-many class="com.hannonhill.cascade.model.dom.Page"/>
+     	</set>
+     	
+     	<many-to-one
+     		name="contentType"
+     		column="contentTypeId"
+     		class="com.hannonhill.cascade.model.dom.ContentType"
+     		fetch="join"
+     		lazy="false"     		
+     	/>		
+	</subclass>
+</hibernate-mapping>

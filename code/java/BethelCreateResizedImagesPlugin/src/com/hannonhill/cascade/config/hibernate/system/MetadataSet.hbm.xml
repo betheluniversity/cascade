@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.MetadataSet" table="cxml_metadataset" extends="com.hannonhill.cascade.model.dom.SystemAreaEntity">
+		<many-to-one 
+			name="parentContainer" 
+			column="containerId"
+			class="com.hannonhill.cascade.model.dom.MetadataSetContainer"
+		/>
+		
+		<set name="dynamicMetadataFieldDefinitions" inverse="true" cascade="all-delete-orphan">
+			<key column="metadataSetId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.DynamicMetadataFieldDefinition"/>
+		</set>
+		
+		<property name="displayNameRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_displayname"/>
+		<property name="displayNameVisibility" column="vis_displayname">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="titleRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_title"/>
+		<property name="titleVisibility" column="vis_title">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="summaryRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_summary"/>
+		<property name="summaryVisibility" column="vis_summary">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="teaserRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_teaser"/>
+		<property name="teaserVisibility" column="vis_teaser">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="keywordsRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_keywords"/>
+		<property name="keywordsVisibility" column="vis_keywords">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="descriptionRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_description"/>
+		<property name="descriptionVisibility" column="vis_description">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="authorRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_author"/>
+		<property name="authorVisibility" column="vis_author">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="startDateRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_startdate"/>
+		<property name="startDateVisibility" column="vis_startdate">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="endDateRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_enddate"/>
+		<property name="endDateVisibility" column="vis_enddate">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="expirationFolderRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_expirationfolder"/>
+		<property name="expirationFolderVisibility" column="vis_expirationfolder">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">4</param>
+			</type>
+		</property>
+		
+		<property name="reviewDateRequired" type="com.hannonhill.cascade.config.hibernate.types.CascadeBooleanType" column="req_reviewdate"/>
+		<property name="reviewDateVisibility" column="vis_reviewdate">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.hannonhill.cascade.model.dom.MetadataFieldVisibility</param>
+				<param name="type">-6</param>
+			</type>
+		</property>
+	</union-subclass>
+</hibernate-mapping>

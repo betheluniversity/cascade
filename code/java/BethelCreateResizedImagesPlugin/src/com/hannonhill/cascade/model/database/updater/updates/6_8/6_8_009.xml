@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+         
+        <changeSet author="bradley.wagner" id="6_8_009" runOnChange="false">
+        	<validCheckSum>5272e9b7171c3e53254d532a237828</validCheckSum>
+        
+        	<dropIndex indexName="IDX_ASSETSTATS_PAGEVIEWS" tableName="cxml_assetstats"/>
+        
+           	<modifyColumn tableName="cxml_assetstats">
+           		<column name="exits" type="BIGINT(20)" />
+           		<column name="entrances" type="BIGINT(20)" />
+           		<column name="bounces" type="BIGINT(20)" />
+           		<column name="totalTime" type="BIGINT(20)" />
+           		<column name="averageTime" type="BIGINT(20)" />
+           		<column name="pageViews" type="BIGINT(20)" />
+           		<column name="visits" type="BIGINT(20)" />
+           		<column name="absoluteUniqueVisitors" type="BIGINT(20)" />
+           	</modifyColumn>
+           	
+           	<createIndex tableName="cxml_assetstats" indexName="IDX_ASSETSTATS_PAGEVIEWS">
+        		<column name="pageViews"></column>
+        	</createIndex>
+           
+            <!-- The following statements handle the column type mappings for id and boolean fields -->
+            <modifySql dbms="mssql">
+                <replace replace="TINYINT(4)" with="TINYINT"/>
+                <replace replace="VARCHAR(3)" with="NVARCHAR(3)"/>
+                <replace replace="VARCHAR(32)" with="NVARCHAR(32)"/>
+                <replace replace="VARCHAR(250)" with="NVARCHAR(250)"/>
+                <replace replace="BIGINT(20)" with="BIGINT"/>
+                <regExpReplace replace=" INT\([0-9]*\)" with=" INT"/>
+            </modifySql>
+             <modifySql dbms="mysql">
+                <replace replace="FLOAT(12)" with="FLOAT(12,2)"/>
+            </modifySql>
+            <modifySql dbms="oracle">
+                <replace replace="TINYINT(4)" with="NUMBER(4)"/>
+                <regExpReplace replace="NUMERIC\(12,2\)" with="NUMBER(12,2)"/>
+                <regExpReplace replace=" INT\(" with=" NUMBER("/>
+            </modifySql>
+        </changeSet> 
+</databaseChangeLog>

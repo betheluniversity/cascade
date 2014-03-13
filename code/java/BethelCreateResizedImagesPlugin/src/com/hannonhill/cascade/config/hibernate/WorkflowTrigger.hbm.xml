@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//END" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<union-subclass name="com.hannonhill.cascade.model.dom.WorkflowTrigger" table="cxml_workflowtrigger" extends="com.hannonhill.cascade.model.dom.NamedEntity">
+		<property name="className"/>
+		<many-to-one
+			name="nextTrigger"
+			column="nextTriggerId"
+			cascade="all"
+			unique="true"
+		/>
+		<many-to-one
+			name="prevTrigger"
+			column="prevTriggerId"
+			cascade="all"
+			unique="true"
+		/>
+		<set name="parameters" inverse="true" cascade="all">
+			<key column="triggerId"/>
+			<one-to-many class="com.hannonhill.cascade.model.dom.WorkflowTriggerParameter"/>
+		</set>
+	</union-subclass>
+</hibernate-mapping>
