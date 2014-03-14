@@ -40,7 +40,7 @@ import com.hannonhill.cascade.util.ImageUtil;
 /**
  * Provides the ability to resize an image upon creation to a given
  * width and height. Effective for PNG and JPEG images.
- * 
+ *
  * @author Eric Jameson  (copy of HH's ImageResizerPlugin, with a modified output)
  * @since 4.3
  */
@@ -142,10 +142,10 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
     /**
      * Creates a new name for the resized image by appending "-$WIDTHx$HEIGHT" to the name
      * of the file before the extension.
-     * 
+     *
      * For example, if the original image were "image.jpg" and the resized dimensions were
      * 640 width and 480 height this function would produce "image-640x480.jpg".
-     * 
+     *
      * @param extension FileExtension object that has parsed the name of the original file
      * @param newDimensions the dimensions of the resized image
      * @return a new name for the resized image of the form "$BASENAME-$WIDTHx$HEIGHT.$EXTENSION"
@@ -157,12 +157,12 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
 
     /**
      * Validates the parameters passed to the plug-in before proceeding:
-     * 
+     *
      * 1.) that the number of additional images is String representing a non-negative integer
      * 2.) that the widths and heights are non-null, and not empty
      * 3.) that the widths and heights contain the same number of values as the number of additional
      * images to be created
-     * 
+     *
      * @throws PluginException if the parameters are invalid
      */
     private final void validateParameters() throws PluginException
@@ -216,7 +216,7 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
 
     /**
      * Ensures the folder the original file is placed in has "no workflow required".
-     * 
+     *
      * @param folderId the id of the folder the original file is being placed in.
      * @throws FatalPluginException if the folder does not have "no workflow required"
      */
@@ -243,7 +243,7 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
 
     /**
      * Persists the file described by the FileModelBean
-     * 
+     *
      * @param newFile the FileModelBean containing the information to persist.
      * @param username the username of the user creating the file
      * @throws FatalPluginException
@@ -269,7 +269,7 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
      * Gets the bytes of a resized image, resized from original using newDimensions as the absolute pixel
      * dimensions,
      * serializing it in the format specified by extension.
-     * 
+     *
      * @param original the original BufferedImage to resize.
      * @param newDimensions the new dimensions of the image, in pixels
      * @param extension the extension of the original file - this determines the type of image that is written
@@ -294,7 +294,7 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
 
     /**
      * Gets the new image dimensions by parsing the newHeightStr and newWidthStr.
-     * 
+     *
      * @param originalDimensions the original dimensions, needed if newHeightStr or newWidthStr are a
      *        percentage.
      * @param newHeightStr a string describing the new height (a percentage if it contains a '%', a pixel
@@ -386,7 +386,7 @@ public final class BethelCreateResizedImagesPlugin extends BaseAssetFactoryPlugi
 
     /**
      * Returns current user
-     * 
+     *
      * @return
      * @throws PluginException
      */
