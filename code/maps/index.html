@@ -11,23 +11,20 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript">
 
-    // Bethel University Main Campus
-    // 3900 Bethel Dr.
-    // Arden Hills, MN 55112
-    //
-    // Pine Tree
-    // 2 Pine Tree Drive
-    // Arden Hills, MN 55112
-    //
-    // Bloomington Site
-    // Normandale Place 4th Floor
-    // 8201 Norman Center Drive
-    // Bloomington, MN 55437-1053
-    //
-    // Plymouth
-    // Intermediate District 287 Conference Center
-    // 1820 Xenium Lane North
-    // Plymouth, MN 55441
+    /*
+        Bethel University Main Campus
+        3900 Bethel Dr.
+        Arden Hills, MN 55112
+
+        Pine Tree
+        2 Pine Tree Drive
+        Arden Hills, MN 55112
+
+        Bloomington
+        Normandale Place 4th Floor
+        8201 Norman Center Drive
+        Bloomington, MN 55437-1053
+    */
 
     var locations =
     {
@@ -35,10 +32,7 @@
             "ardenhills": {
                 "label": "St. Paul Campus",
                 "address": "3900 Bethel Drive, St. Paul, MN 55112",
-                "lat": 45.059770,
-                "long": -93.160723,
-                "zoom": 16,
-                "buildings": {
+                "locations": {
                     "edgrenhall": {
                         "label": "Edgren Hall",
                         "lat": 45.056475,
@@ -85,66 +79,37 @@
             }
         },
         "collection": {
-            /*
-            Bethel University Main Campus
-            3900 Bethel Dr.
-            Arden Hills, MN 55112
-
-            Pine Tree
-            2 Pine Tree Drive
-            Arden Hills, MN 55112
-
-            Bloomington
-            Normandale Place 4th Floor
-            8201 Norman Center Drive
-            Bloomington, MN 55437-1053
-
-            Red Fox Site
-            1200 Red Fox Road
-            Arden Hills, MN 55112
-
-            Brooklyn Park
-            North Hennepin Community College
-            7411 85th Avenue North
-            Brooklyn Park, MN 55445
-
-            Saint Paul - Frogtown/Summit-University (FSU)
-            ModelCities Brownstone Building
-            849 University Avenue
-            St. Paul, MN 55104
-
-            Pine City
-            Pine Technical College
-            900 4th Street SE
-            Pine City, MN 55063
-
-            Plymouth
-            Intermediate District 287 Conference Center
-            1820 Xenium Lane North
-            Plymouth, MN 55441
-            */
-
             "sattelite": {
                 "label": "Satellite",
                 "locations": {
                     "brooklynpark": {
                         "label": "Brooklyn Park",
+                        "building": "North Hennepin Community College",
                         "address": "7411 85th Avenue North, Brooklyn Park, MN 55445",
                         "lat": 45.106893,
                         "long": -93.374478
                     },
                     "plymouth": {
                         "label": "Plymouth",
+                        "building": "Intermediate District 287 Conference Center",
                         "address": "1820 Xenium Lane North, Plymouth, MN 55441",
                         "lat": 44.999685,
                         "long": -93.450536
                     },
-                    // "pinecity": {
-                    //     "label": "Pine City",
-                    //     "address": "900 4th Street SE, Pine City, MN 55063",
-                    //     "lat": 45.819095,
-                    //     "long": -92.968894
-                    // }
+                    "pinecity": {
+                        "label": "Pine City",
+                        "building": "Pine Technical College",
+                        "address": "900 4th Street SE, Pine City, MN 55063",
+                        "lat": 45.819095,
+                        "long": -92.968894
+                    },
+                    "frogtown": {
+                        "label": "Saint Paul - Frogtown/Summit-University (FSU)",
+                        "building": "ModelCities Brownstone Building",
+                        "address": "849 University Avenue, St. Paul, MN 55104",
+                        "lat": 44.956028,
+                        "long":  -93.135738
+                    }
                 }
             }
         }
@@ -155,7 +120,7 @@
     </head>
     <body>
         <div id="map_select"></div>
-        <div id="bldg_select"></div>
+        <div id="loc_select"></div>
         <div id="map_canvas"></div>
     </body>
 </html>
