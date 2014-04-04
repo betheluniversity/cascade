@@ -26,7 +26,6 @@ function initialize(location, type) {
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
         deleteMarkers();
-        createLocationSelect(location);
         panSingleMap(location);
     } else if (type == "collection") {
         deleteMarkers();
@@ -116,7 +115,7 @@ function addMarker(location, label) {
 
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(map,marker);
-        map.setZoom(19);
+        map.setZoom(18);
         map.panTo(location);
 
     });
@@ -147,7 +146,6 @@ function setAllMap(map) {
 }
 
 function clearSelects() {
-    $('#bldg_select').html('');
     $('#loc_select').html('');
 }
 
@@ -160,19 +158,32 @@ function panSingleMap(single)
 
     bounds = new google.maps.LatLngBounds();
 
+    var numLocs = 0;
+    var locationLatlng;
+    var locationObj;
     // loop through the collection and add
     for (locKey in single.locations) {
-        var locationObj = single.locations[locKey];
+        locationObj = single.locations[locKey];
         var lat = locationObj.lat;
         var long = locationObj.long;
 
-        var locationLatlng = new google.maps.LatLng(lat,long);
+        locationLatlng = new google.maps.LatLng(lat,long);
         bounds.extend(locationLatlng);
 
         map.fitBounds(bounds);
+        numLocs++;
     }
 
-    map.panToBounds(bounds);
+    if(numLocs < 2) {
+        map.setZoom(19);
+        map.panTo(locationLatlng);
+        addMarker(locationLatlng, locationObj.label);
+        clearSelects();
+    } else {
+        map.panToBounds(bounds);
+        createLocationSelect(single);
+    }
+
 }
 
 function makeCollectionMap(collection)
