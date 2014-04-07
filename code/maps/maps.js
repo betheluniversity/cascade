@@ -14,6 +14,7 @@ $(document).ready(function() {
 });
 
 function initialize(location, type) {
+    clearAddressDisplay();
 
     if(type == "single") {
         geocoder = new google.maps.Geocoder();
@@ -26,6 +27,7 @@ function initialize(location, type) {
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
         deleteMarkers();
+        updateAddressDisplay(location);
         panSingleMap(location);
     } else if (type == "collection") {
         deleteMarkers();
@@ -96,20 +98,32 @@ function locationSelectChange(location) {
             map.setZoom(17);
         }
 
+        updateAddressDisplay(locationObj);
         map.panTo(position);
     }
+}
+
+function clearAddressDisplay() {
+    $('#addr_container').html('');
+}
+
+function updateAddressDisplay(location) {
+    $labelP = $('<p />').append('<strong />').text(location.label);
+    $addrP = $('<p />').text(location.address);
+
+    $('#addr_container').html($labelP);
+    $('#addr_container').append($addrP);
 }
 
 function addMarker(location, label) {
     var marker = new google.maps.Marker({
         map:map,
         animation: google.maps.Animation.DROP,
-        position: location,
-        title: label
+        position: location
     });
 
     var infowindow = new google.maps.InfoWindow({
-        content: marker.title,
+        content: label,
         position: location
     });
 
@@ -117,10 +131,20 @@ function addMarker(location, label) {
         infowindow.open(map,marker);
         map.setZoom(18);
         map.panTo(location);
-
     });
 
     markers.push(marker);
+}
+
+function makeAddressLabel(label,address) {
+    console.log(label + ' ' + address);
+
+    $labelP = $('<span />').html('<strong>' + label + '</strong><br />');
+    $addrP = $('<span />').html(address + '<br />');
+    $dirA = $('<a />').text('Get Directions');
+    $dirA.attr('href','http://maps.google.com/maps?daddr=' + encodeURIComponent(address));
+    $addressLabel = $('<div />').append($labelP).append($addrP).append($dirA);
+    return $addressLabel.html();
 }
 
 // Removes the markers from the map, but keeps them in the array.
@@ -177,7 +201,7 @@ function panSingleMap(single)
     if(numLocs < 2) {
         map.setZoom(19);
         map.panTo(locationLatlng);
-        addMarker(locationLatlng, locationObj.label);
+        addMarker(locationLatlng, makeAddressLabel(single.label,single.address));
         clearSelects();
     } else {
         map.panToBounds(bounds);
@@ -202,7 +226,7 @@ function makeCollectionMap(collection)
 
         var locationLatlng = new google.maps.LatLng(lat,long);
 
-        addMarker(locationLatlng, locationObj.label);
+        addMarker(locationLatlng, makeAddressLabel(locationObj.label, locationObj.address));
 
         bounds.extend(locationLatlng);
 
