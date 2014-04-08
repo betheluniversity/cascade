@@ -1,31 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
     <style>
         #map_canvas {
-            width: 500px;
+            width: 100%;
             height: 400px;
         }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script type="text/javascript">
-
-    /*
-        Bethel University Main Campus
-        3900 Bethel Dr.
-        Arden Hills, MN 55112
-
-        Pine Tree
-        2 Pine Tree Drive
-        Arden Hills, MN 55112
-
-        Bloomington
-        Normandale Place 4th Floor
-        8201 Norman Center Drive
-        Bloomington, MN 55437-1053
-    */
-
     var locations =
     {
         "single": {
@@ -125,6 +110,7 @@
     <body>
         <div id="map_select"></div>
         <div id="loc_select"></div>
+        <button id="zoom_out">Zoom Out</button>
         <div id="map_canvas"></div>
         <div id="addr_container"></div>
     </body>

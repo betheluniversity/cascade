@@ -8,10 +8,17 @@ $(document).ready(function() {
     $selectedOption = $select.children().first();
     initialize(locations[$selectedOption.data("type")][$select.val()], $selectedOption.data("type"));
     $select.change(function() {
-        var selectedLocation = locations[$(this).children(":selected").data("type")][$(this).val()];
-        initialize(selectedLocation, $(this).children(":selected").data("type"));
+        initializeSelectedMap($(this));
+    });
+    $('#zoom_out').click(function() {
+        initializeSelectedMap($select);
     });
 });
+
+function initializeSelectedMap($mapSelect) {
+    var selectedLocation = locations[$mapSelect.children(":selected").data("type")][$mapSelect.val()];
+    initialize(selectedLocation, $mapSelect.children(":selected").data("type"));
+}
 
 function initialize(location, type) {
     clearAddressDisplay();
@@ -20,7 +27,6 @@ function initialize(location, type) {
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(location.lat, location.long);
         var mapOptions = {
-            //zoom: location.zoom,
             center: latlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }
@@ -91,15 +97,10 @@ function locationSelectChange(location) {
 
     if (location.type == 'single') {
         deleteMarkers();
-        panSingleMap(mapObj);
-        addMarker(position, locationObj.label);
+        panAndMarkMap(locationObj);
     } else if (location.type == 'collection') {
-        if(map.zoom < 15) {
-            map.setZoom(17);
-        }
-
-        updateAddressDisplay(locationObj);
-        map.panTo(position);
+        deleteMarkers();
+        panAndMarkMap(locationObj);
     }
 }
 
@@ -115,7 +116,7 @@ function updateAddressDisplay(location) {
     $('#addr_container').append($addrP);
 }
 
-function addMarker(location, label) {
+function addMarker(location, label, showLabel) {
     var marker = new google.maps.Marker({
         map:map,
         animation: google.maps.Animation.DROP,
@@ -126,6 +127,10 @@ function addMarker(location, label) {
         content: label,
         position: location
     });
+
+    if(showLabel) {
+        infowindow.open(map,marker);
+    }
 
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(map,marker);
@@ -142,7 +147,7 @@ function makeAddressLabel(label,address) {
     $labelP = $('<span />').html('<strong>' + label + '</strong><br />');
     $addrP = $('<span />').html(address + '<br />');
     $dirA = $('<a />').text('Get Directions');
-    $dirA.attr('href','http://maps.google.com/maps?daddr=' + encodeURIComponent(address));
+    $dirA.attr('href','http://maps.google.com/maps?q=' + encodeURIComponent(address));
     $addressLabel = $('<div />').append($labelP).append($addrP).append($dirA);
     return $addressLabel.html();
 }
@@ -198,16 +203,38 @@ function panSingleMap(single)
         numLocs++;
     }
 
-    if(numLocs < 2) {
+    if(numLocs == 1) {
         map.setZoom(19);
         map.panTo(locationLatlng);
-        addMarker(locationLatlng, makeAddressLabel(single.label,single.address));
+        addMarker(locationLatlng, makeAddressLabel(single.label,single.address), true);
         clearSelects();
     } else {
         map.panToBounds(bounds);
+        addMarker(bounds.getCenter(), makeAddressLabel(single.label,single.address), true);
         createLocationSelect(single);
     }
 
+}
+
+// Panning to a single point and marking it
+function panAndMarkMap(location) {
+    var LocationBounds = new Object();
+    LocationBounds.latitude = -1;
+    LocationBounds.longitude = -1;
+
+    var lat = location.lat;
+    var long = location.long;
+
+    locationLatlng = new google.maps.LatLng(lat,long);
+
+    map.setZoom(19);
+    map.panTo(locationLatlng);
+
+    if(location.address) {
+        addMarker(locationLatlng, makeAddressLabel(location.label,location.address), true);
+    } else {
+        addMarker(locationLatlng, location.label, true);
+    }
 }
 
 function makeCollectionMap(collection)
@@ -226,13 +253,11 @@ function makeCollectionMap(collection)
 
         var locationLatlng = new google.maps.LatLng(lat,long);
 
-        addMarker(locationLatlng, makeAddressLabel(locationObj.label, locationObj.address));
+        addMarker(locationLatlng, makeAddressLabel(locationObj.label, locationObj.address), false);
 
         bounds.extend(locationLatlng);
 
         map.fitBounds(bounds);
-        // TODO check if this is a single job map
-        // map.setZoom(16);
     }
 
     map.panToBounds(bounds);
