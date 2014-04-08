@@ -29,7 +29,8 @@ function initialize(location, type) {
         var mapOptions = {
             center: latlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
+        };
+
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
         deleteMarkers();
@@ -66,13 +67,13 @@ function createLocationSelect(map) {
         $select.append($option);
         for(var locKey in map.locations) {
             var locationObj = map.locations[locKey];
-            var $option = $('<option />').val(locKey);
+            $option = $('<option />').val(locKey);
             $option.text(locationObj.label);
             $select.append($option);
         }
         $('#loc_select').html($select);
         $select.change(function() {
-            locationSelectChange(getCurrentlySelectedLocation($(this).val()))
+            locationSelectChange(getCurrentlySelectedLocation($(this).val()));
         });
     }
 }
@@ -85,7 +86,7 @@ function getCurrentlySelectedLocation(location) {
         "type": type,
         "map": map,
         "location": location
-    }
+    };
 
     return locationKeys;
 }
@@ -181,7 +182,7 @@ function clearSelects() {
 // Fitting a single map to the locations defined in it
 function panSingleMap(single)
 {
-    var LocationBounds = new Object();
+    var LocationBounds = {};
     LocationBounds.latitude = -1;
     LocationBounds.longitude = -1;
 
@@ -191,7 +192,7 @@ function panSingleMap(single)
     var locationLatlng;
     var locationObj;
     // loop through the collection and add
-    for (locKey in single.locations) {
+    for (var locKey in single.locations) {
         locationObj = single.locations[locKey];
         var lat = locationObj.lat;
         var long = locationObj.long;
@@ -218,7 +219,7 @@ function panSingleMap(single)
 
 // Panning to a single point and marking it
 function panAndMarkMap(location) {
-    var LocationBounds = new Object();
+    var LocationBounds = {};
     LocationBounds.latitude = -1;
     LocationBounds.longitude = -1;
 
@@ -239,14 +240,14 @@ function panAndMarkMap(location) {
 
 function makeCollectionMap(collection)
 {
-    var LocationBounds = new Object();
+    var LocationBounds = {};
     LocationBounds.latitude = -1;
     LocationBounds.longitude = -1;
 
     bounds = new google.maps.LatLngBounds();
 
     // loop through the collection and add
-    for (locKey in collection.locations) {
+    for (var locKey in collection.locations) {
         var locationObj = collection.locations[locKey];
         var lat = locationObj.lat;
         var long = locationObj.long;
