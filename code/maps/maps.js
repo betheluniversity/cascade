@@ -135,7 +135,7 @@ function addMarker(location, label, showLabel) {
 
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.open(map,marker);
-        map.setZoom(18);
+        map.setZoom(17);
         map.panTo(location);
     });
 
