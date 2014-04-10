@@ -143,8 +143,6 @@ function addMarker(location, label, showLabel) {
 }
 
 function makeAddressLabel(label,address) {
-    console.log(label + ' ' + address);
-
     $labelP = $('<span />').html('<strong>' + label + '</strong><br />');
     $addrP = $('<span />').html(address + '<br />');
     $dirA = $('<a />').text('Get Directions');
