@@ -180,8 +180,7 @@ function clearSelects() {
 }
 
 // Fitting a single map to the locations defined in it
-function panSingleMap(single)
-{
+function panSingleMap(single) {
     var LocationBounds = {};
     LocationBounds.latitude = -1;
     LocationBounds.longitude = -1;
@@ -205,16 +204,21 @@ function panSingleMap(single)
     }
 
     if(numLocs == 1) {
-        map.setZoom(19);
+        map.setZoom(17);
         map.panTo(locationLatlng);
         addMarker(locationLatlng, makeAddressLabel(single.label,single.address), true);
         clearSelects();
+    } else if (single.hasOwnProperty('lat') && single.hasOwnProperty('long')){
+        markerLoc = new google.maps.LatLng(single.lat,single.long);
+        bounds.extend(markerLoc);
+        map.panToBounds(bounds);
+        addMarker(markerLoc, makeAddressLabel(single.label,single.address), true);
+        createLocationSelect(single);
     } else {
         map.panToBounds(bounds);
         addMarker(bounds.getCenter(), makeAddressLabel(single.label,single.address), true);
         createLocationSelect(single);
     }
-
 }
 
 // Panning to a single point and marking it
@@ -228,7 +232,7 @@ function panAndMarkMap(location) {
 
     locationLatlng = new google.maps.LatLng(lat,long);
 
-    map.setZoom(19);
+    map.setZoom(17);
     map.panTo(locationLatlng);
 
     if(location.address) {
@@ -238,8 +242,7 @@ function panAndMarkMap(location) {
     }
 }
 
-function makeCollectionMap(collection)
-{
+function makeCollectionMap(collection) {
     var LocationBounds = {};
     LocationBounds.latitude = -1;
     LocationBounds.longitude = -1;
