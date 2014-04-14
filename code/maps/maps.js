@@ -2,6 +2,10 @@ var geocoder;
 var map;
 var markers = [];
 
+var ua = navigator.userAgent.toLowerCase();
+var androidUA = ua.indexOf("android") > -1;
+var iosUA = ua.indexOf("ipad") > -1 || ua.indexOf("iphone") > -1 || ua.indexOf("ipod") > -1;
+
 $(document).ready(function() {
     var $select = createMapSelect(locations);
     $select.children().first().attr("selected", "selected");
@@ -142,11 +146,19 @@ function addMarker(location, label, showLabel) {
     markers.push(marker);
 }
 
-function makeAddressLabel(label,address) {
+function makeAddressLabel(label,address,lat,long) {
     $labelP = $('<span />').html('<strong>' + label + '</strong><br />');
     $addrP = $('<span />').html(address + '<br />');
     $dirA = $('<a />').text('Get Directions');
-    $dirA.attr('href','http://maps.google.com/maps?q=' + encodeURIComponent(address));
+    if(iosUA) {
+        // Apple Maps
+        $dirA.attr('href','maps://?daddr=' + encodeURIComponent(address));
+    } else if (androidUA) {
+        // Android Maps
+        $dirA.attr('href','geo:' + lat + ',' + long + '?q=' + encodeURIComponent(address));
+    } else {
+        $dirA.attr('href','http://maps.google.com/maps?q=' + encodeURIComponent(address));
+    }
     $addressLabel = $('<div />').append($labelP).append($addrP).append($dirA);
     return $addressLabel.html();
 }
@@ -204,17 +216,17 @@ function panSingleMap(single) {
     if(numLocs == 1) {
         map.setZoom(17);
         map.panTo(locationLatlng);
-        addMarker(locationLatlng, makeAddressLabel(single.label,single.address), true);
+        addMarker(locationLatlng, makeAddressLabel(single.label,single.address,single.lat,single.long), true);
         clearSelects();
     } else if (single.hasOwnProperty('lat') && single.hasOwnProperty('long')){
         markerLoc = new google.maps.LatLng(single.lat,single.long);
         bounds.extend(markerLoc);
         map.panToBounds(bounds);
-        addMarker(markerLoc, makeAddressLabel(single.label,single.address), true);
+        addMarker(markerLoc, makeAddressLabel(single.label,single.address,single.lat,single.long), true);
         createLocationSelect(single);
     } else {
         map.panToBounds(bounds);
-        addMarker(bounds.getCenter(), makeAddressLabel(single.label,single.address), true);
+        addMarker(bounds.getCenter(), makeAddressLabel(single.label,single.address,single.lat,single.long), true);
         createLocationSelect(single);
     }
 }
@@ -234,7 +246,7 @@ function panAndMarkMap(location) {
     map.panTo(locationLatlng);
 
     if(location.address) {
-        addMarker(locationLatlng, makeAddressLabel(location.label,location.address), true);
+        addMarker(locationLatlng, makeAddressLabel(location.label,location.address,location.lat,location.long), true);
     } else {
         addMarker(locationLatlng, location.label, true);
     }
@@ -255,7 +267,7 @@ function makeCollectionMap(collection) {
 
         var locationLatlng = new google.maps.LatLng(lat,long);
 
-        addMarker(locationLatlng, makeAddressLabel(locationObj.label, locationObj.address), false);
+        addMarker(locationLatlng, makeAddressLabel(locationObj.label, locationObj.address,location.lat,location.long), false);
 
         bounds.extend(locationLatlng);
 
