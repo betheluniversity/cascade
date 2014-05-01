@@ -80,6 +80,22 @@ function createLocationSelect(map) {
             locationSelectChange(getCurrentlySelectedLocation($(this).val()));
         });
     }
+
+    if(map.hasOwnProperty('parking')) {
+        var $select = $('<select />');
+        var $option = $('<option />').text('Select Parking');
+        $select.append($option);
+        for(var locKey in map.parking) {
+            var locationObj = map.parking[locKey];
+            $option = $('<option />').val(locKey);
+            $option.text(locationObj.label);
+            $select.append($option);
+        }
+        $('#parking_select').html($select);
+        $select.change(function() {
+            parkingSelectChange(getCurrentlySelectedLocation($(this).val()));
+        });
+    }
 }
 
 function getCurrentlySelectedLocation(location) {
@@ -98,6 +114,20 @@ function getCurrentlySelectedLocation(location) {
 function locationSelectChange(location) {
     var mapObj = locations[location.type][location.map];
     var locationObj = mapObj.locations[location.location];
+    var position = new google.maps.LatLng(locationObj.lat, locationObj.long);
+
+    if (location.type == 'single') {
+        deleteMarkers();
+        panAndMarkMap(locationObj);
+    } else if (location.type == 'collection') {
+        deleteMarkers();
+        panAndMarkMap(locationObj);
+    }
+}
+
+function parkingSelectChange(location) {
+    var mapObj = locations[location.type][location.map];
+    var locationObj = mapObj.parking[location.location];
     var position = new google.maps.LatLng(locationObj.lat, locationObj.long);
 
     if (location.type == 'single') {
@@ -187,6 +217,7 @@ function setAllMap(map) {
 
 function clearSelects() {
     $('#loc_select').html('');
+    $('#parking_select').html('');
 }
 
 // Fitting a single map to the locations defined in it
