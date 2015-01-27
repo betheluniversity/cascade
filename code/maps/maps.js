@@ -80,6 +80,22 @@ function createLocationSelect(map) {
             locationSelectChange(getCurrentlySelectedLocation($(this).val()));
         });
     }
+    
+    if(map.hasOwnProperty('offices')) {
+        var $select = $('<select />');
+        var $option = $('<option />').text('Select an Office');
+        $select.append($option);
+        for(var locKey in map.offices) {
+            var locationObj = map.offices[locKey];
+            $option = $('<option />').val(locKey);
+            $option.text(locationObj.label);
+            $select.append($option);
+        }
+        $('#office_select').html($select);
+        $select.change(function() {
+            parkingSelectChange(getCurrentlySelectedLocation($(this).val()));
+        });
+    }
 
     if(map.hasOwnProperty('parking')) {
         var $select = $('<select />');
@@ -217,6 +233,7 @@ function setAllMap(map) {
 
 function clearSelects() {
     $('#loc_select').html('');
+    $('#office_select').html('');
     $('#parking_select').html('');
 }
 
