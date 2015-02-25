@@ -1,9 +1,9 @@
 __author__ = 'ejc84332'
 
-from assets import linkable
+import asset
 
 
-class Page(linkable.Linkable):
+class Page(asset.Asset):
 
-    def __init__(self):
-        pass
+    def __init__(self, ws_connector):
+        super(self.__class__, self).__init__(ws_connector)

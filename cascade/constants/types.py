@@ -266,7 +266,6 @@ class T(object):
     XSLT_FORMAT = "format_XSLT"
     XSLTFORMAT = "format_XSLT"
 
-    from assets import page
 
     def get_type_class_name_map(self, type):
         # take a constant and return a
@@ -314,7 +313,10 @@ class T(object):
             self.XMLBLOCK: 'XmlBlock',
             self.XSLTFORMAT: 'XsltFormat'
         }
-        return type_class_name_map[type]
+        if type == 'keys':
+            return type_class_name_map.keys()
+        else:
+            return type_class_name_map[type]
 
 
     type_parent_type_map = {
@@ -403,9 +405,8 @@ class T(object):
         XSLTFORMAT: properties.P.XSLTFORMAT
     }
 
-    @staticmethod
-    def get_type_array():
-        return T.type_class_name_map.keys()
+    def get_type_array(self):
+        return self.get_type_class_name_map('keys')
 
     @staticmethod
     def get_class_name_by_type(type):

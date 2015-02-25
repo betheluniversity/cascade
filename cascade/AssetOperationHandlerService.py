@@ -1,10 +1,9 @@
 __author__ = 'ejc84332'
 
-from constants import types, properties
 
-class AssetOperationHandlerService():
+class AssetOperationHandlerService(object):
 
-    def __init__(self, url, auth):
+    def __init__(self, url, auth, t, p):
         self.url = url
         self.auth = auth
         self.message = ""
@@ -12,6 +11,8 @@ class AssetOperationHandlerService():
         self.createdAssetId = ""
         self.lastRequest = ""
         self.lastResponse = ""
+        self.t = t
+        self.p = p
 
 
 
@@ -36,101 +37,101 @@ class AssetOperationHandlerService():
     # }
 
 
-    # 42 properties
-    # property array to generate methods
-    properties = [
-        properties.P.ASSETFACTORY,
-        properties.P.ASSETFACTORYCONTAINER,
-        properties.P.CONNECTORCONTAINER,
-        properties.P.CONTENTTYPE,
-        properties.P.CONTENTTYPECONTAINER,
-        properties.P.DATADEFINITION,
-        properties.P.DATADEFINITIONCONTAINER,
-        properties.P.DATABASETRANSPORT,
-        properties.P.DESTINATION,
-        properties.P.FACEBOOKCONNECTOR,
-        properties.P.FEEDBLOCK,
-        properties.P.FILE,
-        properties.P.FILESYSTEMTRANSPORT,
-        properties.P.FOLDER,
-        properties.P.FTPTRANSPORT,
-        properties.P.GOOGLEANALYTICSCONNECTOR,
-        properties.P.GROUP,
-        properties.P.INDEXBLOCK,
-        properties.P.METADATASET,
-        properties.P.METADATASETCONTAINER,
-        properties.P.PAGE,
-        properties.P.PAGECONFIGURATIONSET,
-        properties.P.PAGECONFIGURATIONSETCONTAINER,
-        properties.P.PUBLISHSET,
-        properties.P.PUBLISHSETCONTAINER,
-        properties.P.REFERENCE,
-        properties.P.ROLE,
-        properties.P.SCRIPTFORMAT,
-        properties.P.SITE,
-        properties.P.SITEDESTINATIONCONTAINER,
-        properties.P.SYMLINK,
-        properties.P.TARGET,
-        properties.P.TEMPLATE,
-        properties.P.TEXTBLOCK,
-        properties.P.TRANSPORTCONTAINER,
-        properties.P.USER,
-        properties.P.WORDPRESSCONNECTOR,
-        properties.P.WORKFLOWDEFINITION,
-        properties.P.WORKFLOWDEFINITIONCONTAINER,
-        properties.P.XHTMLDATADEFINITIONBLOCK,
-        properties.P.XMLBLOCK,
-        properties.P.XSLTFORMAT
-    ]
+        # 42 properties
+        # property array to generate methods
+        self.properties = [
+            self.p.ASSETFACTORY,
+            self.p.ASSETFACTORYCONTAINER,
+            self.p.CONNECTORCONTAINER,
+            self.p.CONTENTTYPE,
+            self.p.CONTENTTYPECONTAINER,
+            self.p.DATADEFINITION,
+            self.p.DATADEFINITIONCONTAINER,
+            self.p.DATABASETRANSPORT,
+            self.p.DESTINATION,
+            self.p.FACEBOOKCONNECTOR,
+            self.p.FEEDBLOCK,
+            self.p.FILE,
+            self.p.FILESYSTEMTRANSPORT,
+            self.p.FOLDER,
+            self.p.FTPTRANSPORT,
+            self.p.GOOGLEANALYTICSCONNECTOR,
+            self.p.GROUP,
+            self.p.INDEXBLOCK,
+            self.p.METADATASET,
+            self.p.METADATASETCONTAINER,
+            self.p.PAGE,
+            self.p.PAGECONFIGURATIONSET,
+            self.p.PAGECONFIGURATIONSETCONTAINER,
+            self.p.PUBLISHSET,
+            self.p.PUBLISHSETCONTAINER,
+            self.p.REFERENCE,
+            self.p.ROLE,
+            self.p.SCRIPTFORMAT,
+            self.p.SITE,
+            self.p.SITEDESTINATIONCONTAINER,
+            self.p.SYMLINK,
+            self.p.TARGET,
+            self.p.TEMPLATE,
+            self.p.TEXTBLOCK,
+            self.p.TRANSPORTCONTAINER,
+            self.p.USER,
+            self.p.WORDPRESSCONNECTOR,
+            self.p.WORKFLOWDEFINITION,
+            self.p.WORKFLOWDEFINITIONCONTAINER,
+            self.p.XHTMLDATADEFINITIONBLOCK,
+            self.p.XMLBLOCK,
+            self.p.XSLTFORMAT
+        ]
 
-    types = [
-        types.T.ASSETFACTORY,
-        types.T.ASSETFACTORYCONTAINER,
-        types.T.CONNECTORCONTAINER,
-        types.T.CONTENTTYPE,
-        types.T.CONTENTTYPECONTAINER,
-        types.T.DATADEFINITION,
-        types.T.DATADEFINITIONCONTAINER,
-        types.T.DESTINATION,
-        types.T.FACEBOOKCONNECTOR,
-        types.T.FEEDBLOCK,
-        types.T.FILE,
-        types.T.FOLDER,
-        types.T.GOOGLEANALYTICSCONNECTOR,
-        types.T.GROUP,
-        types.T.INDEXBLOCK,
-        types.T.MESSAGE,
-        types.T.METADATASET,
-        types.T.METADATASETCONTAINER,
-        types.T.PAGE,
-        types.T.PAGECONFIGURATION,
-        types.T.PAGECONFIGURATIONSET,
-        types.T.PAGECONFIGURATIONSETCONTAINER,
-        types.T.PAGEREGION,
-        types.T.PUBLISHSET,
-        types.T.PUBLISHSETCONTAINER,
-        types.T.REFERENCE,
-        types.T.ROLE,
-        types.T.SCRIPTFORMAT,
-        types.T.SITE,
-        types.T.SITEDESTINATIONCONTAINER,
-        types.T.SYMLINK,
-        types.T.TARGET,
-        types.T.TEMPLATE,
-        types.T.TEXTBLOCK,
-        types.T.TRANSPORTDB,
-        types.T.TRANSPORTFS,
-        types.T.TRANSPORTFTP,
-        types.T.TRANSPORTCONTAINER,
-        types.T.USER,
-        types.T.WORDPRESSCONNECTOR,
-        types.T.WORKFLOW,
-        types.T.WORKFLOWDEFINITION,
-        types.T.WORKFLOWDEFINITIONCONTAINER,
-        types.T.XHTMLDATADEFINITIONBLOCK,
-        types.T.XMLBLOCK,
-        types.T.XSLTFORMAT
-    ]
-    read_methods = []
-    get_methods = []
-    read_assets = []
+        self.types = [
+            self.t.ASSETFACTORY,
+            self.t.ASSETFACTORYCONTAINER,
+            self.t.CONNECTORCONTAINER,
+            self.t.CONTENTTYPE,
+            self.t.CONTENTTYPECONTAINER,
+            self.t.DATADEFINITION,
+            self.t.DATADEFINITIONCONTAINER,
+            self.t.DESTINATION,
+            self.t.FACEBOOKCONNECTOR,
+            self.t.FEEDBLOCK,
+            self.t.FILE,
+            self.t.FOLDER,
+            self.t.GOOGLEANALYTICSCONNECTOR,
+            self.t.GROUP,
+            self.t.INDEXBLOCK,
+            self.t.MESSAGE,
+            self.t.METADATASET,
+            self.t.METADATASETCONTAINER,
+            self.t.PAGE,
+            self.t.PAGECONFIGURATION,
+            self.t.PAGECONFIGURATIONSET,
+            self.t.PAGECONFIGURATIONSETCONTAINER,
+            self.t.PAGEREGION,
+            self.t.PUBLISHSET,
+            self.t.PUBLISHSETCONTAINER,
+            self.t.REFERENCE,
+            self.t.ROLE,
+            self.t.SCRIPTFORMAT,
+            self.t.SITE,
+            self.t.SITEDESTINATIONCONTAINER,
+            self.t.SYMLINK,
+            self.t.TARGET,
+            self.t.TEMPLATE,
+            self.t.TEXTBLOCK,
+            self.t.TRANSPORTDB,
+            self.t.TRANSPORTFS,
+            self.t.TRANSPORTFTP,
+            self.t.TRANSPORTCONTAINER,
+            self.t.USER,
+            self.t.WORDPRESSCONNECTOR,
+            self.t.WORKFLOW,
+            self.t.WORKFLOWDEFINITION,
+            self.t.WORKFLOWDEFINITIONCONTAINER,
+            self.t.XHTMLDATADEFINITIONBLOCK,
+            self.t.XMLBLOCK,
+            self.t.XSLTFORMAT
+        ]
+        self.read_methods = []
+        self.get_methods = []
+        self.read_assets = []

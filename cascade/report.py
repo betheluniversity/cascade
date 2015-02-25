@@ -11,7 +11,7 @@ class Report(object):
         self.cascade = cascade
         self.results = []
         self.clear_results()
-        service = cascade.get_service()
+        service = self.cascade.get_service()
         self.cache = Cache(service)
         self.cache.clear_cache()
 
