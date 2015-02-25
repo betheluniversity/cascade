@@ -1,3 +1,5 @@
+__version__ = 0.1
+
 from cascade_connector import Cascade
 from assets.page import Page
 

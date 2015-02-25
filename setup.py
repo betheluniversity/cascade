@@ -7,7 +7,6 @@ except ImportError:
     from distutils.core import setup
 
 
-
 def fpath(name):
     return os.path.join(os.path.dirname(__file__), name)
 
@@ -25,10 +24,10 @@ def grep(attrname):
 file_text = read(fpath('cascade/__init__.py'))
 
 setup(
-    name='cascade',
-    version=grep('__version__'),
+    name='bu-cascade',
+    version=0.1,
     description='Cascade Server web services integration',
-    long_description=open('README.rst').read(),
+    long_description='',
     url='https://github.com/betheluniversity/cascade/',
     download_url='',
     author='Eric Jameson',
