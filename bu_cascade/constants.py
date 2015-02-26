@@ -324,7 +324,7 @@ class T(object):
         pass
 
     ROOT_PATH = "/"
-    CA = "cascade-admin"
+    CA = "bu_cascade-admin"
     ACTIVATE_VERSION = "activate_version"
     ACTIVATEVERSION = "activate_version"
     ADVANCE_WORKFLOW = "advance_workflow"

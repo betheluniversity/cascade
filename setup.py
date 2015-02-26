@@ -1,3 +1,4 @@
+from setuptools import find_packages
 import os.path
 import re
 
@@ -21,11 +22,11 @@ def grep(attrname):
     return strval
 
 
-file_text = read(fpath('cascade/__init__.py'))
+file_text = read(fpath('bu_cascade/__init__.py'))
 
 setup(
-    name='bu-cascade',
-    version=0.1,
+    name='bu_cascade',
+    version=0.04,
     description='Cascade Server web services integration',
     long_description='',
     url='https://github.com/betheluniversity/cascade/',
@@ -33,7 +34,7 @@ setup(
     author='Eric Jameson',
     author_email="e-jameson@bethel.edu",
     license='Apache 2.0',
-    packages=['cascade'],
+    packages=find_packages(),
     zip_safe=False,
     install_requires=[
         'suds'
