@@ -1,6 +1,7 @@
 from suds.client import Client
 from suds.transport import TransportError
 
+
 class Cascade(object):
 
     def __init__(self, service_url, login, site_id):
