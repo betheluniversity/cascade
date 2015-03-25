@@ -68,3 +68,4 @@ class Asset(object):
     #     if identifier:
     #         self.set_identifier(identifier)
     #     return self.ws.rename(self.identifier, new_name, self.asset_type)
+

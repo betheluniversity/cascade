@@ -17,6 +17,7 @@ class Cascade(object):
         except TransportError:
             return None
 
+
     def read(self, path_or_id, asset_type):
         identifier = Cascade.create_identifier(self, path_or_id, asset_type)
 
