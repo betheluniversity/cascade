@@ -1,8 +1,9 @@
 .metadata
 .idea
+.idea/
 *.pyc
 .swp
-
+bu_cascade.egg-info
 bu_cascade.egg-info/
 suds-0.4-py2.7.egg
 
@@ -10,3 +11,4 @@ dist/cascade-0.1.tar.gz
 
 dist/bu-cascade-0.1.tar.gz
 dits/
+.idea/misc.xml

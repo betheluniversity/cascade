@@ -17,9 +17,8 @@ class Cascade(object):
         except TransportError:
             return None
 
-
     def read(self, path_or_id, asset_type):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = self.create_identifier(path_or_id, asset_type)
 
         response = self.client.service.read(self.login, identifier)
         return response
@@ -33,7 +32,7 @@ class Cascade(object):
         return response
 
     def delete(self, path_or_id, asset_type):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type )
+        identifier = self.create_identifier(path_or_id, asset_type)
         response = self.client.service.delete(self.login, identifier)
         return response
 

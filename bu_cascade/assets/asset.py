@@ -6,6 +6,7 @@ class Asset(object):
     def __init__(self, ws_connector, identifier=None):
         self.ws = ws_connector
         self.identifier = identifier
+        self.asset_type = None
 
     def set_identifier(self, identifier):
         self.identifier = identifier
@@ -17,12 +18,12 @@ class Asset(object):
         else:
             self.set_identifier(identifier)
 
-        asset = self.ws.read(self.identifier, self.asset_type)
+        read_asset = self.ws.read(self.identifier, self.asset_type)
 
         # set the asset value to the writable asset structure
-        self.asset = self.get_asset_structure(asset)
+        asset_structure = self.get_asset_structure(read_asset)
 
-        return asset
+        return asset_structure
 
     def create_asset(self, asset):
         return self.ws.create(asset)
@@ -36,16 +37,11 @@ class Asset(object):
         return self.ws.delete(self.identifier, self.asset_type)
 
     # Dynamically builds the asset into a writable structure
-    def get_asset_structure(asset):
-        asset = {}
-
+    def get_asset_structure(self, cascade_asset):
         # Get metadata/dynamic-fields/etc
 
-
         # Build asset structure
-
-
-        return asset
+        return cascade_asset
 
     # Additional potential methods
 
