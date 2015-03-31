@@ -36,12 +36,9 @@ class Asset(object):
             self.set_identifier(identifier)
         return self.ws.delete(self.identifier, self.asset_type)
 
-    # Dynamically builds the asset into a writable structure
-    def get_asset_structure(self, cascade_asset):
-        # Get metadata/dynamic-fields/etc
+    def get_asset_structure(self, asset):
 
-        # Build asset structure
-        return cascade_asset
+        return self.ws.build_asset_structure(asset)
 
     # Additional potential methods
 

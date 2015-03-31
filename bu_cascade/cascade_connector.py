@@ -1,6 +1,6 @@
 from suds.client import Client
 from suds.transport import TransportError
-
+import json
 
 class Cascade(object):
 
@@ -35,6 +35,39 @@ class Cascade(object):
         identifier = self.create_identifier(path_or_id, asset_type)
         response = self.client.service.delete(self.login, identifier)
         return response
+
+    # Dynamically builds the asset into a writable structure
+    def build_asset_structure(self, asset):
+        asset = self.suds_to_json(asset)
+
+        return asset
+
+    def suds_to_json(self, data):
+        return json.dumps(self.recursive_asdict(data))
+
+    def recursive_asdict(self, d):
+        from suds.sudsobject import asdict
+
+        """Convert Suds object into serializable format."""
+        out = {}
+        for k, v in asdict(d).iteritems():
+            if hasattr(v, '__keylist__'):
+                out[k] = self.recursive_asdict(v)
+            elif isinstance(v, list):
+                out[k] = []
+                for item in v:
+                    if hasattr(item, '__keylist__'):
+                        out[k].append(self.recursive_asdict(item))
+                    else:
+                        out[k].append(item)
+
+            else:
+                # if it has hour, format it correctly as a date
+                if hasattr(v, 'hour'):
+                    out[k] = v.strftime('%Y-%d-%m, %I:%M:%S')
+                elif v:
+                    out[k] = v
+        return out
 
     def create_identifier(self, path_or_id, asset_type):
         if path_or_id is None:
