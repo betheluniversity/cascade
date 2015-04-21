@@ -9,4 +9,3 @@ class Page(asset.Asset):
         super(self.__class__, self).__init__(ws_connector)
         self.asset_type = "page"
         self.identifier = identifier
-

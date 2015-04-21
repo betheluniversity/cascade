@@ -88,8 +88,6 @@ class Cascade(object):
 
         return identifier
 
-    # Additional potential methods
-
     def publish(self, path_or_id, asset_type):
         identifier = Cascade.create_identifier(self, path_or_id, asset_type)
         identifier = {
@@ -98,6 +96,8 @@ class Cascade(object):
 
         response = self.client.service.publish(self.login, identifier)
         return response
+
+    # Additional potential methods
     #
     # def unpublish(self, path_or_id, asset_type):
     #     identifier = Cascade.create_identifier(self, path_or_id, asset_type)

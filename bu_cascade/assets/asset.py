@@ -40,13 +40,12 @@ class Asset(object):
 
         return self.ws.build_asset_structure(asset)
 
-    # Additional potential methods
+    def publish_asset(self, identifier=None):
+        if identifier:
+            self.set_identifier(identifier)
+        return self.ws.publish(self.identifier, self.asset_type)
 
-    # def publish_asset(self, identifier=None):
-    #     if identifier:
-    #         self.set_identifier(identifier)
-    #     return self.ws.publish(self.identifier, self.asset_type)
-    #
+    # Additional potential methods
     # def unpublish_asset(self, identifier=None):
     #     if identifier:
     #         self.set_identifier(identifier)
