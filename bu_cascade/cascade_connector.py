@@ -90,14 +90,14 @@ class Cascade(object):
 
     # Additional potential methods
 
-    # def publish(self, path_or_id, asset_type):
-    #     identifier = Cascade.create_identifier(self, path_or_id, asset_type)
-    #     identifier = {
-    #         "identifier": identifier
-    #     }
-    #
-    #     response = self.client.service.publish(self.login, identifier)
-    #     return response
+    def publish(self, path_or_id, asset_type):
+        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = {
+            "identifier": identifier
+        }
+
+        response = self.client.service.publish(self.login, identifier)
+        return response
     #
     # def unpublish(self, path_or_id, asset_type):
     #     identifier = Cascade.create_identifier(self, path_or_id, asset_type)
