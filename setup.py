@@ -26,7 +26,7 @@ file_text = read(fpath('bu_cascade/__init__.py'))
 
 setup(
     name='bu_cascade',
-    version=1.21,
+    version=1.22,
     description='Cascade Server web services integration',
     long_description='',
     url='https://github.com/betheluniversity/cascade/',
