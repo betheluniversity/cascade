@@ -97,6 +97,19 @@ class Cascade(object):
         response = self.client.service.publish(self.login, identifier)
         return response
 
+
+    def get_groups_for_user(username=None):
+        if username is None:
+            return {}
+        try:
+            user = Cascade.read(username, "user")
+            allowed_groups = user.asset.user.groups
+        except AttributeError:
+            allowed_groups = ""
+
+        return allowed_groups.split(";")
+
+
     # Additional potential methods
     #
     # def unpublish(self, path_or_id, asset_type):
