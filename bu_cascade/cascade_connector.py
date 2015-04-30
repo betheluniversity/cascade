@@ -98,7 +98,7 @@ class Cascade(object):
         return response
 
 
-    def get_groups_for_user(username=None):
+    def get_groups_for_user(self, username=None):
         if username is None:
             return {}
         try:
