@@ -102,7 +102,7 @@ class Cascade(object):
         if username is None:
             return {}
         try:
-            user = Cascade.read(username, "user")
+            user = Cascade.read(self, username, "user")
             allowed_groups = user.asset.user.groups
         except AttributeError:
             allowed_groups = ""
