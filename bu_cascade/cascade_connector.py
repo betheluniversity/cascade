@@ -2,6 +2,7 @@ from suds.client import Client
 from suds.transport import TransportError
 import json
 
+
 class Cascade(object):
 
     def __init__(self, service_url, login, site_id):
@@ -97,7 +98,6 @@ class Cascade(object):
         response = self.client.service.publish(self.login, identifier)
         return response
 
-
     def get_groups_for_user(self, username=None):
         if username is None:
             return {}
@@ -109,51 +109,49 @@ class Cascade(object):
 
         return allowed_groups.split(";")
 
+    def unpublish(self, path_or_id, asset_type):
+        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = {
+            "identifier": identifier,
+            "unpublish": True
+        }
 
-    # Additional potential methods
-    #
-    # def unpublish(self, path_or_id, asset_type):
-    #     identifier = Cascade.create_identifier(self, path_or_id, asset_type)
-    #     identifier = {
-    #         "identifier": identifier,
-    #         "unpublish": True
-    #     }
-    #
-    #     response = self.client.service.publish(self.login, identifier)
-    #     return response
-    #
-    # def move(self, old_path_or_id, new_path_or_id, asset_type):
-    #     identifier = Cascade.create_identifier(self, old_path_or_id, asset_type )
-    #     new_identifier = Cascade.create_identifier(self, new_path_or_id, asset_type )
-    #
-    #     moveParameters = {
-    #         "destinationContainerIdentifier": new_identifier,
-    #         "doWorkFlow": False,
-    #     }
-    #
-    #     response = self.client.service.move(self.login, identifier, moveParameters)
-    #     return response
-    #
-    # def rename(self, path_or_id, new_name, asset_type):
-    #     identifier = Cascade.create_identifier(self, path_or_id, asset_type )
-    #
-    #     renameParameters = {
-    #         "doWorkFlow": False,
-    #         "newName": new_name
-    #     }
-    #
-    #     # Note: rename is the same call as move, with different parameters
-    #     response = self.client.service.move(self.login, identifier, renameParameters)
-    #     return response
-    #
-    # def is_asset_currently_in_workflow(self, path_or_id, asset_type):
-    #     identifier = Cascade.create_identifier(self, path_or_id, asset_type )
-    #
-    #     response = self.client.service.readWorkflowInformation(self.login, identifier)
-    #
-    #     if response.workflow is not None:
-    #         if str(response.workflow.currentStep) != "finish":
-    #             return True
-    #
-    #     return False
+        response = self.client.service.publish(self.login, identifier)
+        return response
+
+    def move(self, new_folder_path_or_id, old_path_or_id, asset_type):
+        identifier = Cascade.create_identifier(self, old_path_or_id, asset_type)
+        new_identifier = Cascade.create_identifier(self, new_folder_path_or_id, "folder")
+
+        moveParameters = {
+            "destinationContainerIdentifier": new_identifier,
+            "doWorkflow": False,
+            "newName": None, ##can add newname here
+        }
+
+        response = self.client.service.move(self.login, identifier, moveParameters)
+        return response
+
+    def rename(self, path_or_id, new_name, asset_type):
+        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+
+        renameParameters = {
+            "doWorkflow": False,
+            "newName": new_name
+        }
+
+        # Note: rename is the same call as move, with different parameters
+        response = self.client.service.move(self.login, identifier, renameParameters)
+        return response
+
+    def is_in_workflow(self, path_or_id, asset_type):
+        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+
+        response = self.client.service.readWorkflowInformation(self.login, identifier)
+
+        if response.workflow is not None:
+            if str(response.workflow.currentStep) != "finish":
+                return True
+
+        return False
 

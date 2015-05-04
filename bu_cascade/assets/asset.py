@@ -45,19 +45,28 @@ class Asset(object):
             self.set_identifier(identifier)
         return self.ws.publish(self.identifier, self.asset_type)
 
-    # Additional potential methods
-    # def unpublish_asset(self, identifier=None):
-    #     if identifier:
-    #         self.set_identifier(identifier)
-    #     return self.ws.unpublish(self.identifier, self.asset_type)
-    #
-    # def move(self, identifier=None, new_identifier=None):
-    #     if identifier:
-    #         self.set_identifier(identifier)
-    #     return self.ws.move(self.identifier, new_identifier, self.asset_type)
-    #
-    # def rename(self, identifier=None, new_name=None):
-    #     if identifier:
-    #         self.set_identifier(identifier)
-    #     return self.ws.rename(self.identifier, new_name, self.asset_type)
+    def unpublish_asset(self, identifier=None):
+        if identifier:
+            self.set_identifier(identifier)
+        return self.ws.unpublish(self.identifier, self.asset_type)
 
+    def move_asset(self, new_identifier=None, identifier=None):
+        if identifier:
+            old_identifier = identifier
+        else:
+            old_identifier = self.identifier
+
+        if new_identifier:
+            self.set_identifier((new_identifier))
+        return self.ws.move(self.identifier, old_identifier, self.asset_type)
+
+    def rename_asset(self, identifier, new_name):
+        if identifier:
+            self.set_identifier((identifier))
+
+        return self.ws.rename(self.identifier, new_name, self.asset_type)
+
+    def is_in_workflow_asset(self, identifier=None):
+        if identifier:
+            self.set_identifier(identifier)
+        return self.ws.is_in_workflow(self.identifier, self.asset_type)
