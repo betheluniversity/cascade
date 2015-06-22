@@ -1,5 +1,6 @@
 __author__ = 'ejc84332'
-
+import json
+from structured_list import List
 
 class Asset(object):
 
@@ -7,38 +8,47 @@ class Asset(object):
         self.ws = ws_connector
         self.identifier = identifier
         self.asset_type = None
+        self.asset = {}
+
+    def get_identifier(self):
+        return self.identifier
 
     def set_identifier(self, identifier):
         self.identifier = identifier
 
+    def get_asset(self):
+       return self.asset
+
+    def set_asset(self, asset):
+        self.asset =  asset
+
     def read_asset(self, identifier=None):
-        # can either set identifier on creation or when you call read_asset
-        if self.identifier is not None:
-            self.set_identifier(self.identifier)
-        else:
+        if self.identifier is None:
             self.set_identifier(identifier)
+        else:
+            identifier = self.identifier
 
         read_asset = self.ws.read(self.identifier, self.asset_type)
 
         # set the asset value to the writable asset structure
-        asset_structure = self.get_asset_structure(read_asset)
+        asset_structure = json.loads(self.ws.build_asset_structure(read_asset))
+
+        self.set_asset(asset_structure)
 
         return asset_structure
 
     def create_asset(self, asset):
         return self.ws.create(asset)
 
-    def edit_asset(self, asset):
+    def edit_asset(self, asset=None):
+        if asset is None:
+            asset = self.asset
         return self.ws.edit(asset)
 
     def delete_asset(self, identifier=None):
         if identifier:
             self.set_identifier(identifier)
         return self.ws.delete(self.identifier, self.asset_type)
-
-    def get_asset_structure(self, asset):
-
-        return self.ws.build_asset_structure(asset)
 
     def publish_asset(self, identifier=None):
         if identifier:
@@ -70,3 +80,5 @@ class Asset(object):
         if identifier:
             self.set_identifier(identifier)
         return self.ws.is_in_workflow(self.identifier, self.asset_type)
+
+    ## Test functions

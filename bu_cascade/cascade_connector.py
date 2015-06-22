@@ -40,7 +40,7 @@ class Cascade(object):
     # Dynamically builds the asset into a writable structure
     def build_asset_structure(self, asset):
         asset = self.suds_to_json(asset)
-
+        # return asset['asset']
         return asset
 
     def suds_to_json(self, data):
@@ -65,6 +65,8 @@ class Cascade(object):
             else:
                 # if it has hour, format it correctly as a date
                 if hasattr(v, 'hour'):
+
+                    # Todo: currently is broken :( datetime's are not formatted correctly
                     out[k] = v.strftime('%Y-%d-%m, %I:%M:%S')
                 elif v:
                     out[k] = v
