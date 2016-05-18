@@ -45,11 +45,11 @@ class Asset(object):
         return self.get_asset()
 
     def create_asset(self, asset):
-        self.set_asset(asset)
-        self.metadata = self.get_metadata()
-        self.structured_data = self.get_structured_data()
+        new_id = self.ws.create(asset)['createdAssetId']
 
-        return self.ws.create(asset)
+        # populate the object with info from the new asset and return
+        self.set_identifier(new_id)
+        return self.read_asset()
 
     def edit_asset(self, asset):
         return self.ws.edit(asset)

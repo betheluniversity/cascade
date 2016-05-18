@@ -164,6 +164,7 @@ class Cascade(object):
         new_asset[asset_specific_key]['parentFolderId'] = None
         new_asset[asset_specific_key]['parentFolderPath'] = None
         new_asset[asset_specific_key]['path'] = None
+        new_asset[asset_specific_key]['metadata']['author'] = None
 
         # return asset parts based upon page/block/etc.
         new_asset_md = new_asset[asset_specific_key]['metadata']
