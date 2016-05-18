@@ -3,12 +3,7 @@ __author__ = 'ces55739'
 
 # Todo: Eric's new stuff can go here?
 class AssetTools():
-
-    # def __init__(self, asset):
-    #     self.asset = asset
-
-    # def get_asset(self):
-    #     return self.asset
+    # Todo: Everything below here is old
 
     # only useful for finding structured nodes
     def find(self, key, asset_structure):

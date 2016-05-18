@@ -1,13 +1,18 @@
 __author__ = 'ejc84332'
 
 
+# Todo: add e_ann_data, sdata, mdata = block.read_asset()
 class Asset(object):
 
-    def __init__(self, ws_connector, identifier):
+    def __init__(self, ws_connector, identifier, asset_type, asset_specific_key):
         self.ws = ws_connector
         self.identifier = identifier
-        self.asset_type = None
+        self.asset_type = asset_type
+        self.asset_specific_key = asset_specific_key
+
         self.asset = None
+        self.metadata = None
+        self.structured_data = None
 
     def get_identifier(self):
         return self.identifier
@@ -16,7 +21,7 @@ class Asset(object):
         self.identifier = identifier
 
     def get_asset(self):
-       return self.asset
+       return self.asset, self.get_metadata(), self.get_structured_data()
 
     def set_asset(self, asset):
         self.asset =  asset
@@ -32,8 +37,10 @@ class Asset(object):
             asset_structure = asset_structure['asset']
 
         self.set_asset(asset_structure)
-        return asset_structure
+        self.metadata = self.get_metadata()
+        self.structured_data = self.get_structured_data()
 
+        return self.get_asset()
 
     def create_asset(self, asset):
         return self.ws.create(asset)
@@ -59,3 +66,8 @@ class Asset(object):
     def is_in_workflow_asset(self):
         return self.ws.is_in_workflow(self.identifier, self.asset_type)
 
+    def get_metadata(self):
+        return self.asset[self.asset_specific_key]['metadata']
+
+    def get_structured_data(self):
+        return self.asset[self.asset_specific_key]['structuredData']
