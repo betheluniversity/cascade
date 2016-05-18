@@ -1,12 +1,14 @@
 __author__ = 'ces55739'
 
-class List():
 
-    def __init__(self, asset):
-        self.asset = asset
+# Todo: Eric's new stuff can go here?
+class AssetTools():
 
-    def get_asset(self):
-        return self.asset
+    # def __init__(self, asset):
+    #     self.asset = asset
+
+    # def get_asset(self):
+    #     return self.asset
 
     # only useful for finding structured nodes
     def find(self, key, asset_structure):
@@ -15,7 +17,7 @@ class List():
 
         match = False
         if 'identifier' in asset_structure and asset_structure['identifier'] == key:
-            match = List(asset_structure)
+            match = AssetTools(asset_structure)
         else:
             for node in asset_structure:
                 if isinstance(asset_structure, list) and (isinstance(node, dict) or isinstance(node, list)):
@@ -59,7 +61,7 @@ class List():
 
         matches = []
         if 'identifier' in asset_structure and asset_structure['identifier'] == key:
-            matches.append(List(asset_structure))
+            matches.append(AssetTools(asset_structure))
         else:
             for node in asset_structure:
                 result = []

@@ -2,7 +2,6 @@ from suds.client import Client
 from suds.transport import TransportError
 import json
 
-
 class Cascade(object):
 
     def __init__(self, service_url, login, site_id):
@@ -39,12 +38,8 @@ class Cascade(object):
 
     # Dynamically builds the asset into a writable structure
     def build_asset_structure(self, asset):
-        asset = self.suds_to_json(asset)
-        # return asset['asset']
+        asset = self.recursive_asdict(asset)
         return asset
-
-    def suds_to_json(self, data):
-        return json.dumps(self.recursive_asdict(data))
 
     def recursive_asdict(self, d):
         from suds.sudsobject import asdict
@@ -62,14 +57,9 @@ class Cascade(object):
                     else:
                         out[k].append(item)
 
-            else:
-                # if it has hour, format it correctly as a date
-                if hasattr(v, 'hour'):
+            elif v:
+                out[k] = v
 
-                    # Todo: currently is broken :( datetime's are not formatted correctly
-                    out[k] = v.strftime('%Y-%d-%m, %I:%M:%S')
-                elif v:
-                    out[k] = v
         return out
 
     def create_identifier(self, path_or_id, asset_type):
@@ -121,14 +111,14 @@ class Cascade(object):
         response = self.client.service.publish(self.login, identifier)
         return response
 
-    def move(self, new_folder_path_or_id, old_path_or_id, asset_type):
+    def move(self, old_path_or_id, new_folder_path_or_id, asset_type):
         identifier = Cascade.create_identifier(self, old_path_or_id, asset_type)
         new_identifier = Cascade.create_identifier(self, new_folder_path_or_id, "folder")
 
         moveParameters = {
             "destinationContainerIdentifier": new_identifier,
             "doWorkflow": False,
-            "newName": None, ##can add newname here
+            "newName": None, # can add newname here
         }
 
         response = self.client.service.move(self.login, identifier, moveParameters)

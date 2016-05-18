@@ -1,7 +1,7 @@
 __author__ = 'ces55739'
 
 from asset import Asset
-from structured_list import List
+from bu_cascade.asset_tools import List
 
 class Block(Asset):
 
