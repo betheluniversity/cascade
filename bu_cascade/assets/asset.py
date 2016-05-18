@@ -21,10 +21,12 @@ class Asset(object):
         self.identifier = identifier
 
     def get_asset(self):
-       return self.asset, self.get_metadata(), self.get_structured_data()
+       return self.asset, self.metadata, self.structured_data
 
     def set_asset(self, asset):
-        self.asset =  asset
+        self.asset = asset
+        self.metadata = self.get_metadata()
+        self.structured_data = self.get_structured_data()
 
     def read_asset(self):
         read_asset = self.ws.read(self.identifier, self.asset_type)
