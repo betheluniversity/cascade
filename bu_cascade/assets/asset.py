@@ -45,6 +45,10 @@ class Asset(object):
         return self.get_asset()
 
     def create_asset(self, asset):
+        self.set_asset(asset)
+        self.metadata = self.get_metadata()
+        self.structured_data = self.get_structured_data()
+
         return self.ws.create(asset)
 
     def edit_asset(self, asset):
