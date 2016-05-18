@@ -1,6 +1,7 @@
 from suds.client import Client
 from suds.transport import TransportError
 import json
+import copy
 
 class Cascade(object):
 
@@ -147,3 +148,32 @@ class Cascade(object):
 
         return False
 
+    # Todo: maybe we should write over the parentFolderPath and name here?
+    def load_base_asset_by_id(self, id, asset_type):
+        asset = self.read(id, asset_type)
+        if asset_type == 'page':
+            asset_specific_key = 'page'
+        elif asset_type == 'block':
+            asset_specific_key = 'xhtmlDataDefinitionBlock'
+        else:
+            return None
+
+        # Copy the base asset
+        new_asset = copy.deepcopy(asset)['asset']
+
+        # a silly way to remove all of the extra junk
+        new_asset = {
+            asset_specific_key: new_asset[asset_specific_key]
+        }
+
+        # reset path's and id's
+        new_asset[asset_specific_key]['id'] = None
+        new_asset[asset_specific_key]['parentFolderId'] = None
+        new_asset[asset_specific_key]['parentFolderPath'] = None
+        new_asset[asset_specific_key]['path'] = None
+
+        # return asset parts based upon page/block/etc.
+        new_asset_md = new_asset[asset_specific_key]['metadata']
+        new_asset_sd = new_asset[asset_specific_key]['structuredData']
+
+        return new_asset, new_asset_md, new_asset_sd
