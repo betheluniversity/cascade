@@ -1,94 +1,129 @@
 __author__ = 'ces55739'
 
 
-# Todo: Eric's new stuff can go here?
-class AssetTools():
-    # Todo: Everything below here is old
+def update(search_list, key, value):
+    returned_search_list = find(search_list, key, True)
 
-    # only useful for finding structured nodes
-    def find(self, key, asset_structure):
-        if asset_structure is None:
-            asset_structure = self.get_asset()
-
-        match = False
-        if 'identifier' in asset_structure and asset_structure['identifier'] == key:
-            match = AssetTools(asset_structure)
+    # complex metadata
+    if 'fieldValues' in returned_search_list.keys() and returned_search_list['name'] == key:
+        print 'test'
+        new_value_array = []
+        if type(value) is list:
+            for item in value:
+                new_value_array.append({'value': item})
         else:
-            for node in asset_structure:
-                if isinstance(asset_structure, list) and (isinstance(node, dict) or isinstance(node, list)):
-                    match = self.find(key, node)
-                elif isinstance(asset_structure, dict) and (isinstance(asset_structure[node], dict) or isinstance(asset_structure[node], list)):
-                    match = self.find(key, asset_structure[node])
+            new_value_array.append({'value': value})
+        returned_search_list['fieldValues']['fieldValue'] = new_value_array
+        return returned_search_list
 
-                if match is not False:
-                    return match
+    # structured data
+    elif returned_search_list.get('identifier') == key:
 
-        return match
+        if returned_search_list['type'] == 'text':
+            # get the type of content xml
+            if '::CONTENT-XML-CHECKBOX::' in returned_search_list['text']:
+                content_xml_type = '::CONTENT-XML-CHECKBOX::'
+            elif '::CONTENT-XML-SELECTOR::' in returned_search_list['text']:
+                content_xml_type = '::CONTENT-XML-SELECTOR::'
+            else:
+                content_xml_type = None
 
+            # checkbox - list
+            if type(value) is list:
+                new_value = ''
+                for item in value:
+                    new_value += content_xml_type + item
+            # checkbox - single value
+            elif content_xml_type:
+                new_value = content_xml_type + value
+            # normal text
+            else:
+                new_value = value
 
-    def set(self, value):
-        asset = self.asset
-        type = asset['type']
-        if type == "text":
-            asset['text'] = value
-            return True
-        elif type == "asset":
-            asset_type = asset.asset_type
+            returned_search_list['text'] = new_value
+            return returned_search_list
 
-            ## Todo: blocks/pages/files all have Id's and Path's to set.
-            # either take in path or id.
-            # use the path or id to set the id or path?
-            # might be a little tricky, but it probably makes the most sense.
-            # asset[asset_type+"Id"] =
-            # asset[asset_type+"Path"] =
+        # elif returned_search_list['type'] == 'group':
+        #     return returned_search_list['structuredDataNodes']['structuredDataNode']
 
-        ## Todo: do we care about group?
-        # elif type == "group":
+        # assets
+        elif returned_search_list['type'] == 'asset':
+            asset_type = returned_search_list['assetType']
+
+            # null out the id and path
+            returned_search_list[asset_type + 'Id'] = ''
+            returned_search_list[asset_type + 'Path'] = ''
+
+            # check if id or path is value
+            if '/' in value:
+                returned_search_list[asset_type + 'Path'] = value
+            else:
+                returned_search_list[asset_type + 'Id'] = value
+
+            return returned_search_list
+
         else:
-            return False
+            return None
 
 
-    ## Todo: Needs to be updated or merged with find() above ^^. I think having a separate function will be more helpful.
-    ## only useful for finding structured nodes
-    def find_all(self, key, asset_structure=None):
-        if asset_structure is None:
-            asset_structure = self.get_asset()
+# returns the value of the element or the full element
+def find(search_list, key, return_full_element=True):
+    # Get the element
+    returned_search_list = __search_for_element__(search_list, key)
 
-        matches = []
-        if 'identifier' in asset_structure and asset_structure['identifier'] == key:
-            matches.append(AssetTools(asset_structure))
-        else:
-            for node in asset_structure:
-                result = []
-                if isinstance(asset_structure, list) and (isinstance(node, dict) or isinstance(node, list)):
-                    result = self.find_all(key, node)
-                elif isinstance(asset_structure, dict) and (isinstance(asset_structure[node], dict) or isinstance(asset_structure[node], list)):
-                    result = self.find_all(key, asset_structure[node])
-                if result != []:
-                    matches.append(result)
+    # return the element
+    if return_full_element:
+        return returned_search_list
 
-        return matches
+    if hasattr(returned_search_list, 'keys') and key in returned_search_list.keys():
+        return returned_search_list[key]
+    else:
+        try:
+            # Checkboxes are considered 'text'
+            if 'fieldValues' in returned_search_list:
+                temp_array = []
+                for item in returned_search_list['fieldValues']['fieldValue']:
+                    temp_array.append(item['value'])
+                return temp_array
+
+            elif returned_search_list['type'] == 'text':
+                # this is an extra check for checkbox. It will return the text or an array of checkbox values
+                return returned_search_list['text'].split('::CONTENT-XML-CHECKBOX::')
+
+            elif returned_search_list['type'] == 'group':
+                return returned_search_list['structuredDataNodes']['structuredDataNode']
+
+            elif returned_search_list['type'] == 'asset':
+                asset_type = returned_search_list['assetType']
+                return returned_search_list
+
+            else:
+                print 'ERROR: need to add more checks here!'
+                print returned_search_list
+        except:
+            return None
 
 
-    def find_md_field(self, key, newValues=None):
-        asset_structure = self.get_asset()
+# an internal search to get the right element
+def __search_for_element__(search_list, key):
+    # basic MD values
+    if key in search_list.keys():
+        return search_list
+    # dynamic MD fields
+    elif 'name' in search_list.keys() and search_list['name'] == key:
+        return search_list
+    # DS values
+    elif search_list.get('identifier') == key:
+        return search_list
 
-        ## normal md values (title, teaser, description, etc. )
-        if key in asset_structure:
-            if newValues is not None:
-                asset_structure[key] = newValues
-            # return asset_structure[key]
-        else: ## dynamic values
-            for node in asset_structure['dynamicFields']['dynamicField']:
-                if node['name'] == key:
-                    if newValues:
-                        node['fieldValues']['fieldValue'] = []
-                        for value in newValues:
-                            value_string = {'value': str(value)}
-                            node['fieldValues']['fieldValue'].append(value_string)
-
-                    value_list = []
-                    for value in node['fieldValues']['fieldValue']:
-                        value_list.append(value['value'])
-                    return str(value_list)
-        return False
+    # loop over the list
+    for k in search_list:
+        if type(search_list[k]) == dict:
+            found = __search_for_element__(search_list[k], key)
+            if found:
+                return found
+        elif type(search_list[k]) == list:
+            for item in search_list[k]:
+                found = __search_for_element__(item, key)
+                if found:
+                    return found
