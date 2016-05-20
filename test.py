@@ -93,7 +93,7 @@ def test_update():
     my_page = Page(ws_connector, TEST_PAGE_ID)
     page_asset, page_md, page_sd = my_page.get_asset()
 
-    print update(page_md, 'title', 'CALEB')
+    print update(page_md, 'title', 'CALEBasdfasdf')
     print update(page_md, 'school', ['Bethel University', 'College of Arts & Sciences'])
 
     print update(page_sd, 'date1', '06-01-2016')
@@ -110,8 +110,6 @@ def test_update():
     print my_page.edit_asset(page_asset)
 
 ###################### Testing area to call functions #####################
-# test_find()
-test_update()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

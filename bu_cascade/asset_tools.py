@@ -19,6 +19,11 @@ def update(search_list, key, value):
         returned_search_list['fieldValues']['fieldValue'] = new_value_array
         return returned_search_list
 
+    # basic metadata
+    elif returned_search_list.get(key):
+        returned_search_list[key] = value
+        return returned_search_list
+
     # structured data
     elif returned_search_list.get('identifier') == key:
 
