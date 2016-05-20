@@ -4,6 +4,9 @@ __author__ = 'ces55739'
 def update(search_list, key, value):
     returned_search_list = find(search_list, key, True)
 
+    if returned_search_list is None:
+        return None
+
     # complex metadata
     if 'fieldValues' in returned_search_list.keys() and returned_search_list['name'] == key:
         print 'test'
