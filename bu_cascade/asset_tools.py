@@ -29,9 +29,9 @@ def update(search_list, key, value):
 
         if returned_search_list['type'] == 'text':
             # get the type of content xml
-            if '::CONTENT-XML-CHECKBOX::' in returned_search_list['text']:
+            if '::CONTENT-XML-CHECKBOX::' in returned_search_list.get('text',''):
                 content_xml_type = '::CONTENT-XML-CHECKBOX::'
-            elif '::CONTENT-XML-SELECTOR::' in returned_search_list['text']:
+            elif '::CONTENT-XML-SELECTOR::' in returned_search_list.get('text',''):
                 content_xml_type = '::CONTENT-XML-SELECTOR::'
             else:
                 content_xml_type = None
