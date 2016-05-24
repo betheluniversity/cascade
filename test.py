@@ -4,7 +4,7 @@ from bu_cascade.asset_tools import *
 from bu_cascade.cascade_connector import Cascade
 import json
 
-from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID
+from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID
 
 ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID)
 
@@ -88,8 +88,8 @@ def test_find():
     print find(page_sd, 'image-chooser', True)
     print find(page_sd, 'block-chooser', True)
 
-############################ Asset Tools -- Find() ############################
-def test_update():
+############################ Asset Tools -- Update() #1 ############################
+def test_update_page():
     my_page = Page(ws_connector, TEST_PAGE_ID)
     page_asset, page_md, page_sd = my_page.get_asset()
 
@@ -109,7 +109,66 @@ def test_update():
 
     print my_page.edit_asset(page_asset)
 
+############################ Asset Tools -- Update() #2 ############################
+def test_update_multiple_block():
+    my_block = Block(ws_connector, TEST_PROGRAM_BLOCK_ID)
+    block_asset, block_md, block_sd = my_block.get_asset()
+
+    concentrations = {
+        'concentration': {
+            'concentration_code': 'lol',
+            'concentration_description': 'dota',
+            'total_credits': '11',
+            'program_length': '2',
+
+            'courses': [
+                {
+                    'course_heading': 'TEST1a',
+                    'description': 'TEST1b',
+                    'course_numbers': 'TEST1c'
+                },
+                {
+                    'course_heading': 'TEST2a',
+                    'description': 'TEST2b',
+                    'course_numbers': 'TEST2c'
+                }
+            ]
+        }
+    }
+    print concentrations
+    for key, value in concentrations.items():
+        update( block_sd, key, value)
+
+
+    block_asset2, block_md2, block_sd2 = my_block.get_asset()
+    my_block.edit_asset(block_asset2)
+
+
+def test_update_multiple_page():
+    my_page = Page(ws_connector, TEST_FACULTY_PAGE_ID)
+    page_asset, page_md, page_sd, = my_page.get_asset()
+
+    bio = {
+        'job-title': [
+            'caleb1',
+            'caleb2'
+        ]
+    }
+
+    print bio
+    for key, value in bio.items():
+        update( page_sd, key, value)
+
+    page_asset2, page_md2, page_sd2 = my_page.get_asset()
+    my_page.edit_asset(page_asset2)
+
+    # print find(page_sd, 'job-title', True)
+
+
+
 ###################### Testing area to call functions #####################
+
+test_update_multiple_page()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'
