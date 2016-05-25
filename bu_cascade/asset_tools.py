@@ -2,48 +2,46 @@ __author__ = 'ces55739'
 
 from copy import *
 
-# Todo: can this handle 'multiple' elements
 def update(search_list, key, value):
+    # get the element to update
     returned_search_list = find(search_list, key, True)
 
+    # if there is ever a list, then it is about to all get deleted and overwritten.
+    # therefore, it is fine to just grab the first element and move on
+    # The functions prior to this should never return an empty list, it should return None instead.
     if type(returned_search_list) == list:
         returned_search_list = returned_search_list[0]
 
     if type(value) == list:
-
-        # delete all but 1.
-        parent_element = __search_for_parent_element__(search_list, key)
+        # get the parent element so that we can delete all applicable children
+        parent_element = __search_for_element__(search_list, key, True)
 
         if parent_element is not None:
-
-            # Delete elements
-            new_parent_element = parent_element['structuredDataNodes']['structuredDataNode']
-
             new_elements = []
-            # create each new element todo: make sure the elements stay in order
+            # create a new element to append later
             for single_value in value:
                 new_elements.append(deepcopy(update(parent_element, key, single_value)))
 
-            # print parent_element['structuredDataNodes']['structuredDataNode']
+            # gather indices to delete
             indexes_to_remove = []
             for index, element in enumerate(parent_element['structuredDataNodes']['structuredDataNode']):
                 if element['identifier'] == key:
                     indexes_to_remove.append(index)
 
+            # delete the old ones
             for index in reversed(indexes_to_remove):
                 del parent_element['structuredDataNodes']['structuredDataNode'][index]
 
-            # append each back to the main element
+            # append the new elements back on (these were created above)
             for new_element in new_elements:
                 parent_element['structuredDataNodes']['structuredDataNode'].append(new_element)
-            print parent_element['structuredDataNodes']['structuredDataNode']
 
         return returned_search_list
 
     if returned_search_list is None:
         return None
 
-    # complex metadata
+    # dynamic metadata
     if 'fieldValues' in returned_search_list.keys() and returned_search_list['name'] == key:
         new_value_array = []
         if type(value) is list:
@@ -55,8 +53,7 @@ def update(search_list, key, value):
         return returned_search_list
 
     # basic metadata
-    # Todo: fix this
-    elif returned_search_list.get(key):
+    elif key in returned_search_list:
         returned_search_list[key] = value
         return returned_search_list
 
@@ -130,17 +127,22 @@ def find(search_list, key, return_full_element=True):
             array_to_return.append(el[key])
         else:
             try:
-                # Checkboxes are considered 'text'
+                # dynamic md
                 if 'fieldValues' in el:
                     temp_array = []
                     for item in el['fieldValues']['fieldValue']:
                         temp_array.append(item['value'])
                     array_to_return.append(temp_array)
 
+                # text fields, checkboxes, and multiselects
                 elif el['type'] == 'text':
-                    # Todo: add the extra check for multiselect! (it is done above in the update method)
                     # this is an extra check for checkbox. It will return the text or an array of checkbox values
-                    value_of_text = el['text'].split('::CONTENT-XML-CHECKBOX::')
+                    if '::CONTENT-XML-CHECKBOX::' in el['text']:
+                        value_of_text = el['text'].split('::CONTENT-XML-CHECKBOX::')
+                    elif '::CONTENT-XML-SELECTOR::' in el['text']:
+                        value_of_text = el['text'].split('::CONTENT-XML-SELECTOR::')
+                    else:
+                        value_of_text = el['text']
 
                     if len(value_of_text) == 0:
                         pass
@@ -149,30 +151,27 @@ def find(search_list, key, return_full_element=True):
                     else:
                         array_to_return.append(value_of_text)
 
-
-
+                # groups
                 elif el['type'] == 'group':
                     array_to_return.append(el['structuredDataNodes']['structuredDataNode'])
 
+                # assets
                 elif el['type'] == 'asset':
                     asset_type = el['assetType']
                     array_to_return.append(el)
+
+                # it should only get here if new types are added
                 else:
                     print 'ERROR: need to add more checks here!'
                     print el
             except:
                 pass
 
-    if len(array_to_return) == 0:
-        return None
-    elif len(array_to_return) == 1:
-        return array_to_return[0]
-    else:
-        return array_to_return
+    return __return_formated_array__(array_to_return)
 
 
 # an internal search to get the right element
-def __search_for_element__(search_list, key):
+def __search_for_element__(search_list, key, find_parent_element=False):
 
     # basic MD values
     if hasattr(search_list, 'keys') and key in search_list.keys():
@@ -190,50 +189,31 @@ def __search_for_element__(search_list, key):
     for k in search_list:
         if type(search_list.get(k)) == dict:
             found = __search_for_element__(search_list.get(k), key)
+
             if found:
-                found_array.append(found)
+                if find_parent_element:
+                    return search_list
+                else:
+                    found_array.append(found)
+
         elif type(search_list.get(k)) == list:
             for item in search_list.get(k):
                 found = __search_for_element__(item, key)
-                if found:
-                    found_array.append(found)
 
-    if len(found_array) == 0:
+                if found:
+                    if find_parent_element:
+                        return search_list
+                    else:
+                        found_array.append(found)
+
+    return __return_formated_array__(found_array)
+
+
+# return an array that can handle lists only when needed
+def __return_formated_array__(array):
+    if len(array) == 0:
         return None
-    elif len(found_array) == 1:
-        return found_array[0]
+    elif len(array) == 1:
+        return array[0]
     else:
-        return found_array
-
-
-# an internal search to get the right element
-def __search_for_parent_element__(search_list, key):
-    # basic MD values
-    if hasattr(search_list, 'keys') and key in search_list.keys():
-        return search_list
-    # dynamic MD fields
-    elif hasattr(search_list, 'keys') and 'name' in search_list.keys() and search_list['name'] == key:
-        return search_list
-    # DS values
-    elif hasattr(search_list, 'get') and search_list.get('identifier') == key:
-        return search_list
-
-    # loop over the list
-    for k in search_list:
-        if type(search_list.get(k)) == dict:
-            found = __search_for_parent_element__(search_list.get(k), key)
-            if found:
-                return search_list
-        elif type(search_list[k]) == list:
-            for item in search_list.get(k):
-                found = __search_for_parent_element__(item, key)
-                if found:
-                    return search_list
-
-
-# deletion is used by the update method. in order to add new elements, we need to delete all but 1, then copy.
-def __delete_all_but_first__(search_list, key):
-    # skip the first element, then delete the rest
-    for index, val in enumerate(search_list):
-        if index != 0:
-            search_list.__delitem__(index)
+        return array
