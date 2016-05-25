@@ -166,7 +166,7 @@ def test_update_multiple_page():
 
 ###################### Testing area to call functions #####################
 
-test_update_multiple_page()
+test_update_multiple_block()
 
 
 ##########################################################################

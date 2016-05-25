@@ -1,6 +1,5 @@
-__author__ = 'ces55739'
-
 from copy import *
+
 
 def update(search_list, key, value):
     # get the element to update
@@ -9,10 +8,10 @@ def update(search_list, key, value):
     # if there is ever a list, then it is about to all get deleted and overwritten.
     # therefore, it is fine to just grab the first element and move on
     # The functions prior to this should never return an empty list, it should return None instead.
-    if type(returned_search_list) == list:
+    if type(returned_search_list) is list:
         returned_search_list = returned_search_list[0]
 
-    if type(value) == list:
+    if type(value) is list:
         # get the parent element so that we can delete all applicable children
         parent_element = __search_for_element__(search_list, key, True)
 
@@ -45,8 +44,8 @@ def update(search_list, key, value):
     if 'fieldValues' in returned_search_list.keys() and returned_search_list['name'] == key:
         new_value_array = []
         if type(value) is list:
-            for item in value:
-                new_value_array.append({'value': item})
+            for child in value:
+                new_value_array.append({'value': child})
         else:
             new_value_array.append({'value': value})
         returned_search_list['fieldValues']['fieldValue'] = new_value_array
@@ -60,11 +59,11 @@ def update(search_list, key, value):
     # structured data
     elif returned_search_list.get('identifier') == key:
 
-        if returned_search_list['type'] == 'text':
+        if returned_search_list['type'] is 'text':
             # get the type of content xml
-            if '::CONTENT-XML-CHECKBOX::' in returned_search_list.get('text',''):
+            if '::CONTENT-XML-CHECKBOX::' in returned_search_list.get('text', ''):
                 content_xml_type = '::CONTENT-XML-CHECKBOX::'
-            elif '::CONTENT-XML-SELECTOR::' in returned_search_list.get('text',''):
+            elif '::CONTENT-XML-SELECTOR::' in returned_search_list.get('text', ''):
                 content_xml_type = '::CONTENT-XML-SELECTOR::'
             else:
                 content_xml_type = None
@@ -85,14 +84,14 @@ def update(search_list, key, value):
             return returned_search_list
 
         # groups
-        elif returned_search_list['type'] == 'group':
+        elif returned_search_list['type'] is 'group':
             for subkey, subvalue in value.items():
                 update(returned_search_list, subkey, subvalue)
 
             return returned_search_list
 
         # assets
-        elif returned_search_list['type'] == 'asset':
+        elif returned_search_list['type'] is 'asset':
             asset_type = returned_search_list['assetType']
 
             # null out the id and path
@@ -122,27 +121,27 @@ def find(search_list, key, return_full_element=True):
 
     array_to_return = []
 
-    for el in returned_search_list:
-        if hasattr(el, 'keys') and key in el.keys():
-            array_to_return.append(el[key])
+    for element in returned_search_list:
+        if hasattr(element, 'keys') and key in element.keys():
+            array_to_return.append(element[key])
         else:
             try:
                 # dynamic md
-                if 'fieldValues' in el:
+                if 'fieldValues' in element:
                     temp_array = []
-                    for item in el['fieldValues']['fieldValue']:
+                    for item in element['fieldValues']['fieldValue']:
                         temp_array.append(item['value'])
                     array_to_return.append(temp_array)
 
                 # text fields, checkboxes, and multiselects
-                elif el['type'] == 'text':
+                elif element['type'] is 'text':
                     # this is an extra check for checkbox. It will return the text or an array of checkbox values
-                    if '::CONTENT-XML-CHECKBOX::' in el['text']:
-                        value_of_text = el['text'].split('::CONTENT-XML-CHECKBOX::')
-                    elif '::CONTENT-XML-SELECTOR::' in el['text']:
-                        value_of_text = el['text'].split('::CONTENT-XML-SELECTOR::')
+                    if '::CONTENT-XML-CHECKBOX::' in element['text']:
+                        value_of_text = element['text'].split('::CONTENT-XML-CHECKBOX::')
+                    elif '::CONTENT-XML-SELECTOR::' in element['text']:
+                        value_of_text = element['text'].split('::CONTENT-XML-SELECTOR::')
                     else:
-                        value_of_text = el['text']
+                        value_of_text = element['text']
 
                     if len(value_of_text) == 0:
                         pass
@@ -152,18 +151,17 @@ def find(search_list, key, return_full_element=True):
                         array_to_return.append(value_of_text)
 
                 # groups
-                elif el['type'] == 'group':
-                    array_to_return.append(el['structuredDataNodes']['structuredDataNode'])
+                elif element['type'] is 'group':
+                    array_to_return.append(element['structuredDataNodes']['structuredDataNode'])
 
                 # assets
-                elif el['type'] == 'asset':
-                    asset_type = el['assetType']
-                    array_to_return.append(el)
+                elif element['type'] is 'asset':
+                    array_to_return.append(element)
 
                 # it should only get here if new types are added
                 else:
                     print 'ERROR: need to add more checks here!'
-                    print el
+                    print element
             except:
                 pass
 
@@ -186,9 +184,9 @@ def __search_for_element__(search_list, key, find_parent_element=False):
     found_array = []
 
     # loop over the list
-    for k in search_list:
-        if type(search_list.get(k)) == dict:
-            found = __search_for_element__(search_list.get(k), key)
+    for child in search_list:
+        if type(search_list.get(child)) is dict:
+            found = __search_for_element__(search_list.get(child), key)
 
             if found:
                 if find_parent_element:
@@ -196,8 +194,8 @@ def __search_for_element__(search_list, key, find_parent_element=False):
                 else:
                     found_array.append(found)
 
-        elif type(search_list.get(k)) == list:
-            for item in search_list.get(k):
+        elif type(search_list.get(child)) is list:
+            for item in search_list.get(child):
                 found = __search_for_element__(item, key)
 
                 if found:
