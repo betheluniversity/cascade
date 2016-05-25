@@ -1,5 +1,7 @@
 __author__ = 'ces55739'
 
+from copy import *
+
 # Todo: can this handle 'multiple' elements
 def update(search_list, key, value):
     returned_search_list = find(search_list, key, True)
@@ -7,37 +9,34 @@ def update(search_list, key, value):
     if type(returned_search_list) == list:
         returned_search_list = returned_search_list[0]
 
-    # todo: update a list
     if type(value) == list:
+
         # delete all but 1.
         parent_element = __search_for_parent_element__(search_list, key)
-        print parent_element
+
         if parent_element is not None:
 
             # Delete elements
             new_parent_element = parent_element['structuredDataNodes']['structuredDataNode']
-            matched_first = False
 
-            for index, element in enumerate(new_parent_element):
-                if element['identifier'] == key:
-                    if matched_first:
-                        new_parent_element.remove(element)
-                    matched_first = True
-
-            # print parent_element
             new_elements = []
-
-            # create each new element todo: reverse this
+            # create each new element todo: make sure the elements stay in order
             for single_value in value:
-                print key, single_value
-                # Todo: this is where it is broken
-                # new_elements.append( update(new_parent_element, key, single_value) )
-            print new_elements
+                new_elements.append(deepcopy(update(parent_element, key, single_value)))
+
+            # print parent_element['structuredDataNodes']['structuredDataNode']
+            indexes_to_remove = []
+            for index, element in enumerate(parent_element['structuredDataNodes']['structuredDataNode']):
+                if element['identifier'] == key:
+                    indexes_to_remove.append(index)
+
+            for index in reversed(indexes_to_remove):
+                del parent_element['structuredDataNodes']['structuredDataNode'][index]
 
             # append each back to the main element
-            # for new_element in new_elements:
-            #     print new_element
-                # returned_search_list.append(new_element)
+            for new_element in new_elements:
+                parent_element['structuredDataNodes']['structuredDataNode'].append(new_element)
+            print parent_element['structuredDataNodes']['structuredDataNode']
 
         return returned_search_list
 
@@ -56,6 +55,7 @@ def update(search_list, key, value):
         return returned_search_list
 
     # basic metadata
+    # Todo: fix this
     elif returned_search_list.get(key):
         returned_search_list[key] = value
         return returned_search_list
@@ -192,7 +192,7 @@ def __search_for_element__(search_list, key):
             found = __search_for_element__(search_list.get(k), key)
             if found:
                 found_array.append(found)
-        elif type(search_list[k]) == list:
+        elif type(search_list.get(k)) == list:
             for item in search_list.get(k):
                 found = __search_for_element__(item, key)
                 if found:

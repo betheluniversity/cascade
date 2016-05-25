@@ -150,25 +150,24 @@ def test_update_multiple_page():
 
     bio = {
         'job-title': [
-            'caleb1',
-            'caleb2'
+            'first job title',
+            '2nd job title',
+            '3rd job title'
         ]
     }
 
-    print bio
     for key, value in bio.items():
         update( page_sd, key, value)
 
     page_asset2, page_md2, page_sd2 = my_page.get_asset()
     my_page.edit_asset(page_asset2)
 
-    # print find(page_sd, 'job-title', True)
-
 
 
 ###################### Testing area to call functions #####################
 
 test_update_multiple_page()
+
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'
