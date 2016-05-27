@@ -93,19 +93,27 @@ def test_update_page():
     my_page = Page(ws_connector, TEST_PAGE_ID)
     page_asset, page_md, page_sd = my_page.get_asset()
 
-    print update(page_md, 'title', 'CALEBasdfasdf')
-    print update(page_md, 'school', ['Bethel University', 'College of Arts & Sciences'])
+    # basic md
+    print update(page_md, 'title', 'CALEB')
 
-    print update(page_sd, 'date1', '06-01-2016')
-    print update(page_sd, 'text2', 'CALEB')
-    print update(page_sd, 'text3', 'CALEB')
-    print update(page_sd, 'checkbox1', ['CALEB', 'Yes1'])
-    print update(page_sd, 'dropdown1', 'CALEB')
-    print update(page_sd, 'radio1', 'Yes')
-    print update(page_sd, 'multiselect1', ['test', 'test2'])
-    # print update(page_sd, 'page-chooser', 'CALEB')
-    # print update(page_sd, 'image-chooser', 'CALEB')
-    # print update(page_sd, 'block-chooser', 'CALEB')
+    # dynamic md
+    print update(page_md, 'checkbox', '3')
+    print update(page_md, 'dropdown', 'value2')
+    print update(page_md, 'multiselect', '1')
+    print update(page_md, 'radio2', '1')
+    print update(page_md, 'text', 'TEST2')
+
+    # structured data
+    print update(page_sd, 'date1', '06-05-2016')
+    print update(page_sd, 'text2', 'CALEB2')
+    print update(page_sd, 'text3', 'CALEB2')
+    print update(page_sd, 'checkbox1', 'Yes')
+    print update(page_sd, 'dropdown1', 'test2')
+    print update(page_sd, 'radio1', 'CALEB2')
+    print update(page_sd, 'multiselect1', ['test', 'CALEB2'])
+    print update(page_sd, 'page-chooser', '/_testing/caleb-schwarze/index')
+    # print update(page_sd, 'image-chooser', 'CALEB2')
+    # print update(page_sd, 'block-chooser', '/CALEB2')
 
     print my_page.edit_asset(page_asset)
 
@@ -163,11 +171,8 @@ def test_update_multiple_page():
     my_page.edit_asset(page_asset2)
 
 
-
 ###################### Testing area to call functions #####################
-
-test_update_multiple_block()
-
+test_update_page()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

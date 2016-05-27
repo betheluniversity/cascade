@@ -1,6 +1,6 @@
 from copy import *
 
-
+# TODO: Multiselect and checkboxes will need extra work if NONE is found
 def update(search_list, key, value):
     # get the element to update
     returned_search_list = find(search_list, key, True)
@@ -8,10 +8,10 @@ def update(search_list, key, value):
     # if there is ever a list, then it is about to all get deleted and overwritten.
     # therefore, it is fine to just grab the first element and move on
     # The functions prior to this should never return an empty list, it should return None instead.
-    if type(returned_search_list) is list:
+    if type(returned_search_list) == list:
         returned_search_list = returned_search_list[0]
 
-    if type(value) is list:
+    if type(value) == list:
         # get the parent element so that we can delete all applicable children
         parent_element = __search_for_element__(search_list, key, True)
 
@@ -41,14 +41,20 @@ def update(search_list, key, value):
         return None
 
     # dynamic metadata
-    if 'fieldValues' in returned_search_list.keys() and returned_search_list['name'] == key:
+    if 'name' in returned_search_list and returned_search_list['name'] == key:
         new_value_array = []
         if type(value) is list:
             for child in value:
                 new_value_array.append({'value': child})
         else:
             new_value_array.append({'value': value})
-        returned_search_list['fieldValues']['fieldValue'] = new_value_array
+
+        # build structure, if it doesn't already exist
+        # todo: shorten up this logic -- simplify
+        if 'fieldValues' in returned_search_list and 'fieldValue' in returned_search_list['fieldValues']:
+            returned_search_list['fieldValues']['fieldValue'] = new_value_array
+        else:
+            returned_search_list['fieldValues'] = {'fieldValue': new_value_array}
         return returned_search_list
 
     # basic metadata
@@ -59,7 +65,7 @@ def update(search_list, key, value):
     # structured data
     elif returned_search_list.get('identifier') == key:
 
-        if returned_search_list['type'] is 'text':
+        if returned_search_list['type'] == 'text':
             # get the type of content xml
             if '::CONTENT-XML-CHECKBOX::' in returned_search_list.get('text', ''):
                 content_xml_type = '::CONTENT-XML-CHECKBOX::'
@@ -84,14 +90,14 @@ def update(search_list, key, value):
             return returned_search_list
 
         # groups
-        elif returned_search_list['type'] is 'group':
+        elif returned_search_list['type'] == 'group':
             for subkey, subvalue in value.items():
                 update(returned_search_list, subkey, subvalue)
 
             return returned_search_list
 
         # assets
-        elif returned_search_list['type'] is 'asset':
+        elif returned_search_list['type'] == 'asset':
             asset_type = returned_search_list['assetType']
 
             # null out the id and path
@@ -134,7 +140,7 @@ def find(search_list, key, return_full_element=True):
                     array_to_return.append(temp_array)
 
                 # text fields, checkboxes, and multiselects
-                elif element['type'] is 'text':
+                elif element['type'] == 'text':
                     # this is an extra check for checkbox. It will return the text or an array of checkbox values
                     if '::CONTENT-XML-CHECKBOX::' in element['text']:
                         value_of_text = element['text'].split('::CONTENT-XML-CHECKBOX::')
@@ -151,11 +157,11 @@ def find(search_list, key, return_full_element=True):
                         array_to_return.append(value_of_text)
 
                 # groups
-                elif element['type'] is 'group':
+                elif element['type'] == 'group':
                     array_to_return.append(element['structuredDataNodes']['structuredDataNode'])
 
                 # assets
-                elif element['type'] is 'asset':
+                elif element['type'] == 'asset':
                     array_to_return.append(element)
 
                 # it should only get here if new types are added
@@ -185,7 +191,7 @@ def __search_for_element__(search_list, key, find_parent_element=False):
 
     # loop over the list
     for child in search_list:
-        if type(search_list.get(child)) is dict:
+        if type(search_list.get(child)) == dict:
             found = __search_for_element__(search_list.get(child), key)
 
             if found:
@@ -194,7 +200,7 @@ def __search_for_element__(search_list, key, find_parent_element=False):
                 else:
                     found_array.append(found)
 
-        elif type(search_list.get(child)) is list:
+        elif type(search_list.get(child)) == list:
             for item in search_list.get(child):
                 found = __search_for_element__(item, key)
 
