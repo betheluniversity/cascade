@@ -147,6 +147,7 @@ class Cascade(object):
 
         return False
 
+    # can only be pages and blocks
     def load_base_asset_by_id(self, id, asset_type):
         asset = self.read(id, asset_type)
         if asset_type == 'page':
