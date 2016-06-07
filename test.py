@@ -1,10 +1,12 @@
 from bu_cascade.assets.page import Page
 from bu_cascade.assets.block import Block
+from bu_cascade.assets.metadata_set import MetadataSet
+from bu_cascade.assets.data_definition import DataDefinition
 from bu_cascade.asset_tools import *
 from bu_cascade.cascade_connector import Cascade
 import json
 
-from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID
+from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID, TEST_METADATA_SET_ID, TEST_DATA_DEFINITION_ID
 
 ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID)
 
@@ -171,8 +173,32 @@ def test_update_multiple_page():
     my_page.edit_asset(page_asset2)
 
 
+def test_update_metadata_set():
+    asset = MetadataSet(ws_connector, TEST_METADATA_SET_ID)
+    metadata_asset, empty_variable, empty_variable = asset.get_asset()
+
+    update_metadata_set(metadata_asset, 'radio1', ['1', 'asdf'])
+    update_metadata_set(metadata_asset, 'radio2', ['2', 'asdf'])
+    update_metadata_set(metadata_asset, 'dropdown', ['3', 'asdf'])
+    update_metadata_set(metadata_asset, 'checkbox', ['4', 'asdf'])
+    update_metadata_set(metadata_asset, 'multiselect', ['5', 'asdf'])
+
+    asset.edit_asset(metadata_asset)
+
+
+def test_update_data_definition():
+    asset = DataDefinition(ws_connector, TEST_DATA_DEFINITION_ID)
+    data_definition_asset, empty_variable, empty_variable = asset.get_asset()
+
+    update_data_definition(data_definition_asset, 'checkbox1', ['1', 'asdf', 'another', 'TEST'])
+    update_data_definition(data_definition_asset, 'dropdown1', ['2', 'asdf'])
+    update_data_definition(data_definition_asset, 'radio1', ['3', 'asdf'])
+    update_data_definition(data_definition_asset, 'multiselect1', ['4', 'asdf'])
+
+    asset.edit_asset(data_definition_asset)
+
 ###################### Testing area to call functions #####################
-test_update_page()
+
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

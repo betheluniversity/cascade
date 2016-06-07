@@ -1,4 +1,5 @@
 from copy import *
+from xml.etree import ElementTree
 
 # TODO: Multiselect and checkboxes will need extra work if NONE is found
 def update(search_list, key, value):
@@ -114,6 +115,82 @@ def update(search_list, key, value):
 
         else:
             return None
+    else:
+        return None
+
+
+# This is currently used to update md sets. Could be made more robust in the future
+def update_metadata_set(search_list, key, value):
+    # get the element to update
+    returned_search_list = __search_for_element__(search_list, key)
+
+    if returned_search_list is None:
+        return None
+
+    # possible values
+    if 'name' in returned_search_list and returned_search_list['name'] == key and 'fieldType' != 'text':
+        new_value_array = []
+        if type(value) is list:
+            for child in value:
+                new_value_array.append({'value': child})
+        else:
+            new_value_array.append({'value': value})
+
+        # build structure, if it doesn't already exist
+        # todo: shorten up this logic -- simplify
+        if 'possibleValues' in returned_search_list and 'possibleValue' in returned_search_list['possibleValues']:
+            returned_search_list['possibleValues']['possibleValue'] = new_value_array
+        else:
+            returned_search_list['possibleValues'] = {'possibleValue': new_value_array}
+        return returned_search_list
+
+    # basic values
+    elif key in returned_search_list:
+        returned_search_list[key] = value
+        return returned_search_list
+
+    else:
+        return None
+
+
+# This is currently used to update data definitions. Could be made more robust in the future
+def update_data_definition(search_xml, key, value):
+    if 'dataDefinition' in search_xml:
+        xml = search_xml['dataDefinition']['xml']
+    else:
+        return None
+
+    search_xml_in_json = ElementTree.fromstring(xml)
+
+    for child in search_xml_in_json.findall('.//text'):
+        if child.get('identifier') == key:
+            if child.get('type') == 'checkbox':
+                field_type = 'checkbox-item'
+            elif child.get('type') == 'dropdown':
+                field_type = 'dropdown-item'
+            elif child.get('type') == 'radiobutton':
+                field_type = 'radio-item'
+            elif child.get('type') == 'multi-selector':
+                field_type = 'selector-item'
+            else:
+                continue
+
+            # This process is to be able to delete elements without changing the array size
+            # gather elements to remove
+            indexes_to_remove = []
+            for index, element in enumerate(child):
+                indexes_to_remove.append(element)
+            # remove the elements
+            for element in indexes_to_remove:
+                child.remove(element)
+
+            # add all
+            for index, single_value in enumerate(value):
+                child.append(ElementTree.Element(field_type, {'value': single_value}))
+
+        search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
+
+    return search_xml
 
 
 # returns the value of the element or the full element
@@ -176,7 +253,6 @@ def find(search_list, key, return_full_element=True):
 
 # an internal search to get the right element
 def __search_for_element__(search_list, key, find_parent_element=False):
-
     # basic MD values
     if hasattr(search_list, 'keys') and key in search_list.keys():
         return search_list
