@@ -73,7 +73,13 @@ class Asset(object):
         return self.ws.is_in_workflow(self.identifier, self.asset_type)
 
     def get_metadata(self):
-        return self.asset[self.asset_specific_key]['metadata']
+        try:
+            return self.asset[self.asset_specific_key]['metadata']
+        except:
+            return None
 
     def get_structured_data(self):
-        return self.asset[self.asset_specific_key]['structuredData']
+        try:
+            return self.asset[self.asset_specific_key]['structuredData']
+        except:
+            return None
