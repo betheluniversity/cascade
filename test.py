@@ -198,7 +198,7 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-test_update_metadata_set()
+test_update_data_definition()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

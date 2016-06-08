@@ -132,15 +132,17 @@ def update_metadata_set(search_list, key, value, default=None):
         new_value_array = []
         if type(value) is list:
             for child in value:
-                selected_by_default = False
+                # todo make this into a method
                 if child == default:
-                    selected_by_default = True
-                new_value_array.append({'value': child, 'selectedByDefault': selected_by_default})
+                    new_value_array.append({'value': child, 'selectedByDefault': True})
+                else:
+                    new_value_array.append({'value': child})
         else:
-            selected_by_default = False
+            # todo make this into a method
             if value == default:
-                selected_by_default = True
-            new_value_array.append({'value': value, 'selectedByDefault': selected_by_default})
+                new_value_array.append({'value': value, 'selectedByDefault': True})
+            else:
+                new_value_array.append({'value': value})
 
         # build structure, if it doesn't already exist
         # todo: shorten up this logic -- simplify
@@ -192,10 +194,11 @@ def update_data_definition(search_xml, key, value, default=None):
 
             # add all
             for index, single_value in enumerate(value):
-                selected_by_default = False
+                # todo make this into a method
                 if single_value == default:
-                    selected_by_default = True
-                child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8'), 'selectedByDefault': selected_by_default}))
+                    child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8'), 'selectedByDefault': True}))
+                else:
+                    child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8')}))
 
     search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
 
