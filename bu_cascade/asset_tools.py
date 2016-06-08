@@ -120,7 +120,7 @@ def update(search_list, key, value):
 
 
 # This is currently used to update md sets. Could be made more robust in the future
-def update_metadata_set(search_list, key, value):
+def update_metadata_set(search_list, key, value, default=None):
     # get the element to update
     returned_search_list = __search_for_element__(search_list, key)
 
@@ -132,9 +132,15 @@ def update_metadata_set(search_list, key, value):
         new_value_array = []
         if type(value) is list:
             for child in value:
-                new_value_array.append({'value': child})
+                selected_by_default = False
+                if child == default:
+                    selected_by_default = True
+                new_value_array.append({'value': child, 'selectedByDefault': selected_by_default})
         else:
-            new_value_array.append({'value': value})
+            selected_by_default = False
+            if value == default:
+                selected_by_default = True
+            new_value_array.append({'value': value, 'selectedByDefault': selected_by_default})
 
         # build structure, if it doesn't already exist
         # todo: shorten up this logic -- simplify
@@ -154,7 +160,7 @@ def update_metadata_set(search_list, key, value):
 
 
 # This is currently used to update data definitions. Could be made more robust in the future
-def update_data_definition(search_xml, key, value):
+def update_data_definition(search_xml, key, value, default=None):
     if 'dataDefinition' in search_xml:
         xml = search_xml['dataDefinition']['xml']
     else:
@@ -186,7 +192,10 @@ def update_data_definition(search_xml, key, value):
 
             # add all
             for index, single_value in enumerate(value):
-                child.append(ElementTree.Element(field_type, {'value': single_value}))
+                selected_by_default = False
+                if single_value == default:
+                    selected_by_default = True
+                child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8'), 'selectedByDefault': selected_by_default}))
 
         search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
 

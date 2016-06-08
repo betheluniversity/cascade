@@ -177,7 +177,7 @@ def test_update_metadata_set():
     asset = MetadataSet(ws_connector, TEST_METADATA_SET_ID)
     metadata_asset, empty_variable, empty_variable = asset.get_asset()
 
-    update_metadata_set(metadata_asset, 'radio1', ['1', 'asdf'])
+    update_metadata_set(metadata_asset, 'radio1', ['1', 'asdf'], 'asdf')
     update_metadata_set(metadata_asset, 'radio2', ['2', 'asdf'])
     update_metadata_set(metadata_asset, 'dropdown', ['3', 'asdf'])
     update_metadata_set(metadata_asset, 'checkbox', ['4', 'asdf'])
@@ -198,7 +198,7 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-
+test_update_metadata_set()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'
