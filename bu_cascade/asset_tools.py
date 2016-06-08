@@ -197,7 +197,7 @@ def update_data_definition(search_xml, key, value, default=None):
                     selected_by_default = True
                 child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8'), 'selectedByDefault': selected_by_default}))
 
-        search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
+    search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
 
     return search_xml
 
