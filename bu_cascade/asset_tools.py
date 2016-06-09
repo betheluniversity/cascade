@@ -150,12 +150,12 @@ def update_metadata_set(search_list, key, value, default=None):
             returned_search_list['possibleValues']['possibleValue'] = new_value_array
         else:
             returned_search_list['possibleValues'] = {'possibleValue': new_value_array}
-        return returned_search_list
+        return key
 
     # basic values
     elif key in returned_search_list:
         returned_search_list[key] = value
-        return returned_search_list
+        return key
 
     else:
         return None
@@ -163,6 +163,7 @@ def update_metadata_set(search_list, key, value, default=None):
 
 # This is currently used to update data definitions. Could be made more robust in the future
 def update_data_definition(search_xml, key, value, default=None):
+    return_key = False
     if 'dataDefinition' in search_xml:
         xml = search_xml['dataDefinition']['xml']
     else:
@@ -196,13 +197,19 @@ def update_data_definition(search_xml, key, value, default=None):
             for index, single_value in enumerate(value):
                 # todo make this into a method
                 if single_value == default:
-                    child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8'), 'selectedByDefault': True}))
+                    child.append(ElementTree.Element(field_type, {'value': single_value.replace(' & ', ' &amp; '), 'selectedByDefault': True}))
                 else:
-                    child.append(ElementTree.Element(field_type, {'value': single_value.encode('utf-8')}))
+                    child.append(ElementTree.Element(field_type, {'value': single_value.replace(' & ', ' &amp; ')}))
 
-    search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
+            return_key = True
+            break
 
-    return search_xml
+
+    if return_key:
+        search_xml['dataDefinition']['xml'] = ElementTree.tostring(search_xml_in_json)
+        return key
+    else:
+        return None
 
 
 # returns the value of the element or the full element

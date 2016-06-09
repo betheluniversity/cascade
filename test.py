@@ -187,13 +187,13 @@ def test_update_metadata_set():
 
 
 def test_update_data_definition():
-    asset = DataDefinition(ws_connector, TEST_DATA_DEFINITION_ID)
+    asset = DataDefinition(ws_connector, '30fd148b8c58651305d792995121ee73')
     data_definition_asset, empty_variable, empty_variable = asset.get_asset()
 
-    update_data_definition(data_definition_asset, 'checkbox1', ['1', 'asdf', 'another', 'TEST'])
-    update_data_definition(data_definition_asset, 'dropdown1', ['2', 'asdf'])
-    update_data_definition(data_definition_asset, 'radio1', ['3', 'asdf'])
-    update_data_definition(data_definition_asset, 'multiselect1', ['4', 'asdf'])
+    # update_data_definition(data_definition_asset, 'school', ['1', 'asdf', 'another', 'TEST'])
+    # update_data_definition(data_definition_asset, 'dropdown1', ['2', 'asdf'])
+    # update_data_definition(data_definition_asset, 'radio1', ['3', 'asdf'])
+    # update_data_definition(data_definition_asset, 'multiselect1', ['4', 'asdf'])
 
     asset.edit_asset(data_definition_asset)
 
