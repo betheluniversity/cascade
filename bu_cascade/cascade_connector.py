@@ -174,7 +174,7 @@ class Cascade(object):
 
         return new_asset, new_asset_md, new_asset_sd
 
-    def get_destinations_for_string(destination):
+    def get_destinations_for_string(self, destination):
         if destination == 'staging.bethel.edu' or destination == 'staging':
             id = 'ba1381d58c586513100ee2a78fc41899'
             identifier = {'assetIdentifier': {
