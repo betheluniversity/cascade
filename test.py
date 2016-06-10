@@ -198,7 +198,8 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-test_update_data_definition()
+my_page = Page(ws_connector, TEST_PAGE_ID)
+my_page.publish_asset()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

@@ -81,11 +81,11 @@ class Cascade(object):
 
         return identifier
 
-    def publish(self, path_or_id, asset_type, destination='production'):
+    def publish(self, path_or_id, asset_type, destination=''):
         identifier = Cascade.create_identifier(self, path_or_id, asset_type)
         identifier = {
             "identifier": identifier,
-            'destinations': destination
+            'destinations': self.get_destinations_for_string(destination)
         }
 
         response = self.client.service.publish(self.login, identifier)
@@ -173,3 +173,15 @@ class Cascade(object):
         new_asset_sd = new_asset[asset_specific_key]['structuredData']
 
         return new_asset, new_asset_md, new_asset_sd
+
+    def get_destinations_for_string(destination):
+        if destination == 'staging.bethel.edu' or destination == 'staging':
+            id = 'ba1381d58c586513100ee2a78fc41899'
+            identifier = {'assetIdentifier': {
+                'id': id,
+                'type': 'destination',
+            }
+            }
+            return identifier
+        else:
+            return ''
