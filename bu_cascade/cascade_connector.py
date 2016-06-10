@@ -81,10 +81,11 @@ class Cascade(object):
 
         return identifier
 
-    def publish(self, path_or_id, asset_type):
+    def publish(self, path_or_id, asset_type, destination='production'):
         identifier = Cascade.create_identifier(self, path_or_id, asset_type)
         identifier = {
-            "identifier": identifier
+            "identifier": identifier,
+            'destinations': destination
         }
 
         response = self.client.service.publish(self.login, identifier)
