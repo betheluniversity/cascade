@@ -96,24 +96,28 @@ def test_update_page():
     page_asset, page_md, page_sd = my_page.get_asset()
 
     # basic md
-    print update(page_md, 'title', 'CALEB')
+    print update(page_asset, 'title', 'CALEB')
 
     # dynamic md
-    print update(page_md, 'checkbox', '3')
-    print update(page_md, 'dropdown', 'value2')
-    print update(page_md, 'multiselect', '1')
-    print update(page_md, 'radio2', '1')
-    print update(page_md, 'text', 'TEST2')
+    print update(page_md, 'checkbox', '4')
+    print update(page_md, 'dropdown', 'asdf')
+    print update(page_md, 'multiselect', '5')
+    print update(page_md, 'radio2', '2')
+    print update(page_md, 'text', 'new test')
 
     # structured data
-    print update(page_sd, 'date1', '06-05-2016')
-    print update(page_sd, 'text2', 'CALEB2')
-    print update(page_sd, 'text3', 'CALEB2')
-    print update(page_sd, 'checkbox1', 'Yes')
-    print update(page_sd, 'dropdown1', 'test2')
-    print update(page_sd, 'radio1', 'CALEB2')
-    print update(page_sd, 'multiselect1', ['test', 'CALEB2'])
-    print update(page_sd, 'page-chooser', '/_testing/caleb-schwarze/index')
+    print update(page_sd, 'date1', '06-07-2016')
+    print update(page_sd, 'text2', 'new test2')
+    print update(page_sd, 'text3', 'new test3')
+    print update(page_sd, 'checkbox1', 'asdf')
+    print update(page_sd, 'dropdown1', '2')
+    print update(page_sd, 'radio1', '3')
+    print update(page_asset, 'multiselect1', ['4', 'asdf'])
+    print update(page_sd, 'page-chooser', '/_testing/caleb-schwarze/major-minor')
+
+
+
+
     # print update(page_sd, 'image-chooser', 'CALEB2')
     # print update(page_sd, 'block-chooser', '/CALEB2')
 
@@ -198,8 +202,13 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-my_page = Page(ws_connector, TEST_PAGE_ID)
-my_page.publish_asset()
+# my_page = Page(ws_connector, '4d629e348c5865134252346aea72af2c')
+# print my_page
+
+
+test_update_page()
+
+
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

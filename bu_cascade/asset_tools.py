@@ -24,17 +24,17 @@ def update(search_list, key, value):
 
             # gather indices to delete
             indexes_to_remove = []
-            for index, element in enumerate(parent_element['structuredDataNodes']['structuredDataNode']):
+            for index, element in enumerate(parent_element):
                 if element['identifier'] == key:
                     indexes_to_remove.append(index)
 
             # delete the old ones
             for index in reversed(indexes_to_remove):
-                del parent_element['structuredDataNodes']['structuredDataNode'][index]
+                del parent_element[index]
 
             # append the new elements back on (these were created above)
             for new_element in new_elements:
-                parent_element['structuredDataNodes']['structuredDataNode'].append(new_element)
+                parent_element.append(new_element)
 
         return returned_search_list
 
@@ -271,6 +271,7 @@ def find(search_list, key, return_full_element=True):
 
 
 # an internal search to get the right element
+# can only be called on the top level asset, top level metadata, or the top level structured data
 def __search_for_element__(search_list, key, find_parent_element=False):
     # basic MD values
     if hasattr(search_list, 'keys') and key in search_list.keys():
@@ -286,24 +287,44 @@ def __search_for_element__(search_list, key, find_parent_element=False):
 
     # loop over the list
     for child in search_list:
-        if type(search_list.get(child)) == dict:
-            found = __search_for_element__(search_list.get(child), key)
+        # basic MD values
+        if hasattr(child, 'keys') and key in child.keys():
+            if find_parent_element:
+                return search_list
+            else:
+                return child
+        # dynamic MD fields
+        elif hasattr(child, 'keys') and 'name' in child.keys() and child['name'] == key:
+            if find_parent_element:
+                return search_list
+            else:
+                return child
+        # DS values
+        elif hasattr(child, 'get') and child.get('identifier') == key:
+            if find_parent_element:
+                return search_list
+            else:
+                return child
 
-            if found:
-                if find_parent_element:
-                    return search_list
-                else:
-                    found_array.append(found)
-
-        elif type(search_list.get(child)) == list:
-            for item in search_list.get(child):
-                found = __search_for_element__(item, key)
+        if hasattr(search_list, 'get'):
+            if type(search_list.get(child)) == dict:
+                found = __search_for_element__(search_list.get(child), key, find_parent_element)
 
                 if found:
                     if find_parent_element:
-                        return search_list
+                        return found
                     else:
                         found_array.append(found)
+
+            elif type(search_list.get(child)) == list:
+                for item in search_list.get(child):
+                    found = __search_for_element__(item, key, find_parent_element)
+
+                    if found:
+                        if find_parent_element:
+                            return search_list.get(child)
+                        else:
+                            found_array.append(found)
 
     return __return_formated_array__(found_array)
 
