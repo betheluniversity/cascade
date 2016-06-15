@@ -8,6 +8,7 @@ suds-0.4-py2.7.egg
 
 dist/*
 config.py
+config.pyc
 build/*
 .idea/misc.xml
 
