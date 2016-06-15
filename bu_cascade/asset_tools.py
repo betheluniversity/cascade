@@ -25,7 +25,9 @@ def update(search_list, key, value):
             # gather indices to delete
             indexes_to_remove = []
             for index, element in enumerate(parent_element):
-                if element['identifier'] == key:
+                if 'name' in returned_search_list and returned_search_list['name'] == key:
+                    indexes_to_remove.append(index)
+                elif element['identifier'] == key:
                     indexes_to_remove.append(index)
 
             # delete the old ones

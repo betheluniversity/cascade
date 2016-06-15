@@ -202,11 +202,6 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-# my_page = Page(ws_connector, '4d629e348c5865134252346aea72af2c')
-# print my_page
-
-
-test_update_page()
 
 
 
