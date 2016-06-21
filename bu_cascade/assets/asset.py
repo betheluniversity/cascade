@@ -29,10 +29,7 @@ class Asset(object):
         self.structured_data = self.get_structured_data()
 
     def read_asset(self):
-        read_asset = self.ws.read(self.identifier, self.asset_type)
-
-        # convert Cascade Asset structure to a dict
-        asset_structure = self.ws.build_asset_structure(read_asset)
+        asset_structure = self.ws.read(self.identifier, self.asset_type)
 
         # if it was read correctly, get the asset
         if asset_structure['success'] == 'true':

@@ -202,7 +202,7 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 ###################### Testing area to call functions #####################
-
+print test_page_read()
 
 
 ##########################################################################

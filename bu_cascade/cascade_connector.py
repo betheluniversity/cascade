@@ -1,4 +1,5 @@
 from suds.client import Client
+from suds.sudsobject import asdict
 from suds.transport import TransportError
 import copy
 
@@ -24,7 +25,7 @@ class Cascade(object):
         identifier = self.create_identifier(path_or_id, asset_type)
 
         response = self.client.service.read(self.login, identifier)
-        return response
+        return self.build_asset_structure(response)
 
     def create(self, asset):
         response = self.client.service.create(self.login, asset)
@@ -44,8 +45,6 @@ class Cascade(object):
         asset = self.recursive_asdict(asset)
         return asset
 
-
-
     def HTMLEntitiesToUnicode(self, text):
         """Converts HTML entities to unicode.  For example '&amp;' becomes '&'."""
         text = unicode(BeautifulStoneSoup(text, convertEntities=BeautifulStoneSoup.ALL_ENTITIES))
@@ -60,7 +59,6 @@ class Cascade(object):
         from suds.sudsobject import asdict
 
         """Convert Suds object into serializable format."""
-
         out = {}
         for k, v in asdict(d).iteritems():
             if hasattr(v, '__keylist__'):
