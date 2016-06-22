@@ -63,6 +63,9 @@ class Asset(object):
     def move_asset(self, folder_identifier):
         return self.ws.move(self.identifier, folder_identifier, self.asset_type)
 
+    def copy_asset(self, new_folder_identifier, new_name):
+        return self.ws.copy(self.identifier, self.asset_type, new_folder_identifier, new_name)
+
     def rename_asset(self, new_name):
         return self.ws.rename(self.identifier, new_name, self.asset_type)
 

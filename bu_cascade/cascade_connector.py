@@ -150,6 +150,19 @@ class Cascade(object):
         response = self.client.service.move(self.login, identifier, moveParameters)
         return response
 
+    def copy(self, old_path_or_id, asset_type, destination_path_or_id, new_name):
+        old_identifier = Cascade.create_identifier(self, old_path_or_id, asset_type)
+        destination = Cascade.create_identifier(self, destination_path_or_id, 'folder')
+
+        copyParameters = {
+            "destinationContainerIdentifier": destination,
+            "doWorkflow": False,
+            "newName": new_name
+        }
+
+        response = self.client.service.copy(self.login, old_identifier, copyParameters)
+        return response
+
     def rename(self, path_or_id, new_name, asset_type):
         identifier = Cascade.create_identifier(self, path_or_id, asset_type)
 
