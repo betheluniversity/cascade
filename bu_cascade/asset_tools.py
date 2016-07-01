@@ -70,9 +70,9 @@ def update(search_list, key, value):
 
         if returned_search_list['type'] == 'text':
             # get the type of content xml
-            if '::CONTENT-XML-CHECKBOX::' in returned_search_list.get('text', ''):
+            if '::CONTENT-XML-CHECKBOX::' in str(returned_search_list.get('text', '')):
                 content_xml_type = '::CONTENT-XML-CHECKBOX::'
-            elif '::CONTENT-XML-SELECTOR::' in returned_search_list.get('text', ''):
+            elif '::CONTENT-XML-SELECTOR::' in str(returned_search_list.get('text', '')):
                 content_xml_type = '::CONTENT-XML-SELECTOR::'
             else:
                 content_xml_type = None
@@ -240,12 +240,12 @@ def find(search_list, key, return_full_element=True):
                 # text fields, checkboxes, and multiselects
                 elif element['type'] == 'text':
                     # this is an extra check for checkbox. It will return the text or an array of checkbox values
-                    if '::CONTENT-XML-CHECKBOX::' in element['text']:
-                        value_of_text = element['text'].split('::CONTENT-XML-CHECKBOX::')
-                    elif '::CONTENT-XML-SELECTOR::' in element['text']:
-                        value_of_text = element['text'].split('::CONTENT-XML-SELECTOR::')
+                    if '::CONTENT-XML-CHECKBOX::' in str(element['text']):
+                        value_of_text = str(element['text']).split('::CONTENT-XML-CHECKBOX::')
+                    elif '::CONTENT-XML-SELECTOR::' in str(element['text']):
+                        value_of_text = str(element['text']).split('::CONTENT-XML-SELECTOR::')
                     else:
-                        value_of_text = element['text']
+                        value_of_text = str(element['text'])
 
                     if len(value_of_text) == 0:
                         pass
