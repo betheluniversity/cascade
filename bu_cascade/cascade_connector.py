@@ -60,7 +60,10 @@ class Cascade(object):
 
         """Convert Suds object into serializable format."""
         out = {}
-        for k, v in asdict(d).iteritems():
+        if type(d) is not dict:
+            d = asdict(d)
+
+        for k, v in d.iteritems():
             if hasattr(v, '__keylist__'):
                 out[k] = self.recursive_asdict(v)
             elif isinstance(v, list):
