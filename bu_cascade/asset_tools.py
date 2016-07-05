@@ -224,9 +224,11 @@ def find(search_list, key, return_full_element=True):
         return returned_search_list
 
     array_to_return = []
+    if hasattr(returned_search_list, 'keys') and key in returned_search_list.keys():
+        array_to_return.append(returned_search_list[key])
 
     for element in returned_search_list:
-        if hasattr(element, 'keys') and key in element.keys():
+        if hasattr(element, 'keys') and (key in element.keys() or element[key]):
             array_to_return.append(element[key])
         else:
             try:
