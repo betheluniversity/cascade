@@ -224,52 +224,50 @@ def find(search_list, key, return_full_element=True):
         return returned_search_list
 
     array_to_return = []
-    if hasattr(returned_search_list, 'keys') and key in returned_search_list.keys():
-        array_to_return.append(returned_search_list[key])
+    element = returned_search_list
 
-    for element in returned_search_list:
-        if hasattr(element, 'keys') and (key in element.keys() or element[key]):
-            array_to_return.append(element[key])
-        else:
-            try:
-                # dynamic md
-                if 'fieldValues' in element:
-                    temp_array = []
-                    for item in element['fieldValues']['fieldValue']:
-                        temp_array.append(item['value'])
-                    array_to_return.append(temp_array)
+    if hasattr(element, 'keys') and key in element.keys():
+        array_to_return.append(element[key])
+    else:
+        try:
+            # dynamic md
+            if 'fieldValues' in element:
+                temp_array = []
+                for item in element['fieldValues']['fieldValue']:
+                    temp_array.append(item['value'])
+                array_to_return.append(temp_array)
 
-                # text fields, checkboxes, and multiselects
-                elif element['type'] == 'text':
-                    # this is an extra check for checkbox. It will return the text or an array of checkbox values
-                    if '::CONTENT-XML-CHECKBOX::' in str(element['text']):
-                        value_of_text = str(element['text']).split('::CONTENT-XML-CHECKBOX::')
-                    elif '::CONTENT-XML-SELECTOR::' in str(element['text']):
-                        value_of_text = str(element['text']).split('::CONTENT-XML-SELECTOR::')
-                    else:
-                        value_of_text = str(element['text'])
-
-                    if len(value_of_text) == 0:
-                        pass
-                    elif len(value_of_text) == 1:
-                        array_to_return.append(value_of_text[0])
-                    else:
-                        array_to_return.append(value_of_text)
-
-                # groups
-                elif element['type'] == 'group':
-                    array_to_return.append(element['structuredDataNodes']['structuredDataNode'])
-
-                # assets
-                elif element['type'] == 'asset':
-                    array_to_return.append(element)
-
-                # it should only get here if new types are added
+            # text fields, checkboxes, and multiselects
+            elif element['type'] == 'text':
+                # this is an extra check for checkbox. It will return the text or an array of checkbox values
+                if '::CONTENT-XML-CHECKBOX::' in str(element['text']):
+                    value_of_text = str(element['text']).split('::CONTENT-XML-CHECKBOX::')
+                elif '::CONTENT-XML-SELECTOR::' in str(element['text']):
+                    value_of_text = str(element['text']).split('::CONTENT-XML-SELECTOR::')
                 else:
-                    print 'ERROR: need to add more checks here!'
-                    print element
-            except:
-                pass
+                    value_of_text = str(element['text'])
+
+                if len(value_of_text) == 0:
+                    pass
+                elif len(value_of_text) == 1:
+                    array_to_return.append(value_of_text[0])
+                else:
+                    array_to_return.append(value_of_text)
+
+            # groups
+            elif element['type'] == 'group':
+                array_to_return.append(element['structuredDataNodes']['structuredDataNode'])
+
+            # assets
+            elif element['type'] == 'asset':
+                array_to_return.append(element)
+
+            # it should only get here if new types are added
+            else:
+                print 'ERROR: need to add more checks here!'
+                print element
+        except:
+            pass
 
     return __return_formated_array__(array_to_return)
 
