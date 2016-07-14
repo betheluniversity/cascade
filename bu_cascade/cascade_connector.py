@@ -207,7 +207,10 @@ class Cascade(object):
         new_asset[asset_specific_key]['parentFolderId'] = None
         new_asset[asset_specific_key]['parentFolderPath'] = None
         new_asset[asset_specific_key]['path'] = None
+
+        # add in these keys manually to make sure they are in the asset
         new_asset[asset_specific_key]['metadata']['author'] = None
+        new_asset[asset_specific_key]['metadata']['metaDescription'] = None
 
         # return asset parts based upon page/block/etc.
         new_asset_md = new_asset[asset_specific_key]['metadata']
