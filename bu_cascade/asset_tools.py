@@ -17,17 +17,23 @@ def update(search_list, key, value):
         parent_element = __search_for_element__(search_list, key, True)
 
         if parent_element is not None:
+
             new_elements = []
-            # create a new element to append later
-            for single_value in value:
-                new_elements.append(deepcopy(update(parent_element, key, single_value)))
+            if len(value) == 0:
+                temp_element = deepcopy(find(parent_element, key))
+                temp_element = clear_element_values(temp_element)
+                new_elements.append(temp_element)
+            else:
+                # create a new element to append later
+                for single_value in value:
+                    new_elements.append(deepcopy(update(parent_element, key, single_value)))
 
             # gather indices to delete
             indexes_to_remove = []
             for index, element in enumerate(parent_element):
-                if 'name' in returned_search_list and returned_search_list['name'] == key:
+                if 'name' in element and element['name'] == key:
                     indexes_to_remove.append(index)
-                elif element['identifier'] == key:
+                elif 'identifier' in element and element['identifier'] == key:
                     indexes_to_remove.append(index)
 
             # delete the old ones
@@ -339,3 +345,27 @@ def __return_formated_array__(array):
         return array[0]
     else:
         return array
+
+def clear_element_values(element):
+    # group
+    if 'type' in element and element.get('type') == 'group':
+        parent_element = element['structuredDataNodes']['structuredDataNode']
+        for child in parent_element:
+            if 'text' in child:
+                child['text'] = ''
+            elif 'type' in child and child.get('type') == 'asset':
+                asset_type = child.get('assetType')
+                child[asset_type + 'Id'] = ''
+                child[asset_type + 'Path'] = ''
+            elif 'type' in child and child.get('type') == 'group':
+                child = clear_element_values(child)
+        return element
+    # dynamic md
+    elif 'fieldValues' in element:
+        element['fieldValues']['fieldValue'] = []
+        element['fieldValues']['fieldValue'].append({
+            'value': ''
+        })
+        return element
+    else:
+        return None
