@@ -107,6 +107,8 @@ def update(search_list, key, value):
 
         # assets
         elif returned_search_list['type'] == 'asset':
+            if value is None:
+                return None
             asset_type = returned_search_list['assetType']
 
             # null out the id and path
