@@ -6,9 +6,9 @@ from bu_cascade.asset_tools import *
 from bu_cascade.cascade_connector import Cascade
 import json
 
-from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID, TEST_METADATA_SET_ID, TEST_DATA_DEFINITION_ID
+from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID, TEST_METADATA_SET_ID, TEST_DATA_DEFINITION_ID, STAGING_DESTINATION_ID
 
-ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID)
+ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID, STAGING_DESTINATION_ID)
 
 print '--------------------  Start Test  ---------------------------'
 ############################ Page ########################################
@@ -211,7 +211,6 @@ def test_event():
     print my_page.edit_asset(page_asset)
 
 ###################### Testing area to call functions #####################
-test_update_page()
 
 ##########################################################################
 print '---------------------  Finished Test  --------------------------'

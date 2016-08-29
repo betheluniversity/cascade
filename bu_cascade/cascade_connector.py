@@ -8,11 +8,12 @@ import cgi
 
 class Cascade(object):
 
-    def __init__(self, service_url, login, site_id):
+    def __init__(self, service_url, login, site_id, staging_destination_id):
         self.service_url = service_url
         self.login = login
         self.site_id = site_id
         self.client = self.get_client()
+        self.staging_destination_id = staging_destination_id
 
     def get_client(self):
         try:
@@ -110,7 +111,7 @@ class Cascade(object):
         return identifier
 
     def publish(self, path_or_id, asset_type, destination=''):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = self.create_identifier(path_or_id, asset_type)
         identifier = {
             "identifier": identifier,
             'destinations': self.get_destinations_for_string(destination)
@@ -123,7 +124,7 @@ class Cascade(object):
         if username is None:
             return {}
         try:
-            user = Cascade.read(self, username, "user")
+            user = self.read(username, "user")
             allowed_groups = user.asset.user.groups
         except AttributeError:
             allowed_groups = ""
@@ -131,7 +132,7 @@ class Cascade(object):
         return allowed_groups.split(";")
 
     def unpublish(self, path_or_id, asset_type):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = self.create_identifier(path_or_id, asset_type)
         identifier = {
             "identifier": identifier,
             "unpublish": True
@@ -141,8 +142,8 @@ class Cascade(object):
         return response
 
     def move(self, old_path_or_id, new_folder_path_or_id, asset_type):
-        identifier = Cascade.create_identifier(self, old_path_or_id, asset_type)
-        new_identifier = Cascade.create_identifier(self, new_folder_path_or_id, "folder")
+        identifier = self.create_identifier(old_path_or_id, asset_type)
+        new_identifier = self.create_identifier(new_folder_path_or_id, "folder")
 
         moveParameters = {
             "destinationContainerIdentifier": new_identifier,
@@ -154,8 +155,8 @@ class Cascade(object):
         return response
 
     def copy(self, old_path_or_id, asset_type, destination_path_or_id, new_name):
-        old_identifier = Cascade.create_identifier(self, old_path_or_id, asset_type)
-        destination = Cascade.create_identifier(self, destination_path_or_id, 'folder')
+        old_identifier = self.create_identifier(old_path_or_id, asset_type)
+        destination = self.create_identifier(destination_path_or_id, 'folder')
 
         copyParameters = {
             "destinationContainerIdentifier": destination,
@@ -167,7 +168,7 @@ class Cascade(object):
         return response
 
     def rename(self, path_or_id, new_name, asset_type):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = self.create_identifier(path_or_id, asset_type)
 
         renameParameters = {
             "doWorkflow": False,
@@ -179,7 +180,7 @@ class Cascade(object):
         return response
 
     def is_in_workflow(self, path_or_id, asset_type):
-        identifier = Cascade.create_identifier(self, path_or_id, asset_type)
+        identifier = self.create_identifier(path_or_id, asset_type)
 
         response = self.client.service.readWorkflowInformation(self.login, identifier)
 
@@ -219,13 +220,23 @@ class Cascade(object):
         return new_asset, new_asset_md, new_asset_sd
 
     def get_destinations_for_string(self, destination):
-        if destination == 'staging.bethel.edu' or destination == 'staging':
-            id = 'ba1381d58c586513100ee2a78fc41899'
-            identifier = {'assetIdentifier': {
-                'id': id,
-                'type': 'destination',
-            }
+        if destination == 'staging':
+            identifier = {
+                'assetIdentifier': {
+                    'id': self.staging_destination_id,
+                    'type': 'destination',
+                }
             }
             return identifier
         else:
             return ''
+
+    def search(self, search_information):
+        response = self.client.service.search(self.login, search_information)
+        return response
+
+    def list_relationships(self, path_or_id, asset_type):
+        identifier = self.create_identifier(path_or_id, asset_type)
+
+        response = self.client.service.listSubscribers(self.login, identifier)
+        return response
