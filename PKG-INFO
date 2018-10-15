@@ -1,10 +1,10 @@
 Metadata-Version: 1.0
 Name: bu_cascade
-Version: 1.0
+Version: 3.00
 Summary: Cascade Server web services integration
 Home-page: https://github.com/betheluniversity/cascade/
-Author: Eric Jameson
-Author-email: e-jameson@bethel.edu
+Author: Caleb Schwarze
+Author-email: c-schwarze@bethel.edu
 License: Apache 2.0
 Description: UNKNOWN
 Platform: UNKNOWN

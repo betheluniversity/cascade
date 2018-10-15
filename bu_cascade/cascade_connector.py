@@ -2,9 +2,11 @@ from suds.client import Client
 from suds.sudsobject import asdict
 from suds.transport import TransportError
 import copy
+import html
 
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulStoneSoup
 import cgi
+
 
 class Cascade(object):
 
@@ -48,12 +50,12 @@ class Cascade(object):
 
     def HTMLEntitiesToUnicode(self, text):
         """Converts HTML entities to unicode.  For example '&amp;' becomes '&'."""
-        text = unicode(BeautifulStoneSoup(text, convertEntities=BeautifulStoneSoup.ALL_ENTITIES))
+        text = str(BeautifulStoneSoup(text, convertEntities=BeautifulStoneSoup.ALL_ENTITIES), 'utf-8')
         return text
 
     def unicodeToHTMLEntities(self, text):
         """Converts unicode to HTML entities.  For example '&' becomes '&amp;'."""
-        text = cgi.escape(text).encode('ascii', 'xmlcharrefreplace')
+        text = html.escape(text).encode('ascii', 'xmlcharrefreplace')
         return text
 
     def recursive_asdict(self, d):
@@ -64,7 +66,7 @@ class Cascade(object):
         if type(d) is not dict:
             d = asdict(d)
 
-        for k, v in d.iteritems():
+        for k, v in d.items():
             if hasattr(v, '__keylist__'):
                 out[k] = self.recursive_asdict(v)
             elif isinstance(v, list):
@@ -77,7 +79,7 @@ class Cascade(object):
 
             elif v:
                 # if v is True or k in ['lastModifiedDate', 'createdDate', 'lastPublishedDate']:
-                # print k, v
+                # print (k, v)
                 try:
                     # out[k] = BeautifulStoneSoup(v)
                     out[k] = v.encode('ascii', 'xmlcharrefreplace')

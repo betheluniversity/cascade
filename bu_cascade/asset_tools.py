@@ -272,8 +272,8 @@ def find(search_list, key, return_full_element=True):
 
             # it should only get here if new types are added
             else:
-                print 'ERROR: need to add more checks here!'
-                print element
+                print('ERROR: need to add more checks here!')
+                print(element)
         except:
             pass
 

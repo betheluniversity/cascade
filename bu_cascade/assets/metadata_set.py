@@ -1,6 +1,6 @@
 __author__ = 'ces55739'
 
-from asset import Asset
+from bu_cascade.assets.asset import Asset
 
 
 class MetadataSet(Asset):

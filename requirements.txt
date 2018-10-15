@@ -1,2 +1,2 @@
-suds
-BeautifulSoup
+suds-jurko
+beautifulsoup4

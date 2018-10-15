@@ -10,7 +10,7 @@ from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_
 
 ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID, STAGING_DESTINATION_ID)
 
-print '--------------------  Start Test  ---------------------------'
+print('--------------------  Start Test  ---------------------------')
 ############################ Page ########################################
 # 1a) read
 def test_page_read():
@@ -64,31 +64,31 @@ def test_base_asset_create(new_page_asset):
 def test_find():
     page_asset, page_md, page_sd = test_page_read()
 
-    print find(page_md, 'title', False)
-    print find(page_sd, 'group1', False)
-    print find(page_sd, 'text2', False)
-    print find(page_sd, 'text3', False)
-    print find(page_sd, 'checkbox1', False)
-    print find(page_sd, 'dropdown1', False)
-    print find(page_sd, 'radio1', False)
-    print find(page_sd, 'multiselect1', False)
-    print find(page_sd, 'page-chooser', False)
-    print find(page_sd, 'image-chooser', False)
-    print find(page_sd, 'block-chooser', False)
+    print(find(page_md, 'title', False))
+    print(find(page_sd, 'group1', False))
+    print(find(page_sd, 'text2', False))
+    print(find(page_sd, 'text3', False))
+    print(find(page_sd, 'checkbox1', False))
+    print(find(page_sd, 'dropdown1', False))
+    print(find(page_sd, 'radio1', False))
+    print(find(page_sd, 'multiselect1', False))
+    print(find(page_sd, 'page-chooser', False))
+    print(find(page_sd, 'image-chooser', False))
+    print(find(page_sd, 'block-chooser', False))
 
-    print '-----------'
+    print('-----------')
 
-    print find(page_md, 'title', True)
-    print find(page_sd, 'group1', True)
-    print find(page_sd, 'text2', True)
-    print find(page_sd, 'text3', True)
-    print find(page_sd, 'checkbox1', True)
-    print find(page_sd, 'dropdown1', True)
-    print find(page_sd, 'radio1', True)
-    print find(page_sd, 'multiselect1', True)
-    print find(page_sd, 'page-chooser', True)
-    print find(page_sd, 'image-chooser', True)
-    print find(page_sd, 'block-chooser', True)
+    print(find(page_md, 'title', True))
+    print(find(page_sd, 'group1', True))
+    print(find(page_sd, 'text2', True))
+    print(find(page_sd, 'text3', True))
+    print(find(page_sd, 'checkbox1', True))
+    print(find(page_sd, 'dropdown1', True))
+    print(find(page_sd, 'radio1', True))
+    print(find(page_sd, 'multiselect1', True))
+    print(find(page_sd, 'page-chooser', True))
+    print(find(page_sd, 'image-chooser', True))
+    print(find(page_sd, 'block-chooser', True))
 
 ############################ Asset Tools -- Update() #1 ############################
 def test_update_page():
@@ -96,32 +96,32 @@ def test_update_page():
     page_asset, page_md, page_sd = my_page.get_asset()
 
     # basic md
-    print update(page_asset, 'title', 'CALEB')
+    print(update(page_asset, 'title', 'CALEB'))
 
     # dynamic md
-    print update(page_md, 'checkbox', '4')
-    print update(page_md, 'dropdown', 'asdf')
-    print update(page_md, 'multiselect', '5')
-    print update(page_md, 'radio2', '2')
-    print update(page_md, 'text', 'new test')
+    print(update(page_md, 'checkbox', '4'))
+    print(update(page_md, 'dropdown', 'asdf'))
+    print(update(page_md, 'multiselect', '5'))
+    print(update(page_md, 'radio2', '2'))
+    print(update(page_md, 'text', 'new test'))
 
     # structured data
-    print update(page_sd, 'date1', '06-07-2016')
-    print update(page_sd, 'text2', 'new test2')
-    print update(page_sd, 'text3', 'new test3')
-    print update(page_sd, 'checkbox1', 'asdf')
-    print update(page_sd, 'dropdown1', '2')
-    print update(page_sd, 'radio1', '3')
-    print update(page_asset, 'multiselect1', ['4', 'asdf'])
-    print update(page_sd, 'page-chooser', '/_testing/caleb-schwarze/major-minor')
+    print(update(page_sd, 'date1', '06-07-2016'))
+    print(update(page_sd, 'text2', 'new test2'))
+    print(update(page_sd, 'text3', 'new test3'))
+    print(update(page_sd, 'checkbox1', 'asdf'))
+    print(update(page_sd, 'dropdown1', '2'))
+    print(update(page_sd, 'radio1', '3'))
+    print(update(page_asset, 'multiselect1', ['4', 'asdf']))
+    print(update(page_sd, 'page-chooser', '/_testing/caleb-schwarze/major-minor'))
 
 
 
 
-    # print update(page_sd, 'image-chooser', 'CALEB2')
-    # print update(page_sd, 'block-chooser', '/CALEB2')
+    # print(update(page_sd, 'image-chooser', 'CALEB2'))
+    # print(update(page_sd, 'block-chooser', '/CALEB2'))
 
-    print my_page.edit_asset(page_asset)
+    print(my_page.edit_asset(page_asset))
 
 ############################ Asset Tools -- Update() #2 ############################
 def test_update_multiple_block():
@@ -149,7 +149,7 @@ def test_update_multiple_block():
             ]
         }
     }
-    print concentrations
+    print(concentrations)
     for key, value in concentrations.items():
         update( block_sd, key, value)
 
@@ -205,12 +205,12 @@ def test_event():
     my_page = Page(ws_connector, 'cc0396008c58651305d7929990ca7750')
     page_asset, page_md, page_sd, = my_page.get_asset()
 
-    print find(page_sd, 'event-dates', False)
-    print update(page_sd, 'event-dates', [{'start-date': 1468006951000, 'end-date': 1468006951000}])
+    print(find(page_sd, 'event-dates', False))
+    print(update(page_sd, 'event-dates', [{'start-date': 1468006951000, 'end-date': 1468006951000}]))
 
-    print my_page.edit_asset(page_asset)
+    print(my_page.edit_asset(page_asset))
 
 ###################### Testing area to call functions #####################
-
+print(test_page_read())
 ##########################################################################
-print '---------------------  Finished Test  --------------------------'
+print('---------------------  Finished Test  --------------------------')

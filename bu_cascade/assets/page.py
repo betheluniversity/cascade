@@ -1,6 +1,6 @@
 __author__ = 'ejc84332'
 
-from asset import Asset
+from bu_cascade.assets.asset import Asset
 
 
 class Page(Asset):
