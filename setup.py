@@ -37,7 +37,8 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
-        'suds'
+        'suds-jurko',
+        'beautifulsoup4'
     ],
     test_suite="",
     classifiers=[]
