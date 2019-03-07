@@ -127,7 +127,7 @@ class Cascade(object):
             return {}
         try:
             user = self.read(username, "user")
-            allowed_groups = user['asset']['user']['groups']
+            allowed_groups = user['asset']['user']['groups'].decode('utf-8')
         except AttributeError:
             allowed_groups = ""
 
