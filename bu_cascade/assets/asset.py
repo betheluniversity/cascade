@@ -32,7 +32,7 @@ class Asset(object):
         asset_structure = self.ws.read(self.identifier, self.asset_type)
 
         # if it was read correctly, get the asset
-        if asset_structure['success'] == 'true':
+        if asset_structure['success'].decode('utf-8') == 'true':
             asset_structure = asset_structure['asset']
 
         self.set_asset(asset_structure)
