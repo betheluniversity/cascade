@@ -211,6 +211,6 @@ def test_event():
     print(my_page.edit_asset(page_asset))
 
 ###################### Testing area to call functions #####################
-print(test_page_read())
+# print(test_page_read())
 ##########################################################################
 print('---------------------  Finished Test  --------------------------')

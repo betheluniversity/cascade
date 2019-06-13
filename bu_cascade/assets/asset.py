@@ -1,4 +1,4 @@
-__author__ = 'ejc84332'
+from bu_cascade.asset_tools import convert_asset
 
 
 # Todo: add e_ann_data, sdata, mdata = block.read_asset()
@@ -30,9 +30,10 @@ class Asset(object):
 
     def read_asset(self):
         asset_structure = self.ws.read(self.identifier, self.asset_type)
+        asset_structure = convert_asset(asset_structure)
 
         # if it was read correctly, get the asset
-        if asset_structure['success'].decode('utf-8') == 'true':
+        if asset_structure['success'] == 'true':
             asset_structure = asset_structure['asset']
 
         self.set_asset(asset_structure)
