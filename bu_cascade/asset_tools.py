@@ -50,7 +50,7 @@ def update(search_list, key, value):
         return None
 
     # dynamic metadata
-    if 'name' in returned_search_list and returned_search_list['name'] == key:
+    if 'name' in returned_search_list and str(returned_search_list['name'], 'utf-8') == key:
         new_value_array = []
         if type(value) is list:
             for child in value:
@@ -138,7 +138,7 @@ def update_metadata_set(search_list, key, value, default=None):
         return None
 
     # possible values
-    if 'name' in returned_search_list and returned_search_list['name'] == key and 'fieldType' != 'text':
+    if 'name' in returned_search_list and str(returned_search_list['name'], 'utf-8') == key and 'fieldType' != 'text':
         new_value_array = []
         if type(value) is list:
             for child in value:
@@ -287,7 +287,7 @@ def __search_for_element__(search_list, key, find_parent_element=False):
     if hasattr(search_list, 'keys') and key in search_list.keys():
         return search_list
     # dynamic MD fields
-    elif hasattr(search_list, 'keys') and 'name' in search_list.keys() and search_list['name'] == key:
+    elif hasattr(search_list, 'keys') and 'name' in search_list.keys() and str(search_list['name'], 'utf-8') == key:
         return search_list
     # DS values
     elif hasattr(search_list, 'get') and search_list.get('identifier') == key:
