@@ -7,6 +7,8 @@ import html
 from bs4 import BeautifulStoneSoup
 import cgi
 
+from bu_cascade.asset_tools import convert_asset
+
 
 class Cascade(object):
 
@@ -31,10 +33,12 @@ class Cascade(object):
         return self.build_asset_structure(response)
 
     def create(self, asset):
+        asset = convert_asset(asset)
         response = self.client.service.create(self.login, asset)
         return response
 
     def edit(self, asset):
+        asset = convert_asset(asset)
         response = self.client.service.edit(self.login, asset)
         return response
 
@@ -46,6 +50,7 @@ class Cascade(object):
     # Dynamically builds the asset into a writable structure
     def build_asset_structure(self, asset):
         asset = self.recursive_asdict(asset)
+        asset = convert_asset(asset)
         return asset
 
     def HTMLEntitiesToUnicode(self, text):

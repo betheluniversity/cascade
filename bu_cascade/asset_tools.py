@@ -377,6 +377,7 @@ def clear_element_values(element):
 # https://stackoverflow.com/questions/33137741/fastest-way-to-convert-a-dicts-keys-values-from-bytes-to-str-in-python3
 def convert_asset(data):
   if isinstance(data, bytes):      return data.decode()
+  if isinstance(data, bool):       return data
   if isinstance(data, (str, int)): return str(data)
   if isinstance(data, dict):       return dict(map(convert_asset, data.items()))
   if isinstance(data, tuple):      return tuple(map(convert_asset, data))
