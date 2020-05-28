@@ -1,7 +1,4 @@
 cascade
 =======
 
-Documenting our transition from Silva to Cascade.
-
-
-Check out ongoing [implementation discussions](https://github.com/betheluniversity/cascade/issues?state=open).
+This documents anything in the realm of Cascade or www.bethel.edu as issues. Most of these are outdated, and should be considered to move into Jira.
