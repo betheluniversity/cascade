@@ -101,4 +101,4 @@ class Asset(object):
             update(self.get_structured_data(), key, new_value)
 
         self.ws.edit(self.asset)
-        return self.get_asset()
+        return self

@@ -233,6 +233,8 @@ def test_event():
 ###################### Testing area to call functions #####################
 my_page = Page(ws_connector, TEST_PAGE_ID)
 print(my_page.get_asset())
+my_new_page = my_page.update_and_edit('sd','send-email', 'No')
+print(my_new_page.get_asset())
 
 ##########################################################################
 print('---------------------  Finished Test  --------------------------')
