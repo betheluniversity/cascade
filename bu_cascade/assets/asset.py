@@ -1,4 +1,4 @@
-from bu_cascade.asset_tools import convert_asset
+from bu_cascade.asset_tools import convert_asset, update
 
 
 # Todo: add e_ann_data, sdata, mdata = block.read_asset()
@@ -84,3 +84,21 @@ class Asset(object):
             return self.asset[self.asset_specific_key]['structuredData']
         except:
             return None
+
+    def update_and_edit(self, type, key, new_value):
+        """ Updates and saves a key-value pair in existing Asset, Metadata, or Structured Data for a given page.
+
+        :param page_id: the ID of the page to be updated
+        :param type: "md" or "sd"
+        :param key: key to update
+        :param new_value: the value to be assigned to the key
+        :return: the updated page
+        """
+
+        if type == "md":
+            update(self.get_metadata(), key, new_value)
+        elif type == "sd":
+            update(self.get_structured_data(), key, new_value)
+
+        self.ws.edit(self.asset)
+        return self.get_asset()

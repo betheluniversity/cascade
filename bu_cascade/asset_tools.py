@@ -4,8 +4,16 @@ from xml.etree import ElementTree
 
 # TODO: Multiselect and checkboxes will need extra work if NONE is found
 def update(search_list, key, value):
+    """ Updates a specified key-value pair within an Asset
+
+    :param search_list: The Asset, Metadata, or Structured Metadata to update
+    :param key: The key being updated
+    :param value: The new value to be assigned to this key
+    :return: Tuple (Message, success)
+    """
+
     # get the element to update
-    returned_search_list = find(search_list, key, True)
+    returned_search_list = find(search_list, key)
 
     # if there is ever a list, then it is about to all get deleted and overwritten.
     # therefore, it is fine to just grab the first element and move on
@@ -132,6 +140,14 @@ def update(search_list, key, value):
 
 # This is currently used to update md sets. Could be made more robust in the future
 def update_metadata_set(search_list, key, value, default=None):
+    """ Updates a specified key-value pair within an Asset
+
+    :param search_list: The Asset, Metadata, or Structured Metadata containing the key-value to update
+    :param key: The key being updated
+    :param value: The new value to be assigned to this key
+    :param default: The default value for this metadata set is true
+    :return: Tuple (Message, success)
+    """
     # get the element to update
     returned_search_list = __search_for_element__(search_list, key)
 
@@ -225,6 +241,13 @@ def update_data_definition(search_xml, key, value, default=None):
 
 # returns the value of the element or the full element
 def find(search_list, key, return_full_element=True):
+    """ Looks for a given key
+
+    :param search_list: The Asset, Metadata, or Structured Metadata to update ('the haystack')
+    :param key: The key being searched for ('the needle')
+    :param return_full_element: (optional) If false, returns the value or values associated with the key.
+    :return: The full element (unless otherwised specified)
+    """
     # Get the element
     returned_search_list = __search_for_element__(search_list, key)
 

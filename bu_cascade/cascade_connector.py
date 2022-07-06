@@ -20,6 +20,10 @@ class Cascade(object):
         self.staging_destination_id = staging_destination_id
 
     def get_client(self):
+        """ Gets the web client managing this object
+
+        :return: Client (or None, if Transport Error occurs)
+        """
         try:
             client = Client(url=self.service_url+'?wsdl', location=self.service_url)
             return client
@@ -27,22 +31,44 @@ class Cascade(object):
             return None
 
     def read(self, path_or_id, asset_type):
+        """ Read a specified Asset from Cascade
+
+        :param path_or_id: Identifier (path or ID) of the Asset
+        :param asset_type: Asset type (page, folder, etc)
+        :return: Tuple (Asset, metadata, structured data)
+        """
         identifier = self.create_identifier(path_or_id, asset_type)
 
         response = self.client.service.read(self.login, identifier)
         return self.build_asset_structure(response)
 
     def create(self, asset):
+        """ Creates a new Asset
+
+        :param asset: Asset
+        :return: Tuple (Asset, metadata, structured data)
+        """
         asset = convert_asset(asset)
         response = self.client.service.create(self.login, asset)
         return response
 
     def edit(self, asset):
+        """ Edits an existing Asset
+
+        :param asset: Asset
+        :return: Tuple (Message, status)
+        """
         asset = convert_asset(asset)
         response = self.client.service.edit(self.login, asset)
         return response
 
     def delete(self, path_or_id, asset_type):
+        """ Deletes an Asset
+
+        :param path_or_id: ID or Path of the Asset
+        :param asset_type: Asset type (page, folder, etc)
+        :return: Tuple (Message, status)
+        """
         identifier = self.create_identifier(path_or_id, asset_type)
         response = self.client.service.delete(self.login, identifier)
         return response
@@ -187,6 +213,12 @@ class Cascade(object):
         return response
 
     def is_in_workflow(self, path_or_id, asset_type):
+        """ If a given Asset is in a Workflow
+
+        :param path_or_id: Asset Identifier
+        :param asset_type: Asset Type (page, block, etc)
+        :return: boolean
+        """
         identifier = self.create_identifier(path_or_id, asset_type)
 
         response = self.client.service.readWorkflowInformation(self.login, identifier)
@@ -199,6 +231,12 @@ class Cascade(object):
 
     # can only be pages and blocks
     def load_base_asset_by_id(self, id, asset_type):
+        """ Loads a page or block by ID
+
+        :param id: Asset ID
+        :param asset_type: "page" or "block" only
+        :return: Tuple(Asset, Metadata, Structured Data)
+        """
         asset = self.read(id, asset_type)
         if asset_type == 'page':
             asset_specific_key = 'page'
