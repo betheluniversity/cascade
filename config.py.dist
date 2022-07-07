@@ -1,11 +1,8 @@
 SITE_ID = ""
-WSDL = ""
-AUTH = {'username': '', 'password': ''}
+STAGING_DESTINATION_ID = ""
 
-SOAP_URL = ''
-TEST_PAGE_ID = ''
-TEST_BLOCK_ID = ''
-TEST_PROGRAM_BLOCK_ID = ''
-TEST_FACULTY_PAGE_ID = ''
-TEST_METADATA_SET_ID = ''
-TEST_DATA_DEFINITION_ID = ''
+SOAP_URL = ""
+WSDL = ""
+SOAP_URL = ""
+
+CASCADE_LOGIN = {'username': "", 'password': ""}

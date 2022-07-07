@@ -6,7 +6,15 @@ from bu_cascade.asset_tools import *
 from bu_cascade.cascade_connector import Cascade
 import json
 
-from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, TEST_PAGE_ID, TEST_BLOCK_ID, TEST_PROGRAM_BLOCK_ID, TEST_FACULTY_PAGE_ID, TEST_METADATA_SET_ID, TEST_DATA_DEFINITION_ID, STAGING_DESTINATION_ID
+from config import SOAP_URL, CASCADE_LOGIN as AUTH, SITE_ID, STAGING_DESTINATION_ID
+
+TEST_PAGE_ID = 'b07f825c8c5865fc6dc0e6c684c1925d'
+TEST_BLOCK_ID = ''
+TEST_PROGRAM_BLOCK_ID = ''
+TEST_FACULTY_PAGE_ID = ''
+TEST_METADATA_SET_ID = ''
+TEST_DATA_DEFINITION_ID = ''
+TEST_FOLDER_PATH = ''
 
 ws_connector = Cascade(SOAP_URL, AUTH, SITE_ID, STAGING_DESTINATION_ID)
 
@@ -91,7 +99,19 @@ def test_find():
     print(find(page_sd, 'block-chooser', True))
 
 ############################ Asset Tools -- Update() #1 ############################
-def test_update_page():
+def test_update_page_a():
+    my_page = Page(ws_connector, TEST_PAGE_ID)
+    page_asset, page_md, page_sd = my_page.get_asset()
+
+    print("\nupdating")
+    update(page_sd, 'send-email', "Newer Value")
+
+    print("\nediting")
+    test_page_edit(my_page)
+    return my_page
+
+
+def test_update_page_c():
     my_page = Page(ws_connector, TEST_PAGE_ID)
     page_asset, page_md, page_sd = my_page.get_asset()
 
@@ -202,7 +222,7 @@ def test_update_data_definition():
     asset.edit_asset(data_definition_asset)
 
 def test_event():
-    my_page = Page(ws_connector, 'cc0396008c58651305d7929990ca7750')
+    my_page = Page(ws_connector, TEST_PAGE_ID)
     page_asset, page_md, page_sd, = my_page.get_asset()
 
     print(find(page_sd, 'event-dates', False))
@@ -211,6 +231,10 @@ def test_event():
     print(my_page.edit_asset(page_asset))
 
 ###################### Testing area to call functions #####################
-# print(test_page_read())
+my_page = Page(ws_connector, TEST_PAGE_ID)
+print(my_page.get_asset())
+my_new_page = my_page.update_and_edit('sd','send-email', 'No')
+print(my_new_page.get_asset())
+
 ##########################################################################
 print('---------------------  Finished Test  --------------------------')
