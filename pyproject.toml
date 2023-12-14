@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bu_cascade"
+version = "3.20"
+authors = [
+  { name="Bethel University", email="web-services@bethel.edu" },
+]
+description = "Connects to Cascade CMS and provides a Python interface to the API."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "suds-community",
+  "beautifulsoup4",
+]
+
+[project.urls]
+Homepage = "https://github.com/betheluniversity/cascade"
+Issues = "https://github.com/betheluniversity/cascade/issues"
