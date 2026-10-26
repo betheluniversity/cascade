@@ -1,5 +1,6 @@
 import os
 import sys
+import importlib
 from copy import deepcopy
 from datetime import datetime
 from pathlib import Path
@@ -13,13 +14,25 @@ USE_INSTALLED_PACKAGE = os.getenv("CASCADE_USE_INSTALLED_PACKAGE", "0").strip().
 if not USE_INSTALLED_PACKAGE:
     sys.path.insert(0, str(SRC_DIR))
 
+CASCADE_PACKAGE_MODULE = os.getenv("CASCADE_PACKAGE_MODULE", "bu_cascade")
+
 try:
-    from bu_cascade.asset_tools import find, update, update_data_definition, update_metadata_set
-    from bu_cascade.assets.block import Block
-    from bu_cascade.assets.data_definition import DataDefinition
-    from bu_cascade.assets.metadata_set import MetadataSet
-    from bu_cascade.assets.page import Page
-    from bu_cascade.cascade_connector import Cascade
+    asset_tools_mod = importlib.import_module("{}.asset_tools".format(CASCADE_PACKAGE_MODULE))
+    block_mod = importlib.import_module("{}.assets.block".format(CASCADE_PACKAGE_MODULE))
+    data_definition_mod = importlib.import_module("{}.assets.data_definition".format(CASCADE_PACKAGE_MODULE))
+    metadata_set_mod = importlib.import_module("{}.assets.metadata_set".format(CASCADE_PACKAGE_MODULE))
+    page_mod = importlib.import_module("{}.assets.page".format(CASCADE_PACKAGE_MODULE))
+    connector_mod = importlib.import_module("{}.cascade_connector".format(CASCADE_PACKAGE_MODULE))
+
+    find = asset_tools_mod.find
+    update = asset_tools_mod.update
+    update_data_definition = asset_tools_mod.update_data_definition
+    update_metadata_set = asset_tools_mod.update_metadata_set
+    Block = block_mod.Block
+    DataDefinition = data_definition_mod.DataDefinition
+    MetadataSet = metadata_set_mod.MetadataSet
+    Page = page_mod.Page
+    Cascade = connector_mod.Cascade
 except Exception as exc:
     pytest.skip(f"bu_cascade import failed in this environment: {exc}", allow_module_level=True)
 

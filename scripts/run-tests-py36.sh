@@ -7,6 +7,7 @@ PY36_VERSION="3.6.15"
 PYENV_PYTHON="$HOME/.pyenv/versions/$PY36_VERSION/bin/python3.6"
 CONFIG_FILE="$ROOT_DIR/config.py"
 PACKAGE_NAME="bu-cascade"
+PACKAGE_MODULE="bu_cascade"
 PACKAGE_VERSION=""
 INDEX_NAME="local"
 VENV_DIR="$ROOT_DIR/.venv36"
@@ -19,6 +20,9 @@ Usage:
 
 Options:
   --index local|test|prod  Package source (default: local)
+  --package-name NAME      Package name for test/prod install (default: bu-cascade)
+  --package-module NAME    Python module name to import in tests (default: bu_cascade)
+  --testpypi-user USER     Shortcut for suffixed test package/module naming
   --version VERSION        Package version for test/prod index (default: latest)
   --venv-dir PATH          Virtual environment path (default: .venv36)
   --run-destructive        Run destructive integration tests
@@ -27,6 +31,7 @@ Options:
 Examples:
   ./scripts/run-tests-py36.sh
   ./scripts/run-tests-py36.sh --index local --run-destructive
+  ./scripts/run-tests-py36.sh --index test --testpypi-user jane_doe --version 3.20 --run-destructive
   ./scripts/run-tests-py36.sh --index test --version 3.20 --run-destructive
   ./scripts/run-tests-py36.sh --index prod --version 3.20 -k update_page_c -vv
 USAGE
@@ -37,6 +42,21 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --index)
       INDEX_NAME="${2:-}"
+      shift 2
+      ;;
+    --package-name)
+      PACKAGE_NAME="${2:-}"
+      shift 2
+      ;;
+    --package-module)
+      PACKAGE_MODULE="${2:-}"
+      shift 2
+      ;;
+    --testpypi-user)
+      TESTPYPI_USER_RAW="${2:-}"
+      TESTPYPI_USER_SANITIZED="${TESTPYPI_USER_RAW//-/_}"
+      PACKAGE_NAME="bu-cascade-${TESTPYPI_USER_RAW}"
+      PACKAGE_MODULE="bu_cascade_${TESTPYPI_USER_SANITIZED}"
       shift 2
       ;;
     --version)
@@ -72,6 +92,8 @@ echo "==> bu-cascade Python 3.6 test runner"
 echo "    root: $ROOT_DIR"
 echo "    venv: $VENV_DIR"
 echo "    index: $INDEX_NAME"
+echo "    package: $PACKAGE_NAME"
+echo "    module: $PACKAGE_MODULE"
 echo "    version: ${PACKAGE_VERSION:-local/latest}"
 echo "    mode: $( [[ "$RUN_DESTRUCTIVE" == "true" ]] && echo "destructive (writes enabled)" || echo "non-destructive" )"
 
@@ -155,6 +177,9 @@ fi
 "$VENV_DIR/bin/python" -m pip install --upgrade "pip==21.3.1" "setuptools==59.6.0" "wheel==0.37.1"
 
 if [[ "$INDEX_NAME" == "local" ]]; then
+  if [[ "$PACKAGE_NAME" != "bu-cascade" || "$PACKAGE_MODULE" != "bu_cascade" ]]; then
+    echo "Note: --package-name/--package-module are ignored for --index local."
+  fi
   "$VENV_DIR/bin/python" -m pip install ".[test]"
 else
   if [[ "$INDEX_NAME" == "test" ]]; then
@@ -178,14 +203,21 @@ if [[ "$INDEX_NAME" == "local" ]]; then
   echo "==> Import mode: local src/ tree"
 else
   echo "==> Import mode: installed package"
-  CASCADE_USE_INSTALLED_PACKAGE=1 "$VENV_DIR/bin/python" -c 'import bu_cascade; print(bu_cascade.__file__)'
+  CASCADE_USE_INSTALLED_PACKAGE=1 CASCADE_PACKAGE_MODULE="$PACKAGE_MODULE" "$VENV_DIR/bin/python" - <<'PY'
+import importlib
+import os
+
+module_name = os.environ.get("CASCADE_PACKAGE_MODULE", "bu_cascade")
+pkg = importlib.import_module(module_name)
+print(pkg.__file__)
+PY
 fi
 
 echo "==> Collecting tests"
 if [[ "$INDEX_NAME" == "local" ]]; then
   PYTHONPATH=src "$VENV_DIR/bin/python" -m pytest --collect-only -q tests/test.py "${PYTEST_ARGS[@]}"
 else
-  CASCADE_USE_INSTALLED_PACKAGE=1 "$VENV_DIR/bin/python" -m pytest --collect-only -q tests/test.py "${PYTEST_ARGS[@]}"
+  CASCADE_USE_INSTALLED_PACKAGE=1 CASCADE_PACKAGE_MODULE="$PACKAGE_MODULE" "$VENV_DIR/bin/python" -m pytest --collect-only -q tests/test.py "${PYTEST_ARGS[@]}"
 fi
 
 has_verbosity_arg="false"
@@ -206,7 +238,7 @@ set +e
 if [[ "$INDEX_NAME" == "local" ]]; then
   PYTHONPATH=src "$VENV_DIR/bin/python" -m pytest "${pytest_flags[@]}" tests/test.py "${PYTEST_ARGS[@]}"
 else
-  CASCADE_USE_INSTALLED_PACKAGE=1 "$VENV_DIR/bin/python" -m pytest "${pytest_flags[@]}" tests/test.py "${PYTEST_ARGS[@]}"
+  CASCADE_USE_INSTALLED_PACKAGE=1 CASCADE_PACKAGE_MODULE="$PACKAGE_MODULE" "$VENV_DIR/bin/python" -m pytest "${pytest_flags[@]}" tests/test.py "${PYTEST_ARGS[@]}"
 fi
 pytest_exit=$?
 set -e
