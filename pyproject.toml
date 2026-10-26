@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+  "setuptools>=59.6",
+  "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bu-cascade"
+version = "3.20"
+description = "Cascade Server web services integration"
+readme = "README.md"
+requires-python = ">=3.6"
+license = "Apache-2.0"
+license-files = ["LICENSE*"]
+authors = [
+  { name = "Caleb Schwarze", email = "c-schwarze@bethel.edu" },
+  { name = "Jacob Jensen", email = "jacob-jensen@bethel.edu" },
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "suds-community>=1.1.2,<1.2",
+  "beautifulsoup4<4.13",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=6.2,<7",
+]
+
+[project.urls]
+Homepage = "https://github.com/betheluniversity/cascade/"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

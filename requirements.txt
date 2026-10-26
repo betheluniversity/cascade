@@ -1,2 +1,2 @@
-suds-jurko
+suds-community==1.1.2
 beautifulsoup4

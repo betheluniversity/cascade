@@ -1,6 +1,47 @@
-cascade
-=======
+# bu-cascade
 
-This repository is for bu-cascade, which is a pypi package for python 2/3. We use it to more easily leverage connecting from python to cascade.
+Python package for integrating with Cascade Server web services.
 
-The issues document anything in the realm of Cascade or www.bethel.edu as issues. Most of these are outdated, and should be considered to move into Jira, as they do not relate to bu-cascade.
+## Project layout
+
+This package follows the PyPA packaging tutorial layout:
+
+```
+cascade/
+├── LICENSE
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── src/
+│   └── bu_cascade/
+└── tests/
+```
+
+## Dependencies
+
+- suds-community
+- beautifulsoup4
+
+## Build distributions
+
+From the project directory:
+
+```bash
+python3 -m pip install --upgrade pip build
+python3 -m build
+```
+
+This creates source and wheel distributions in `dist/`.
+
+## Upload to TestPyPI
+
+```bash
+python3 -m pip install --upgrade twine
+python3 -m twine upload --repository testpypi dist/*
+```
+
+## Install from TestPyPI
+
+```bash
+python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps bu-cascade
+```

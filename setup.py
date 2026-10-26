@@ -1,45 +1,31 @@
-from setuptools import find_packages
-import os.path
-import re
+from setuptools import find_packages, setup
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
-
-def fpath(name):
-    return os.path.join(os.path.dirname(__file__), name)
-
-
-def read(fname):
-    return open(fpath(fname)).read()
-
-
-def grep(attrname):
-    pattern = r"{0}\W*=\W*'([^']+)'".format(attrname)
-    strval, = re.findall(pattern, file_text)
-    return strval
-
-
-file_text = read(fpath('bu_cascade/__init__.py'))
 
 setup(
-    name='bu_cascade',
-    version=3.18,
-    description='Cascade Server web services integration',
-    long_description='',
-    url='https://github.com/betheluniversity/cascade/',
-    download_url='',
-    author='Caleb Schwarze',
+    name="bu-cascade",
+    version="3.20",
+    description="Cascade Server web services integration",
+    long_description="Python package for integrating with Cascade Server web services.",
+    author="Caleb Schwarze",
     author_email="c-schwarze@bethel.edu",
-    license='Apache 2.0',
-    packages=find_packages(),
-    zip_safe=False,
+    url="https://github.com/betheluniversity/cascade/",
+    license="Apache-2.0",
+    python_requires=">=3.6",
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
+    include_package_data=True,
     install_requires=[
-        'suds-jurko',
-        'beautifulsoup4'
+        "suds-community>=1.1.2,<1.2",
+        "beautifulsoup4<4.13",
     ],
-    test_suite="",
-    classifiers=[]
+    extras_require={
+        "test": [
+            "pytest>=6.2,<7",
+        ]
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+    ],
 )

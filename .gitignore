@@ -12,4 +12,5 @@ config.pyc
 build/*
 .idea/misc.xml
 
-
+.venv36/
+UNKNOWN*/
